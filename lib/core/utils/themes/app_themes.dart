@@ -3,59 +3,53 @@ import 'package:flutter/material.dart';
 import '../app_colors.dart';
 
 class AppTheme {
-  // static const _prompt = 'Prompt';
-  // static const _crashGrotesk = 'Crash Grotesk';
+  static const montserrat = 'Montserrat';
+  static const dmSans = 'DMSans';
+  static const montserratAlternate = 'MontserratAlternates';
 
   //? light text mode
-  static TextTheme lightTextTheme = TextTheme(
+  static TextTheme lightTextTheme = const TextTheme(
       bodyLarge: TextStyle(
         fontSize: 14.0,
         fontWeight: FontWeight.w500,
-        // color: AppColors.grey500,
-        // fontFamily: _crashGrotesk,
-        height: 1.4,
+        color: AppColors.blackText,
+        fontFamily: montserrat,
       ),
       bodySmall: TextStyle(
         fontSize: 12.0,
         fontWeight: FontWeight.w500,
-        // color: AppColors.warning500,
-        // fontFamily: _crashGrotesk,
-        height: 1.45,
+        color: AppColors.blackText,
+        fontFamily: montserrat,
       ),
       displayLarge: TextStyle(
         fontSize: 32.0,
         fontWeight: FontWeight.w700,
-        // color: AppColors.grey700,
-        // fontFamily: _prompt,
-        height: 1.2,
+        fontFamily: montserrat,
       ),
       displayMedium: TextStyle(
         fontWeight: FontWeight.w700,
         fontSize: 21,
-        // color: AppColors.grey700,
-        // fontFamily: _prompt,
+        fontFamily: montserrat,
       ),
       displaySmall: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w600,
-        // color: AppColors.shadeWhite,
-        height: 1.45,
-        // fontFamily: _crashGrotesk,
+        color: AppColors.blackText,
+        fontFamily: montserrat,
       ),
       titleLarge: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w600,
-        color: Colors.black,
-        // fontFamily: _prompt,
+        color: AppColors.blackSupplementary,
+        fontFamily: montserrat,
       ));
 
   //? dark text mode
-  static TextTheme darkTextTheme = TextTheme(
+  static TextTheme darkTextTheme = const TextTheme(
       bodyLarge: TextStyle(
         fontSize: 14.0,
         fontWeight: FontWeight.w500,
         color: Colors.white,
-        // fontFamily: _crashGrotesk
       ),
       displayLarge: TextStyle(
         fontSize: 32.0,
@@ -73,10 +67,9 @@ class AppTheme {
         color: Colors.white,
       ),
       titleLarge: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w600,
-        color: Colors.white,
-      ));
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: AppColors.blackSupplementary));
 
   //? light Mode
   static ThemeData lightTheme() {

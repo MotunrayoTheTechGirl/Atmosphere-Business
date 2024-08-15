@@ -1,7 +1,5 @@
-import 'dart:developer';
-
-import 'package:dealer_portal_mobile/core/api/api_endpoints.dart';
-import 'package:dealer_portal_mobile/core/api/dealer_portal_api.dart';
+import 'package:dealer_portal_mobile/core/constants/app_constants.dart';
+import 'package:dealer_portal_mobile/core/utils/custom_inapp_browser.dart';
 import 'package:flutter/material.dart';
 
 class TestingScreen extends StatelessWidget {
@@ -17,9 +15,14 @@ class TestingScreen extends StatelessWidget {
         child: Center(
           child: GestureDetector(
             onTap: () async {
-              final api = DealerPoratlApi();
-              final testing = await api.get(ApiEndpoints.testEndPoint);
-              log("Data: ${testing?.data}");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const CustomInAppBrowser(url: AppConstants.authurl);
+                  },
+                ),
+              );
             },
             child: const Text(
               'Click Me!',
