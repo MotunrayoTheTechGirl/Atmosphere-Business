@@ -3,6 +3,7 @@ import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AppElevatedButton extends StatelessWidget {
@@ -12,6 +13,7 @@ class AppElevatedButton extends StatelessWidget {
     required this.onTap,
     this.width,
     this.isLightBlue = false,
+    this.isLoading = false,
     this.isActive = true,
     this.rowIcon,
     this.rowLabel,
@@ -35,6 +37,7 @@ class AppElevatedButton extends StatelessWidget {
   final bool isActive;
   final TextStyle? rowLabelstyle;
   final Widget? child;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -53,35 +56,40 @@ class AppElevatedButton extends StatelessWidget {
             Radius.circular(borderRadius ?? 16.5.r),
           ),
         ),
-        child: isLightBlue
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    rowIcon ?? '',
-                    width: rowIconWidth,
-                    height: rowIconHeight,
-                  ),
-                  10.wi,
-                  Text(
-                    rowLabel ?? '',
-                    style: rowLabelstyle ??
-                        AppTheme.lightTextTheme.displaySmall?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: rowLabelColor ?? AppColors.lightBlue,
-                        ),
-                  )
-                ],
+        child: isLoading
+            ? const SpinKitChasingDots(
+                size: 20,
+                color: AppColors.white,
               )
-            : Center(
-                child: child ??
-                    Text(
-                      label ?? '',
-                      style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                          color: AppColors.white,
-                          fontSize: labelFontSize ?? 16.sp),
-                    ),
-              ),
+            : isLightBlue
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        rowIcon ?? '',
+                        width: rowIconWidth,
+                        height: rowIconHeight,
+                      ),
+                      10.wi,
+                      Text(
+                        rowLabel ?? '',
+                        style: rowLabelstyle ??
+                            AppTheme.lightTextTheme.displaySmall?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: rowLabelColor ?? AppColors.lightBlue,
+                            ),
+                      )
+                    ],
+                  )
+                : Center(
+                    child: child ??
+                        Text(
+                          label ?? '',
+                          style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+                              color: AppColors.white,
+                              fontSize: labelFontSize ?? 16.sp),
+                        ),
+                  ),
       ),
     );
   }

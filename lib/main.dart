@@ -9,7 +9,7 @@ import 'core/utils/themes/app_themes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  DealerPoratlApi.initialize(Environment.dev);
+  DealerPoratlApi.initialize(Environment.production);
   runApp(const DealerPortal());
 }
 
@@ -21,7 +21,10 @@ class DealerPortal extends StatelessWidget {
     final theme = AppTheme.lightTheme();
     return ProviderScope(
       child: ScreenUtilInit(
-        designSize: const Size(390, 844),
+        designSize: const Size(428, 928),
+        ensureScreenSize: true,
+        useInheritedMediaQuery: true,
+        rebuildFactor: (old, data) => true,
         minTextAdapt: true,
         builder: (BuildContext context, Widget? child) => MaterialApp(
           theme: theme,

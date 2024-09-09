@@ -3,6 +3,7 @@
 import 'package:dealer_portal_mobile/core/common_widgets/app_elevated_button.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/common_widgets/app_bars/custom_appbar.dart';
@@ -11,14 +12,14 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/themes/app_themes.dart';
 import '../widgets/subscription_bottom_sheet.dart';
 
-class CustomizeHoursScreen extends StatefulWidget {
+class CustomizeHoursScreen extends ConsumerStatefulWidget {
   const CustomizeHoursScreen({Key? key}) : super(key: key);
 
   @override
   _CustomizeHoursScreenState createState() => _CustomizeHoursScreenState();
 }
 
-class _CustomizeHoursScreenState extends State<CustomizeHoursScreen> {
+class _CustomizeHoursScreenState extends ConsumerState<CustomizeHoursScreen> {
   final amountController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -142,7 +143,10 @@ class _CustomizeHoursScreenState extends State<CustomizeHoursScreen> {
               AppElevatedButton(
                 label: 'Buy Data',
                 onTap: () {
-                  subsriptionBottomSheet(context: context);
+                  subsriptionBottomSheet(
+                    context: context,
+                    ref: ref,
+                  );
                 },
               ),
             ],

@@ -2,20 +2,22 @@ import 'package:dealer_portal_mobile/core/common_widgets/app_elevated_button.dar
 import 'package:dealer_portal_mobile/core/utils/app_colors.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
-import 'package:dealer_portal_mobile/features/app/presentation/screen/app.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/utils/app_icons.dart';
+import '../../../../core/utils/custom_inapp_browser.dart';
 
-class WelcomeBottomSheet extends StatelessWidget {
+class WelcomeBottomSheet extends ConsumerWidget {
   const WelcomeBottomSheet({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
@@ -64,12 +66,17 @@ class WelcomeBottomSheet extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) {
-                  return App();
-                }),
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const CustomInAppBrowser(
+                      url: AppConstants.prodAuthUrl,
+                    );
+                    // return const FileUploadTest();
+                  },
+                ),
               );
             },
-            label: 'Sign in to contunue',
+            label: 'Sign in to continue',
           ),
         ],
       ),

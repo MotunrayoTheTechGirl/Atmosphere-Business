@@ -1,3 +1,11 @@
-enum Environment { dev, production }
+enum Environment {
+  dev,
+  production,
+}
 
-enum ResponseStatus { initial, error, loading, success }
+enum ResponseStatus {
+  initial,
+  error,
+  loading,
+  success,
+}

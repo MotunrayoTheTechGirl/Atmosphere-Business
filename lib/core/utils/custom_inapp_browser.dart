@@ -5,7 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../features/app/presentation/screen/app.dart';
+import '../../features/onboarding/data/controller/get_query_param.dart';
 
 class CustomInAppBrowser extends StatefulWidget {
   final String url;
@@ -64,7 +68,9 @@ class _CustomInAppBrowserState extends State<CustomInAppBrowser> {
                 children: [
                   Text(
                     title,
-                    style: AppTheme.lightTextTheme.bodyMedium,
+                    style: AppTheme.lightTextTheme.bodyMedium?.copyWith(
+                      fontSize: 10.sp,
+                    ),
                     overflow: TextOverflow.fade,
                   ),
                   Row(
@@ -86,6 +92,7 @@ class _CustomInAppBrowserState extends State<CustomInAppBrowser> {
                         url,
                         style: AppTheme.lightTextTheme.bodyMedium?.copyWith(
                           color: Colors.black,
+                          fontSize: 14.sp,
                         ),
                         overflow: TextOverflow.fade,
                       )),
@@ -148,10 +155,21 @@ class _CustomInAppBrowserState extends State<CustomInAppBrowser> {
                         setState(() {
                           this.url = url.toString();
                         });
-                        if (url.toString().contains('token')) {
+                        if (url.toString().contains('token') &&
+                            url.toString().contains('nonce')) {
                           log('in-app browser nav redirect: $url');
-
-                          Navigator.pop(context);
+                          ref
+                              .read(getQueryParamValueController.notifier)
+                              .getAuthDetails(url.toString());
+                          // Navigator.pop(context);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return App();
+                              },
+                            ),
+                          );
                         }
                       }
                     },

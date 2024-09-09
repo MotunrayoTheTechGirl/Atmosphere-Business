@@ -5,15 +5,19 @@ import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
 import 'package:dealer_portal_mobile/features/home/presentation/screens/dealer/dealer_mgt_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomDrawer extends StatelessWidget {
+import '../../features/onboarding/data/controller/user_details_controller.dart';
+
+class CustomDrawer extends ConsumerWidget {
   const CustomDrawer({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userDetailsController = ref.watch(userDetailsControllerProvider);
     return Drawer(
       width: .7.sw,
       backgroundColor: Colors.white,
@@ -43,14 +47,14 @@ class CustomDrawer extends StatelessWidget {
                   ),
                   4.hi,
                   Text(
-                    'John Doechukwu',
+                    '${userDetailsController.data?.data?.user?.firstName ?? ''} ${userDetailsController.data?.data?.user?.lastName}',
                     style: AppTheme.lightTextTheme.displaySmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         fontFamily: AppTheme.montserratAlternate),
                   ),
                   1.hi,
                   Text(
-                    'johnny1@dealer.com',
+                    userDetailsController.data?.data?.user?.email ?? '',
                     style: AppTheme.lightTextTheme.bodySmall?.copyWith(
                         color: AppColors.blackText.withOpacity(0.8),
                         fontFamily: AppTheme.montserratAlternate),

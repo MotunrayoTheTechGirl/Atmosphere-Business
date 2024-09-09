@@ -6,6 +6,7 @@ import 'package:dealer_portal_mobile/features/billing/presentation/screens/billi
 import 'package:dealer_portal_mobile/features/create_plan/presentation/screens/create_plan_screen.dart';
 import 'package:dealer_portal_mobile/features/home/presentation/screens/home_screen.dart';
 import 'package:dealer_portal_mobile/features/my_plans/presentation/screens/my_plans_screen.dart';
+import 'package:dealer_portal_mobile/features/onboarding/data/controller/user_details_controller.dart';
 import 'package:dealer_portal_mobile/features/subscriptions/presentation/screens/subscription_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,21 +14,32 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../widgets/navbar_item.dart';
 
-final isHomeActiveStateProvider = StateProvider<bool>((ref) => false);
+class App extends ConsumerStatefulWidget {
+  const App({Key? key}) : super(key: key);
 
-class App extends ConsumerWidget {
-  App({Key? key}) : super(key: key);
+  @override
+  _AppState createState() => _AppState();
+}
 
+class _AppState extends ConsumerState<App> {
   List<Widget> screens = [
     HomeScreen(),
     const SubscriptionScreen(),
-    CreatePlanScreen(),
+    const CreatePlanScreen(),
     const MyPlansScreen(),
     BillingScreen(),
   ];
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(userDetailsControllerProvider.notifier).getUserDetails();
+    });
+
+    super.initState();
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),

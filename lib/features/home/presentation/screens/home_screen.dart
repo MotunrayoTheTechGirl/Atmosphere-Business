@@ -3,6 +3,7 @@ import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
 import 'package:dealer_portal_mobile/features/home/presentation/widgets/usage_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -12,14 +13,14 @@ import '../widgets/available_data_balnce_card.dart';
 import '../widgets/drop_down_form_field.dart';
 import '../widgets/overview_card.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,12 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
           SvgPicture.asset(AppIcons.notification).padOnly(right: 20),
         ],
       ),
-      // MenuAppBar(
-      //   title: 'Overview',
-      //   onTap: () {
-      //     Scaffold.of(context).openDrawer();
-      //   },
-      // ),
       drawer: const CustomDrawer(),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -76,11 +71,18 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Filter by:',
-                    style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.blackText,
+                  GestureDetector(
+                    onTap: () {
+                      // ref
+                      //     .read(generateReferenceControllerProvider.notifier)
+                      //     .generateReference();
+                    },
+                    child: Text(
+                      'Filter by:',
+                      style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.blackText,
+                      ),
                     ),
                   ),
                   SizedBox(width: 92.w, child: const DropDownFormField()),

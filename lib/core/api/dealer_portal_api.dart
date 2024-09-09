@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dealer_portal_mobile/core/api/api_response.dart';
 import 'package:dealer_portal_mobile/core/api/api_utils.dart';
+import 'package:dealer_portal_mobile/core/api/dio_interceptor.dart';
 import 'package:dealer_portal_mobile/core/enums.dart';
 import 'package:dealer_portal_mobile/core/exceptions.dart';
 import 'package:dio/dio.dart';
@@ -20,7 +21,7 @@ class DealerPoratlApi {
     _dio = Dio();
     _baseUrl = _getBaseUrl(environment);
     _headers = {};
-    // _dio.interceptors.add(DioInterceptor());
+    _dio.interceptors.add(DioInterceptor());
   }
 
   static void initialize(Environment environment) {
@@ -46,7 +47,7 @@ class DealerPoratlApi {
     log('$_baseUrl$string');
 
     try {
-      log('Headers: $_headers');
+      // log('Headers: $_headers');
       final response = await _dio.get(
         '$_baseUrl$string',
         data: body,
@@ -95,15 +96,15 @@ class DealerPoratlApi {
     Map<String, dynamic>? headers,
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? body,
-    List<Map<String, dynamic>>? bodyList,
-    bool isBodyList = false,
+    FormData? formData,
+    bool isFormData = false,
   }) async {
     log('$_baseUrl$string');
     log('Request Body: $body');
     try {
-      log('Headers: $_headers');
+      // log('Headers: $_headers');
       final response = await _dio.post('$_baseUrl$string',
-          data: isBodyList ? bodyList : body,
+          data: isFormData ? formData : body,
           options: Options(headers: _headers),
           queryParameters: queryParameters);
 

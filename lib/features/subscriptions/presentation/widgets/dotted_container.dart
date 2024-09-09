@@ -10,9 +10,11 @@ import '../../../../core/utils/themes/app_themes.dart';
 class DottedContainer extends StatelessWidget {
   const DottedContainer({
     required this.onTap,
+    required this.label,
     super.key,
   });
   final void Function()? onTap;
+  final String label;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -38,12 +40,12 @@ class DottedContainer extends StatelessWidget {
               Image.asset(
                 AppIcons.upload,
                 fit: BoxFit.scaleDown,
-                height: 81.h,
-                width: 94.w,
+                height: 70.h,
+                width: 80.w,
               ),
               20.hi,
               Text(
-                'Tap to upload',
+                label,
                 style: AppTheme.lightTextTheme.displaySmall?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: AppColors.blackShade400,

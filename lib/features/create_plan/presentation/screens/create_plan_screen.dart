@@ -11,13 +11,26 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../core/common_widgets/app_bars/custom_appbar.dart';
 import '../../../../core/utils/app_icons.dart';
 
-class CreatePlanScreen extends StatelessWidget {
-  CreatePlanScreen({Key? key}) : super(key: key);
+class CreatePlanScreen extends StatefulWidget {
+  const CreatePlanScreen({Key? key}) : super(key: key);
+
+  @override
+  State<CreatePlanScreen> createState() => _CreatePlanScreenState();
+}
+
+class _CreatePlanScreenState extends State<CreatePlanScreen> {
   final planController = TextEditingController();
+
   final priceController = TextEditingController();
+
   final volumeController = TextEditingController();
+
   final wifiTimeController = TextEditingController();
+
   final validityPeriodController = TextEditingController();
+
+  String selectedUnit = 'GB';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,27 +148,27 @@ class CreatePlanScreen extends StatelessWidget {
             AppTextField(
               keyboardType: TextInputType.number,
               prefixIcon: Padding(
-                padding: const EdgeInsets.only(left: 12),
+                padding: const EdgeInsets.only(left: 10),
                 child: SizedBox(
                   width: 90,
                   height: 20.h,
                   child: Row(
                     children: [
                       Text(
-                        'GB',
+                        selectedUnit,
                         style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
                           color: AppColors.greyText,
                         ),
                       ),
-                      8.wi,
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 18,
-                        ),
-                        child: GestureDetector(
-                          onTap: () {},
+                      // 2.wi,
+                      PopupMenuButton(
+                        icon: Padding(
+                          padding: const EdgeInsets.only(
+                            top: 16,
+                            right: 0,
+                          ),
                           child: Column(
                             children: [
                               SvgPicture.asset(AppIcons.arrowUp),
@@ -164,8 +177,45 @@ class CreatePlanScreen extends StatelessWidget {
                             ],
                           ),
                         ),
+                        padding: EdgeInsets.zero,
+                        itemBuilder: (context) {
+                          return [
+                            const PopupMenuItem(
+                              value: 'GB',
+                              child: Text('GB'),
+                            ),
+                            const PopupMenuItem(
+                              value: 'MB',
+                              child: Text('MB'),
+                            ),
+                            const PopupMenuItem(
+                              value: 'KB',
+                              child: Text('KB'),
+                            ),
+                          ];
+                        },
+                        onSelected: (String value) {
+                          setState(() {
+                            selectedUnit = value;
+                          });
+                        },
                       ),
-                      8.wi,
+                      // Padding(
+                      //   padding: const EdgeInsets.only(
+                      //     top: 18,
+                      //   ),
+                      //   child: GestureDetector(
+                      //     onTap: () {},
+                      //     child: Column(
+                      //       children: [
+                      //         SvgPicture.asset(AppIcons.arrowUp),
+                      //         4.hi,
+                      //         SvgPicture.asset(AppIcons.arrowDownn),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                      // 8.wi,
                       const VerticalDivider(
                         color: AppColors.dividerColor,
                       ),
