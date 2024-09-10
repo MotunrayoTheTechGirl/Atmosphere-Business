@@ -12,10 +12,16 @@ class BillingTile extends StatelessWidget {
   const BillingTile({
     this.isPaid = false,
     required this.onTap,
+    this.id,
+    this.dataPlan,
+    this.price,
+    this.name,
+    this.duration,
     super.key,
   });
   final bool isPaid;
   final void Function() onTap;
+  final String? id, dataPlan, price, name, duration;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,7 +36,7 @@ class BillingTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'INV-10022004-001',
+                id ?? 'INV-10022004-001',
                 style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.w400,
                   fontSize: 15.sp,
@@ -39,19 +45,19 @@ class BillingTile extends StatelessWidget {
               ),
               isPaid
                   ? const PaymentStatus(
-                      label: 'Paid',
+                      label: 'Used',
                       color: AppColors.green,
                       bgColor: AppColors.greyShade50,
                     )
                   : const PaymentStatus(
-                      label: 'Unpaid',
+                      label: 'Expired',
                       color: AppColors.red,
                     )
             ],
           ),
           6.hi,
           Text(
-            'Glo Atmosphere 30TB + 150K Hrs Plan',
+            dataPlan ?? 'Glo Atmosphere 30TB + 150K Hrs Plan',
             style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w400,
               fontSize: 17.sp,
@@ -60,7 +66,7 @@ class BillingTile extends StatelessWidget {
           ),
           6.hi,
           Text(
-            '₦3,0000,000',
+            price ?? '₦3,0000,000',
             style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w600,
               fontSize: 25.sp,
@@ -74,7 +80,7 @@ class BillingTile extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Emeka Obi',
+                    name ?? 'Emeka Obi',
                     style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
                       fontSize: 15.sp,
                       color: AppColors.deepAsh,
@@ -82,7 +88,7 @@ class BillingTile extends StatelessWidget {
                   ),
                   6.wi,
                   Text(
-                    '10:00 PM, 25 Jun',
+                    duration ?? '10:00 PM, 25 Jun',
                     style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w400,
@@ -99,7 +105,7 @@ class BillingTile extends StatelessWidget {
                       'VIEW DETAILS',
                       style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
                         fontSize: 14.sp,
-                        color: AppColors.deepAsh,
+                        color: AppColors.primaryColor,
                       ),
                     ),
                     6.wi,

@@ -36,6 +36,8 @@ class AppIcons {
   static const String dragHandle = "assets/svg/drag_handle.svg";
   static const String arrowUp = "assets/svg/arrow_up.svg";
   static const String arrowDownn = "assets/svg/arrow_down.svg";
+  static const String copy = "assets/svg/copy.svg";
+  // static const String notification = "assets/svg/bell.svg";
 
   ///Png
   static const String activeHomeNew = "assets/images/active_home.png";

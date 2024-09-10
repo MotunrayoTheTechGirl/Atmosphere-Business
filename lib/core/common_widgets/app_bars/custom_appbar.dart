@@ -12,19 +12,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.suffix,
     this.icon,
     this.centerTitle = false,
+    this.backgroundColor,
   });
 
   final String title;
   final String? suffixIcon;
   final Widget? suffix, icon;
   final bool? centerTitle;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: centerTitle,
       toolbarHeight: 100.0.h,
-      backgroundColor: AppColors.appbarColor,
+      backgroundColor: backgroundColor ?? AppColors.appbarColor,
       leading: Padding(
         padding: const EdgeInsets.only(top: 38.0),
         child: icon ??

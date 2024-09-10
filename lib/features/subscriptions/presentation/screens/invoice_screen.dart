@@ -7,11 +7,11 @@ import 'package:dealer_portal_mobile/core/common_widgets/status_button.dart';
 import 'package:dealer_portal_mobile/core/utils/app_icons.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/core/utils/ui_helper.dart';
-import 'package:dealer_portal_mobile/features/subscriptions/presentation/screens/screenshot_test2.dart';
 import 'package:dealer_portal_mobile/features/subscriptions/presentation/widgets/custom_table_header.dart';
 import 'package:dealer_portal_mobile/features/subscriptions/presentation/widgets/invoice_breakdown_tile.dart';
 import 'package:dealer_portal_mobile/features/subscriptions/presentation/widgets/invoice_summary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -23,6 +23,7 @@ import 'package:screenshot/screenshot.dart';
 
 import '../../../../core/common_widgets/app_divider.dart';
 import '../../../../core/common_widgets/custom_alert_dialog.dart';
+import '../../../../core/common_widgets/custom_snackbar.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/themes/app_themes.dart';
 import '../../../onboarding/data/controller/user_details_controller.dart';
@@ -225,14 +226,7 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                       rowIcon: AppIcons.share,
                                       width: 112.w,
                                       rowLabel: 'share',
-                                      onTap: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          // return const ScreenShotTest();
-                                          return const ScreenshotCapture();
-                                        }));
-                                      },
+                                      onTap: () {},
                                       isLightBlue: true,
                                     ),
                                   ],
@@ -322,6 +316,55 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                 const AppDivider(),
                                 18.hi,
                                 Text(
+                                  'ACCOUNT DETAILS',
+                                  style: AppTheme.lightTextTheme.bodySmall
+                                      ?.copyWith(
+                                    color: AppColors.deepAsh,
+                                  ),
+                                ),
+                                22.hi,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const InvoiceSummary(
+                                      leading: 'Bank Name:',
+                                      trailing: ' Wema',
+                                    ),
+                                    14.hi,
+                                    Row(
+                                      children: [
+                                        const InvoiceSummary(
+                                          leading: 'Account Number:',
+                                          trailing: ' 5003553283',
+                                        ),
+                                        8.wi,
+                                        InkWell(
+                                          onTap: () async =>
+                                              await Clipboard.setData(
+                                            const ClipboardData(
+                                                text: '5003553283'),
+                                          ).then(
+                                            (value) => CustomSnackBar.showSnackBar(
+                                                context: context,
+                                                message:
+                                                    'Account number copied to clipboard'),
+                                          ),
+                                          child:
+                                              SvgPicture.asset(AppIcons.copy),
+                                        ),
+                                      ],
+                                    ),
+                                    14.hi,
+                                    const InvoiceSummary(
+                                      leading: 'Account Name:',
+                                      trailing: ' Wave 5 Wireless',
+                                    ),
+                                  ],
+                                ),
+                                18.hi,
+                                const AppDivider(),
+                                18.hi,
+                                Text(
                                   'BREAKDOWN',
                                   style: AppTheme.lightTextTheme.bodySmall
                                       ?.copyWith(
@@ -359,7 +402,7 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                 padding: EdgeInsets.zero,
                               ),
                             ),
-                            10.hi,
+                            // 10.hi,
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

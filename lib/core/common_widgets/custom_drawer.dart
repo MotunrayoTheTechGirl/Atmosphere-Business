@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../features/onboarding/data/controller/user_details_controller.dart';
+import '../../features/transaction_history.dart/features/screen/transaction_history_screen.dart';
 
 class CustomDrawer extends ConsumerWidget {
   const CustomDrawer({
@@ -79,8 +80,13 @@ class CustomDrawer extends ConsumerWidget {
                 ),
                 40.hi,
                 DrawerTile(
-                  onTap: () {},
-                  label: 'Orders',
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const TransactionHistoryScreen();
+                    }));
+                  },
+                  label: 'Transaction History',
                   icon: AppIcons.orders,
                 ),
                 40.hi,
