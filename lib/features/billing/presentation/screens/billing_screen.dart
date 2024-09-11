@@ -5,18 +5,30 @@ import 'package:dealer_portal_mobile/core/utils/app_icons.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
 import 'package:dealer_portal_mobile/features/billing/presentation/widgets/billing_tile.dart';
-import 'package:dealer_portal_mobile/features/subscriptions/presentation/screens/invoice_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/common_widgets/app_bars/primary_appbar.dart';
+import '../../../../core/utils/ui_helper.dart';
+import '../../../onboarding/data/controller/user_details_controller.dart';
+import '../../data/repository/billing_repository.dart';
 
-class BillingScreen extends StatelessWidget {
+class BillingScreen extends ConsumerWidget {
   BillingScreen({Key? key}) : super(key: key);
   final searchController = TextEditingController();
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final invoiceController = ref.watch(billingRepositoryFutureProvider);
+    final firstName =
+        ref.watch(userDetailsControllerProvider).data?.data?.user?.firstName ??
+            '';
+    final lastName =
+        ref.watch(userDetailsControllerProvider).data?.data?.user?.lastName ??
+            '';
     return Scaffold(
       appBar: const PrimaryAppBar(
         title: 'Billing',
@@ -53,26 +65,52 @@ class BillingScreen extends StatelessWidget {
                 ),
               ),
               20.hi,
-              SizedBox(
-                height: .6.sh,
-                child: ListView.separated(
-                  itemBuilder: (context, index) {
-                    return BillingTile(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) {
-                            return const InvoiceScreen();
-                          }),
+              invoiceController.when(
+                data: (data) {
+                  return SizedBox(
+                    height: .6.sh,
+                    child: ListView.separated(
+                      itemBuilder: (context, index) {
+                        final invoice = data[index];
+                        String duration = invoice.createdAt.toString();
+                        DateTime dateTime = DateTime.parse(duration);
+                        String formattedDate = DateFormat('hh:mm a, dd MMM')
+                            .format(dateTime.toLocal());
+                        return BillingTile(
+                          onTap: () {},
+                          duration: formattedDate,
+                          id: 'INV-${invoice.id}',
+                          price: formatNaira(
+                            invoice.amount ?? '',
+                          ),
+                          dataPlan: 'Data Plan',
+                          name: '$firstName $lastName',
+                          status: invoice.paymentStatus ?? '',
+                          statusColorBg: invoice.paymentStatus == 'pending'
+                              ? AppColors.redShade50
+                              : AppColors.greenShade50,
+                          statusColor: invoice.paymentStatus == 'pending'
+                              ? AppColors.red
+                              : AppColors.green,
                         );
                       },
-                    );
-                  },
-                  itemCount: 4,
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const AppDivider();
-                  },
-                ),
+                      itemCount: data.length,
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const AppDivider();
+                      },
+                    ),
+                  );
+                },
+                error: (e, str) {
+                  return const Text('Oops! something went wrong');
+                },
+                loading: () {
+                  return const Center(
+                    child: SpinKitSpinningLines(
+                      color: AppColors.primaryColor,
+                    ),
+                  );
+                },
               ),
             ],
           ).padHorizontal(16),

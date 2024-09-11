@@ -17,11 +17,16 @@ class BillingTile extends StatelessWidget {
     this.price,
     this.name,
     this.duration,
+    this.status = 'Pending',
+    this.statusColor,
+    this.statusColorBg,
     super.key,
   });
   final bool isPaid;
   final void Function() onTap;
   final String? id, dataPlan, price, name, duration;
+  final String status;
+  final Color? statusColor, statusColorBg;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,16 +48,21 @@ class BillingTile extends StatelessWidget {
                   color: AppColors.textColor,
                 ),
               ),
-              isPaid
-                  ? const PaymentStatus(
-                      label: 'Used',
-                      color: AppColors.green,
-                      bgColor: AppColors.greyShade50,
-                    )
-                  : const PaymentStatus(
-                      label: 'Expired',
-                      color: AppColors.red,
-                    )
+              // isPaid
+              //     ? const PaymentStatus(
+              //         label: 'Used',
+              //         color: AppColors.green,
+              //         bgColor: AppColors.greyShade50,
+              //       )
+              //     : const PaymentStatus(
+              //         label: 'Expired',
+              //         color: AppColors.red,
+              //       )
+              PaymentStatus(
+                label: status,
+                color: statusColor,
+                bgColor: statusColorBg,
+              )
             ],
           ),
           6.hi,

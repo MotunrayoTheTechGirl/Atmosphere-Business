@@ -9,4 +9,5 @@ class ApiEndpoints {
   static const String receiptUrl = '/orders/';
   static const String invoiceUrl = '/orders/';
   static const String getDigitalOrders = '/orders/getDigitalOrdersByUserId/';
+  static const String getBillingInvoice = '/orders/findAllInvoices';
 }

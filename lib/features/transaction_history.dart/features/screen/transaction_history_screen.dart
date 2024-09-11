@@ -28,10 +28,10 @@ class TransactionHistoryScreen extends ConsumerWidget {
         ref.watch(userDetailsControllerProvider).data?.data?.user?.id ?? 0;
     final firstName =
         ref.watch(userDetailsControllerProvider).data?.data?.user?.firstName ??
-            0;
+            '';
     final lastName =
         ref.watch(userDetailsControllerProvider).data?.data?.user?.lastName ??
-            0;
+            '';
     final historyController =
         ref.watch(transactionHistoryFutureProvider(userId));
     return Scaffold(
@@ -83,7 +83,7 @@ class TransactionHistoryScreen extends ConsumerWidget {
                       String formattedDate = DateFormat('hh:mm a, dd MMM')
                           .format(dateTime.toLocal());
 
-                      DateTime convertDate = DateTime.parse(duration);
+                      // DateTime convertDate = DateTime.parse(duration);
                       String formatDayWithSuffix(int day) {
                         if (day >= 11 && day <= 13) {
                           return '${day}th';
@@ -114,6 +114,13 @@ class TransactionHistoryScreen extends ConsumerWidget {
                         ),
                         duration: formattedDate,
                         name: '$firstName $lastName',
+                        statusColorBg: history.orderStatus == 'pending'
+                            ? AppColors.redShade50
+                            : AppColors.greenShade50,
+                        status: history.paymentStatus ?? '',
+                        statusColor: history.orderStatus == 'pending'
+                            ? AppColors.red
+                            : AppColors.green,
                         onTap: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
@@ -127,7 +134,6 @@ class TransactionHistoryScreen extends ConsumerWidget {
                               amount: formatNaira(
                                 history.total.toString(),
                               ),
-                              // status: history.orderStatus ?? '',
                             );
                           }));
                         },
