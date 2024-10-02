@@ -1,13 +1,15 @@
-import 'package:dealer_portal_mobile/core/constants/app_constants.dart';
-import 'package:dealer_portal_mobile/core/utils/custom_inapp_browser.dart';
 import 'package:flutter/material.dart';
+
+import '../../../my_plans/presentation/widgets/plan_bottom_sheet.dart';
 
 class TestingScreen extends StatelessWidget {
   const TestingScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
     return Scaffold(
+      key: const Key('value'),
       appBar: AppBar(
         title: const Text('Testing Screen'),
       ),
@@ -15,14 +17,11 @@ class TestingScreen extends StatelessWidget {
         child: Center(
           child: GestureDetector(
             onTap: () async {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const CustomInAppBrowser(url: AppConstants.authurl);
-                  },
-                ),
+              planBottomSheet(
+                parentContext: context,
+                key: const Key('value'),
               );
+              // assignToCustomerBottomSheet(context: context);
             },
             child: const Text(
               'Click Me!',

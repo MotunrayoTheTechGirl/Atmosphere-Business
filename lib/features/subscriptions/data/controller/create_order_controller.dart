@@ -30,18 +30,21 @@ class CreateDigitalOrderController
     required num total,
     required num totalHrs,
     required List<Map<String, dynamic>> orderItems,
+    required String paymentMethod,
+    required num dealerUserId,
   }) async {
     state = ResponseState(status: ResponseStatus.loading, message: '');
     try {
       final response = await createDigitalOrderRepository.createDigitalOrder(
-        reference: reference,
-        userId: userId,
-        dealerId: dealerId,
-        amount: amount,
-        total: total,
-        totalHrs: totalHrs,
-        orderItems: orderItems,
-      );
+          reference: reference,
+          userId: userId,
+          dealerId: dealerId,
+          amount: amount,
+          total: total,
+          totalHrs: totalHrs,
+          orderItems: orderItems,
+          paymentPayment: paymentMethod,
+          dealerUserId: dealerUserId);
       state = ResponseState(
         status: ResponseStatus.success,
         message: '',

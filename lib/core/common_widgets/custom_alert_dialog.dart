@@ -209,6 +209,8 @@ import '../utils/themes/app_themes.dart';
 //   );
 // }
 
+final isUploadingProvider = StateProvider<bool>((ref) => false);
+
 Future<void> customAlertDialog({
   required BuildContext context,
   required WidgetRef ref,
@@ -218,6 +220,12 @@ Future<void> customAlertDialog({
     context: context,
     builder: (context) {
       FilePickerResult? result;
+      final status1 = ref.watch(receiptFileUploadControllerProvider).status ==
+          ResponseStatus.loading;
+      final status2 = ref.watch(updateReceiptUrlControllerProvider).status ==
+          ResponseStatus.loading;
+      log('Status1: $status1');
+      log('Status2: $status2');
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 60),
         child: AlertDialog(
@@ -335,7 +343,7 @@ Future<void> customAlertDialog({
                                     .lightTextTheme.displaySmall
                                     ?.copyWith(
                                   fontWeight: FontWeight.w400,
-                                  fontSize: 13.sp,
+                                  fontSize: 12.sp,
                                   color: AppColors.lightBlue,
                                 ),
                               ),
@@ -349,7 +357,7 @@ Future<void> customAlertDialog({
                                     .lightTextTheme.displaySmall
                                     ?.copyWith(
                                   fontWeight: FontWeight.w400,
-                                  fontSize: 13.sp,
+                                  fontSize: 12.sp,
                                   color: AppColors.lightBlue,
                                 ),
                                 rowIcon: AppIcons.delete,
@@ -362,68 +370,187 @@ Future<void> customAlertDialog({
                       ),
                     ),
                   if (result == null)
+                    // DottedContainer(
+                    //   label: 'Tap to upload',
+                    //   onTap: () async {
+                    //     result = await FilePicker.platform
+                    //         .pickFiles(allowMultiple: true);
+                    //     if (result == null) {
+                    //       print("No file selected");
+                    //     } else {
+                    //       setState(() {});
+                    //       for (var element in result!.files) {
+                    //         print('Selected File: ${element.name}');
+                    //       }
+                    //     }
+                    //   },
+                    // ),
                     DottedContainer(
                       label: 'Tap to upload',
                       onTap: () async {
-                        result = await FilePicker.platform
-                            .pickFiles(allowMultiple: true);
-                        if (result == null) {
-                          print("No file selected");
-                        } else {
-                          setState(() {});
-                          for (var element in result!.files) {
-                            print('Selected File: ${element.name}');
+                        final pickedResult =
+                            await FilePicker.platform.pickFiles(
+                          allowMultiple: false,
+                          type: FileType.custom,
+                          allowedExtensions: [
+                            'jpg',
+                            'jpeg',
+                            'png',
+                            'pdf'
+                          ], // Add or modify as needed
+                        );
+
+                        if (pickedResult != null &&
+                            pickedResult.files.isNotEmpty) {
+                          final file = pickedResult.files.first;
+                          final fileSize = file.size; // Size in bytes
+
+                          if (fileSize < 1024 || fileSize > 1024 * 1024) {
+                            // File size is less than 1 KB or greater than 1 MB
+                            CustomSnackBar.showSnackBar(
+                              context: context,
+                              message:
+                                  'File size must be between 1 KB and 1 MB',
+                              // isError: true,
+                            );
+                          } else {
+                            setState(() {
+                              result = pickedResult;
+                            });
+                            print('Selected File: ${file.name}');
                           }
+                        } else {
+                          print("No file selected");
                         }
                       },
                     ),
-                  30.hi,
-                  AppElevatedButton(
-                    onTap: () async {
-                      if (result != null && result!.files.isNotEmpty) {
-                        final file = File(result?.files.first.path ?? '');
 
-                        final hasUploadedFile = await ref
-                            .read(receiptFileUploadControllerProvider.notifier)
-                            .uploadFile(file: file);
-                        log('check first file: ${ref.watch(receiptFileUploadControllerProvider).status == ResponseStatus.loading}');
-                        final data =
-                            ref.read(fileUploadControllerProvider).data;
-                        print('fileUpload data: $data');
-                        if (hasUploadedFile) {
-                          log('file upload successful');
-                          final trimmedData = data?.substring(
-                            data.indexOf('/dealer'),
-                          );
-                          log('trimmed Data: $trimmedData');
-                          final hasUpdatedReceiptUrl = await ref
-                              .read(updateReceiptUrlControllerProvider.notifier)
-                              .updateReceiptUrl(
-                                  invoiceId: invoiceId,
-                                  receiptfileUrl: trimmedData ?? '');
-                          log('check second file: ${ref.watch(updateReceiptUrlControllerProvider).status == ResponseStatus.loading}');
-                          if (hasUpdatedReceiptUrl) {
-                            print('Receipt Url Successfully updated');
+                  30.hi,
+                  // AppElevatedButton(
+                  //   onTap: () async {
+                  //     if (result != null && result!.files.isNotEmpty) {
+                  //       final file = File(result?.files.first.path ?? '');
+
+                  //       ///First endpoint: for file upload
+                  //       final hasUploadedFile = await ref
+                  //           .read(receiptFileUploadControllerProvider.notifier)
+                  //           .uploadFile(file: file);
+                  //       log('check first file: ${ref.watch(receiptFileUploadControllerProvider).status == ResponseStatus.loading}');
+                  //       final data =
+                  //           ref.read(fileUploadControllerProvider).data;
+                  //       print('fileUpload data: $data');
+                  //       if (hasUploadedFile) {
+                  //         log('file upload successful');
+                  //         final trimmedData = data?.substring(
+                  //           data.indexOf('/dealer'),
+                  //         );
+                  //         log('Helllo');
+                  //         log('trimmed Data: $trimmedData');
+
+                  //         //Second endpoint: for  sending the url response of the first endpoint
+
+                  //         final hasUpdatedReceiptUrl = await ref
+                  //             .read(updateReceiptUrlControllerProvider.notifier)
+                  //             .updateReceiptUrl(
+                  //                 invoiceId: invoiceId,
+                  //                 receiptfileUrl: trimmedData ?? '');
+                  //         log('check second file: ${ref.watch(updateReceiptUrlControllerProvider).status == ResponseStatus.loading}');
+                  //         if (hasUpdatedReceiptUrl) {
+                  //           print('Receipt Url Successfully updated');
+                  //           Navigator.pop(context);
+                  //           CustomSnackBar.showSnackBar(
+                  //               context: context, message: 'Upload successful');
+                  //         } else {
+                  //           print(' UnSuccessfully  Url update');
+                  //         }
+                  //       } else {
+                  //         log('file upload unsuccessful');
+                  //       }
+                  //     }
+                  //   },
+                  //   // isLoading: true,
+                  //   isLoading:
+                  //       //     ref.watch(receiptFileUploadControllerProvider).status ==
+                  //       //         ResponseStatus.loading,
+                  //       //     ||
+                  //       ref.watch(updateReceiptUrlControllerProvider).status ==
+                  //           ResponseStatus.loading,
+                  //   label: 'Submit',
+                  //   isActive: !(result == null || result!.files.isEmpty),
+                  // ),
+                  Consumer(builder: (context, ref, child) {
+                    return AppElevatedButton(
+                      onTap: () async {
+                        ref.read(isUploadingProvider.notifier).state = true;
+                        log('watching1: ${ref.watch(isUploadingProvider)}');
+                        if (result != null && result!.files.isNotEmpty) {
+                          final file = File(result?.files.first.path ?? '');
+
+                          // Set loading state to true before starting the upload
+
+                          try {
+                            // First endpoint: for file upload
+                            final hasUploadedFile = await ref
+                                .read(receiptFileUploadControllerProvider
+                                    .notifier)
+                                .uploadFile(file: file);
+
+                            if (hasUploadedFile) {
+                              log('file upload successful');
+                              final data = ref
+                                  .read(receiptFileUploadControllerProvider)
+                                  .data;
+                              final trimmedData =
+                                  data?.substring(data.indexOf('/dealer'));
+                              log('trimmed Data: $trimmedData');
+
+                              // Second endpoint: for sending the url response of the first endpoint
+                              final hasUpdatedReceiptUrl = await ref
+                                  .read(updateReceiptUrlControllerProvider
+                                      .notifier)
+                                  .updateReceiptUrl(
+                                      invoiceId: invoiceId,
+                                      receiptfileUrl: trimmedData ?? '');
+
+                              if (hasUpdatedReceiptUrl) {
+                                print('Receipt Url Successfully updated');
+                                Navigator.pop(context);
+                                CustomSnackBar.showSnackBar(
+                                    context: context,
+                                    message: 'Upload successful');
+                              } else {
+                                print('Unsuccessful Url update');
+                                Navigator.pop(context);
+                                CustomSnackBar.showSnackBar(
+                                    context: context,
+                                    message: 'Failed to update receipt URL');
+                              }
+                            } else {
+                              log('file upload unsuccessful');
+                              Navigator.pop(context);
+                              CustomSnackBar.showSnackBar(
+                                  context: context,
+                                  message: 'Failed to upload file');
+                            }
+                          } catch (e) {
+                            log('Error during upload process: $e');
                             Navigator.pop(context);
                             CustomSnackBar.showSnackBar(
-                                context: context, message: 'Upload successful');
-                          } else {
-                            print(' UnSuccessfully  Url update');
+                                context: context,
+                                message: 'An error occurred during upload');
+                          } finally {
+                            // Set loading state to false after the process is complete
+                            ref.read(isUploadingProvider.notifier).state =
+                                false;
+                            log('watching2: ${ref.watch(isUploadingProvider)}');
                           }
-                        } else {
-                          log('file upload unsuccessful');
                         }
-                      }
-                    },
-                    isLoading: ref
-                                .watch(receiptFileUploadControllerProvider)
-                                .status ==
-                            ResponseStatus.loading &&
-                        ref.watch(updateReceiptUrlControllerProvider).status ==
-                            ResponseStatus.loading,
-                    label: 'Submit',
-                    isActive: !(result == null || result!.files.isEmpty),
-                  ),
+                      },
+                      isLoading: ref.watch(isUploadingProvider),
+                      label: 'Submit',
+                      isActive: !(result == null || result!.files.isEmpty),
+                    );
+                  }),
                   20.hi,
                   AppElevatedButton(
                     onTap: () {

@@ -10,14 +10,19 @@ final generateReferenceRepositoryProvider = Provider(
 class GenerateReferenceRepository {
   final api = DealerPoratlApi();
 
-  Future<String> reference(
-      {required num amount, required String userId}) async {
+  Future<String> reference({
+    required num amount,
+    required String userId,
+    required String paymentMethod,
+    String? transactionType,
+    String? note,
+  }) async {
     try {
       final response = await api.post(ApiEndpoints.generateReference, body: {
         "amount": amount,
-        "transaction_type": "data_payment",
-        "note": "Payment for services",
-        "payment_method": "wema",
+        "transaction_type": transactionType ?? "data_payment",
+        "note": note ?? "Payment for services",
+        "payment_method": paymentMethod,
         "narration": "Additional details",
         "userId": userId,
         "system_source": "atmosphere",

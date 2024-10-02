@@ -37,11 +37,24 @@ class AppIcons {
   static const String arrowUp = "assets/svg/arrow_up.svg";
   static const String arrowDownn = "assets/svg/arrow_down.svg";
   static const String copy = "assets/svg/copy.svg";
-  // static const String notification = "assets/svg/bell.svg";
+  static const String phone = "assets/svg/phone.svg";
+  static const String glo = "assets/svg/glo.svg";
+  static const String creditArrow = "assets/svg/credit_arrow.svg";
+  static const String debitArrow = "assets/svg/debit_arrow.svg";
+  static const String visibiltyOn = "assets/images/visibilityOnIcon.svg";
+  static const String visibiltyOff = "assets/svg/visibilityOffIcon.svg";
+  static const String filterIcon = "assets/svg/filter_icon.svg";
+  static const String editIcon = "assets/svg/edit_icon.svg";
 
   ///Png
   static const String activeHomeNew = "assets/images/active_home.png";
   static const String avatar = "assets/images/avatar.png";
   static const String upload = "assets/images/upload.png";
   static const String appLogo = "assets/images/atmospherre.png";
+  static const String atmosphere = "assets/images/atmosp.png";
+  static const String redArrow = "assets/images/red_arrow.png";
+  static const String greenArrow = "assets/images/green_arrow.png";
+  static const String walletCard = "assets/images/wallet_card.png";
+  static const String bank = "assets/images/bank.png";
+  static const String visibility = "assets/images/visible_icon.png";
 }

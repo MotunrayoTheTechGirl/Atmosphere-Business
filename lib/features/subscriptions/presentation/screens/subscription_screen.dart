@@ -1,7 +1,6 @@
 import 'package:dealer_portal_mobile/core/utils/app_colors.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
-import 'package:dealer_portal_mobile/features/subscriptions/presentation/screens/customize_hours_screen.dart';
 import 'package:dealer_portal_mobile/features/subscriptions/presentation/screens/data_pack_screen.dart';
 import 'package:dealer_portal_mobile/features/subscriptions/presentation/widgets/subs_card.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +35,7 @@ class SubscriptionScreen extends StatelessWidget {
                 color: AppColors.lighterText,
               ),
             ),
-            30.hi,
+            40.hi,
             SubsCard(
               title: 'Choose a Data Pack',
               subTitle:
@@ -53,23 +52,23 @@ class SubscriptionScreen extends StatelessWidget {
                 );
               },
             ),
-            20.hi,
-            SubsCard(
-              title: 'Customize Your Hours',
-              subTitle:
-                  'Enter the hours you need, and we\'ll\ncalculate the price. For example, 150 hours for 150\nNaira.',
-              buttonLabel: 'Buy custom volume',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const CustomizeHoursScreen();
-                    },
-                  ),
-                );
-              },
-            ),
+            // 20.hi,
+            // SubsCard(
+            //   title: 'Customize Your Hours',
+            //   subTitle:
+            //       'Enter the hours you need, and we\'ll\ncalculate the price. For example, 150 hours for 150\nNaira.',
+            //   buttonLabel: 'Buy custom volume',
+            //   onTap: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) {
+            //           return const CustomizeHoursScreen();
+            //         },
+            //       ),
+            //     );
+            //   },
+            // ),
           ],
         ).padHorizontal(
           16,

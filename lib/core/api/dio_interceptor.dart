@@ -37,6 +37,7 @@ class DioInterceptor extends Interceptor {
 
     super.onRequest(options, handler);
     logger.i("Request Endpoint: ${options.path}");
+    logger.i("Request Endpoint with param: ${options.uri.queryParameters}");
     logger.d("Request Header: ${options.headers}");
     logger.d("Request data: ${options.data}");
   }

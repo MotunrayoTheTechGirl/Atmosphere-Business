@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:dealer_portal_mobile/core/enums.dart';
@@ -141,6 +143,7 @@ Future<dynamic> subsriptionBottomSheet({
                               amount: total,
                               userId:
                                   userDetailsController?.id.toString() ?? '',
+                              paymentMethod: "offline",
                             );
                         log('joromi: $generateReference');
 
@@ -165,10 +168,12 @@ Future<dynamic> subsriptionBottomSheet({
                                 reference: reference ?? '',
                                 userId: userDetailsController?.id ?? 0,
                                 dealerId: userDetailsController?.id ?? 0,
+                                dealerUserId: userDetailsController?.id ?? 0,
                                 amount: total,
                                 total: total,
                                 totalHrs: totalHours,
                                 orderItems: orderItems,
+                                paymentMethod: "offline",
                               );
                           if (createOrder) {
                             Navigator.push(

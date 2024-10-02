@@ -74,12 +74,12 @@ class _DataPackScreenState extends ConsumerState<DataPackScreen>
               ],
             ),
             SizedBox(
-              height: .8.sh,
+              height: .9.sh,
               child: TabBarView(
                 controller: _tabController,
                 children: [
                   SizedBox(
-                    height: .6.sh,
+                    height: .7.sh,
                     child: digitalPrdController.when(
                       data: (data) {
                         return SingleChildScrollView(
@@ -126,7 +126,7 @@ class _DataPackScreenState extends ConsumerState<DataPackScreen>
                                         },
                                       ),
                               ),
-                              20.hi,
+                              40.hi,
                               AppElevatedButton(
                                 label: 'Buy selected plans',
                                 isActive: selectDataController.isNotEmpty,

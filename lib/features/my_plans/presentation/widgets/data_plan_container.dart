@@ -3,7 +3,6 @@ import 'package:dealer_portal_mobile/core/common_widgets/app_elevated_button.dar
 import 'package:dealer_portal_mobile/core/utils/app_colors.dart';
 import 'package:dealer_portal_mobile/core/utils/app_icons.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
-import 'package:dealer_portal_mobile/features/my_plans/presentation/widgets/plan_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,9 +11,16 @@ import '../../../../core/utils/themes/app_themes.dart';
 
 class DataPlanContainer extends StatelessWidget {
   const DataPlanContainer({
+    required this.productLogo,
+    required this.price,
+    required this.allocation,
+    required this.validity,
+    required this.onTap,
     super.key,
   });
-
+  final Widget productLogo;
+  final String price, allocation, validity;
+  final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,14 +36,7 @@ class DataPlanContainer extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Glo Atmosphere plan',
-                style: AppTheme.lightTextTheme.displaySmall?.copyWith(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.greyText,
-                ),
-              ),
+              productLogo,
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12,
@@ -50,7 +49,7 @@ class DataPlanContainer extends StatelessWidget {
                   color: AppColors.primaryColor.withOpacity(0.1),
                 ),
                 child: Text(
-                  '₦5,000',
+                  price,
                   style: AppTheme.lightTextTheme.displaySmall?.copyWith(
                     fontWeight: FontWeight.w700,
                     fontSize: 15.sp,
@@ -62,7 +61,7 @@ class DataPlanContainer extends StatelessWidget {
           ),
           10.hi,
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,16 +75,21 @@ class DataPlanContainer extends StatelessWidget {
                     ),
                   ),
                   6.hi,
-                  Text(
-                    '25GB + 10HRs',
-                    style: AppTheme.lightTextTheme.bodySmall?.copyWith(
-                      color: AppColors.greyText,
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w600,
+                  SizedBox(
+                    width: 200.w,
+                    child: Text(
+                      allocation,
+                      style: AppTheme.lightTextTheme.bodySmall?.copyWith(
+                        color: AppColors.greyText,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
               ),
+              26.wi,
               SizedBox(
                 height: 60.h,
                 child: const VerticalDivider(
@@ -93,6 +97,7 @@ class DataPlanContainer extends StatelessWidget {
                   color: AppColors.lightBorder,
                 ),
               ),
+              26.wi,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -106,10 +111,10 @@ class DataPlanContainer extends StatelessWidget {
                   ),
                   6.hi,
                   Text(
-                    '30 days',
+                    validity,
                     style: AppTheme.lightTextTheme.bodySmall?.copyWith(
                       color: AppColors.greyText,
-                      fontSize: 20.sp,
+                      fontSize: 18.sp,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -117,54 +122,31 @@ class DataPlanContainer extends StatelessWidget {
               ),
             ],
           ),
-          18.hi,
+          16.hi,
           const AppDivider(),
-          18.hi,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AppElevatedButton(
-                width: 244.w,
-                onTap: () {},
-                // label: 'Assign to customer',
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SvgPicture.asset(
-                      AppIcons.customer,
-                      width: 24.w,
-                      height: 16.h,
-                    ),
-                    Text(
-                      'Assign to customer',
-                      style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16.sp,
-                        color: AppColors.white,
-                      ),
-                    )
-                  ],
+          14.hi,
+          AppElevatedButton(
+            width: 300.w,
+            onTap: onTap,
+            // label: 'Assign to customer',
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SvgPicture.asset(
+                  AppIcons.customer,
+                  width: 24.w,
+                  height: 16.h,
                 ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  planBottomSheet(context: context);
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 26,
-                    vertical: 16,
+                Text(
+                  'Assign to customer',
+                  style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16.sp,
+                    color: AppColors.white,
                   ),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                    color: AppColors.primaryColor.withOpacity(0.1),
-                  ),
-                  child: SvgPicture.asset(AppIcons.dotMenu),
-                ),
-              ),
-            ],
+                )
+              ],
+            ),
           ),
         ],
       ),

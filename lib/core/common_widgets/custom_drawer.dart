@@ -9,7 +9,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../features/onboarding/data/controller/user_details_controller.dart';
+import '../../features/profile/profile_screen.dart';
 import '../../features/transaction_history.dart/features/screen/transaction_history_screen.dart';
+import '../../features/wallet/presentation/screens/wallet_screen.dart';
 
 class CustomDrawer extends ConsumerWidget {
   const CustomDrawer({
@@ -48,7 +50,7 @@ class CustomDrawer extends ConsumerWidget {
                   ),
                   4.hi,
                   Text(
-                    '${userDetailsController.data?.data?.user?.firstName ?? ''} ${userDetailsController.data?.data?.user?.lastName}',
+                    '${userDetailsController.data?.data?.user?.name ?? ''}',
                     style: AppTheme.lightTextTheme.displaySmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         fontFamily: AppTheme.montserratAlternate),
@@ -74,7 +76,12 @@ class CustomDrawer extends ConsumerWidget {
                 ),
                 22.hi,
                 DrawerTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const ProfileScreen();
+                    }));
+                  },
                   label: 'Profile',
                   icon: AppIcons.profile,
                 ),
@@ -91,7 +98,12 @@ class CustomDrawer extends ConsumerWidget {
                 ),
                 40.hi,
                 DrawerTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const WalletScreen();
+                    }));
+                  },
                   label: 'Wallet',
                   icon: AppIcons.wallet,
                 ),

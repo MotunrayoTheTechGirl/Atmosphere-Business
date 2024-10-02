@@ -23,6 +23,7 @@ class AppElevatedButton extends StatelessWidget {
     this.borderRadius,
     this.rowLabelstyle,
     this.child,
+    this.padding,
     super.key,
   });
 
@@ -38,6 +39,7 @@ class AppElevatedButton extends StatelessWidget {
   final TextStyle? rowLabelstyle;
   final Widget? child;
   final bool isLoading;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,7 @@ class AppElevatedButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: width ?? double.infinity,
-        padding: const EdgeInsets.all(16),
+        padding: padding ?? const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isLightBlue
               ? AppColors.lightBlue.withOpacity(0.05)

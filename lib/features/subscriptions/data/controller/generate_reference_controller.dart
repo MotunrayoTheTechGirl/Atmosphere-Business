@@ -23,12 +23,18 @@ class GenerateReferenceController extends StateNotifier<ResponseState<String>> {
   Future<bool> generateReference({
     required num amount,
     required String userId,
+    required String paymentMethod,
+    String? transactionType,
+    String? note,
   }) async {
     state = ResponseState(status: ResponseStatus.loading, message: '');
     try {
       final response = await generateReferenceRepository.reference(
         amount: amount,
         userId: userId,
+        paymentMethod: paymentMethod,
+        note: note,
+        transactionType: transactionType,
       );
       state = ResponseState(
         status: ResponseStatus.success,

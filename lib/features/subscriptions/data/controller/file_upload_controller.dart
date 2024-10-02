@@ -13,6 +13,7 @@ final fileUploadControllerProvider =
   return FileUploadController(receiptFileUploadProvider);
 });
 
+/// i duplicated provider up here,
 final receiptFileUploadControllerProvider =
     StateNotifierProvider<FileUploadController, ResponseState<String>>((ref) {
   final receiptFileUploadProvider = ref.read(fileUploadRepositoryProvider);
@@ -34,6 +35,7 @@ class FileUploadController extends StateNotifier<ResponseState<String>> {
       final response = await fileUploadRepository.fileUpload(
         file: file,
       );
+      log('file upload response: $response');
       state = ResponseState(
         status: ResponseStatus.success,
         message: '',
@@ -42,7 +44,7 @@ class FileUploadController extends StateNotifier<ResponseState<String>> {
       return true;
     } catch (e) {
       state = ResponseState(status: ResponseStatus.error, message: "$e");
-      log('Error: $e');
+      log('file upload error: $e');
       return false;
     }
   }

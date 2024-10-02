@@ -44,17 +44,17 @@ class DealerPoratlApi {
     Map<String, dynamic>? headers,
     Map<String, dynamic>? queryParameters,
   }) async {
-    log('$_baseUrl$string');
-
+    log('endpoint: $_baseUrl$string');
+    log('endpoint: $_baseUrl$string');
+    log('QueryParam: $queryParameters');
     try {
-      // log('Headers: $_headers');
       final response = await _dio.get(
         '$_baseUrl$string',
         data: body,
         options: Options(headers: _headers),
         queryParameters: queryParameters,
       );
-
+      log('--final url---: ${response.realUri}');
       if (response.statusCode == 200 ||
           response.statusCode == 201 ||
           response.statusCode == 204) {
@@ -67,9 +67,11 @@ class DealerPoratlApi {
             'Request failed with status code ${response.statusCode}');
       }
     } on DioException catch (e) {
+      log('---url request--- ${e.response?.realUri}');
       if (e.type == DioExceptionType.badResponse) {
         if (e.response != null) {
           if (e.response!.statusCode! >= 500 && e.response!.statusCode! < 600) {
+            log('Status code: ${e.response!.statusCode}');
             throw const ApiResponseException(
                 'Oops! Something went wrong on our end. Please try again later.');
           }

@@ -22,14 +22,16 @@ class CreateDigitalOrderRepository {
     required String reference,
     required num userId,
     required num dealerId,
+    required num dealerUserId,
     required num amount,
     required num total,
     required num totalHrs,
     required List<Map<String, dynamic>> orderItems,
+    required String paymentPayment,
   }) async {
     try {
       final response = await api.post(ApiEndpoints.createDigitalOrder, body: {
-        "payment_method": "wema",
+        "payment_method": paymentPayment,
         "dealer_id": dealerId,
         "total": total,
         "userId": userId,
@@ -38,21 +40,7 @@ class CreateDigitalOrderRepository {
         "vendor_id": 1,
         "transaction_reference": reference,
         "order_items": orderItems,
-        // [
-        //   {
-        //     "product_id": 8,
-        //     "order_quantity": 1,
-        //     "unit_price": 22200000,
-        //     "subtotal": 22200000,
-        //     "item_name": "Glo Atmosphere Plan",
-        //     "total_hours": 100000,
-        //     "validity": 365,
-        //     "vendor_id": 0,
-        //     "dealer_id": 1,
-        //     "sub_dealer": 0,
-        //     "discount": 0
-        //   }
-        // ]
+        "dealer_user_id": dealerUserId
       });
 
       if (response?.data is String) {

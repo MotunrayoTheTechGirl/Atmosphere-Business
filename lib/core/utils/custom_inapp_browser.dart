@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
 import 'package:flutter/foundation.dart';
@@ -10,20 +11,26 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../features/app/presentation/screen/app.dart';
 import '../../features/onboarding/data/controller/get_query_param.dart';
+import '../../features/wallet/data/controller/verify_and_update_wallet_controller.dart';
+import '../../features/wallet/logic/wallet_countdown_controller.dart';
+import '../../features/wallet/presentation/screens/fund_wallet_screen.dart';
+import '../../features/wallet/presentation/screens/wallet_screen.dart';
 
-class CustomInAppBrowser extends StatefulWidget {
+class CustomInAppBrowser extends ConsumerStatefulWidget {
   final String url;
+  final bool? isFunding;
 
   const CustomInAppBrowser({
     Key? key,
     required this.url,
+    this.isFunding,
   }) : super(key: key);
 
   @override
-  State<CustomInAppBrowser> createState() => _CustomInAppBrowserState();
+  ConsumerState<CustomInAppBrowser> createState() => _CustomInAppBrowserState();
 }
 
-class _CustomInAppBrowserState extends State<CustomInAppBrowser> {
+class _CustomInAppBrowserState extends ConsumerState<CustomInAppBrowser> {
   final GlobalKey webViewKey = GlobalKey();
 
   String url = '';
@@ -35,6 +42,11 @@ class _CustomInAppBrowserState extends State<CustomInAppBrowser> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (widget.isFunding == true) {
+        ref.read(walletPaystackCountdownProvider.notifier).startTimer();
+      }
+    });
     url = widget.url;
   }
 
@@ -42,6 +54,7 @@ class _CustomInAppBrowserState extends State<CustomInAppBrowser> {
   void dispose() {
     super.dispose();
     webViewController?.dispose();
+    ref.read(walletPaystackCountdownProvider.notifier).stopTimer();
   }
 
   @override
@@ -136,6 +149,24 @@ class _CustomInAppBrowserState extends State<CustomInAppBrowser> {
                           this.url = url.toString();
                           isSecure = urlIsSecure(url);
                         });
+                        // if (url.toString().contains('atmosphere.net')) {
+
+                        //   ref
+                        //       .read(verifyAndUpdateWalletControllerProvider
+                        //           .notifier)
+                        //       .verifyPaymentAndUpdateWallet(
+                        //           amount: ref.watch(amountStateProvider),
+                        //           reference: ref
+                        //               .watch(generatedReferenceStateProvider),
+                        //           userId: ref.watch(userIdStateProvider));
+
+                        //   Navigator.pushAndRemoveUntil(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => const WalletScreen()),
+                        //     (Route<dynamic> route) => false,
+                        //   );
+                        // }
                       }
                     },
                     onLoadStop: (controller, url) async {
@@ -143,6 +174,25 @@ class _CustomInAppBrowserState extends State<CustomInAppBrowser> {
                         setState(() {
                           this.url = url.toString();
                         });
+                      }
+                      if (Platform.isIOS) {
+                        if (url.toString().contains('atmosphere.net')) {
+                          ref
+                              .read(verifyAndUpdateWalletControllerProvider
+                                  .notifier)
+                              .verifyPaymentAndUpdateWallet(
+                                  amount: ref.watch(amountStateProvider),
+                                  reference: ref
+                                      .watch(generatedReferenceStateProvider),
+                                  userId: ref.watch(userIdStateProvider));
+
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const WalletScreen()),
+                            (Route<dynamic> route) => false,
+                          );
+                        }
                       }
                       final sslCertificate = await controller.getCertificate();
                       setState(() {
@@ -161,12 +211,12 @@ class _CustomInAppBrowserState extends State<CustomInAppBrowser> {
                           ref
                               .read(getQueryParamValueController.notifier)
                               .getAuthDetails(url.toString());
-                          // Navigator.pop(context);
+
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) {
-                                return App();
+                                return const App();
                               },
                             ),
                           );
@@ -207,28 +257,6 @@ class _CustomInAppBrowserState extends State<CustomInAppBrowser> {
                       return NavigationActionPolicy.ALLOW;
                     },
                   ),
-                  // if (widget.isCaptive) ...[
-                  //   Container(
-                  //     alignment: Alignment.center,
-                  //     padding: EdgeInsets.symmetric(
-                  //       horizontal: AppConstants.kPadding,
-                  //     ),
-                  //     color: AppColors.whiteColor,
-                  //     child: Column(
-                  //       mainAxisAlignment: MainAxisAlignment.center,
-                  //       mainAxisSize: MainAxisSize.max,
-                  //       children: [
-                  //         Lottie.asset(
-                  //           'wifi'.json,
-                  //         ),
-                  //         Text(
-                  //           'Connecting to WiFi...',
-                  //           style: context.bodyLarge,
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   )
-                  // ],
                   progress < 1.0
                       ? LinearProgressIndicator(value: progress)
                       : Container(),

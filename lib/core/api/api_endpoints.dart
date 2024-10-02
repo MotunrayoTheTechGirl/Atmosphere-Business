@@ -10,4 +10,17 @@ class ApiEndpoints {
   static const String invoiceUrl = '/orders/';
   static const String getDigitalOrders = '/orders/getDigitalOrdersByUserId/';
   static const String getBillingInvoice = '/orders/findAllInvoices';
+  static const String getCaptiveDigitalPlans =
+      '/product/get_captive_digital_products';
+  static const String getDealerUserDetails = "/users/getDealerUserDetail";
+  static const String getDealerByIdentity = "/dealer/getDealerByIdentity";
+  static const String confirmOrder = "/orders/confirmOrder";
+  static const String userBalance = "/wallet/user-balance/";
+  static const String chargeDealerUserWallet = "/wallet/chargeDealerUserWallet";
+  static const String generatePaystackPayment =
+      "/wallet/generatePaystackInitializePaymentLink";
+  static const String verifyPaymentAndUpdateWallet =
+      "/wallet/verifyPaymentAndUpdateWallet";
+  static const String createDigitalProducts = "/product/createGigitalProduct";
+  static const String walletHistory = "/wallet/user-transactions/";
 }

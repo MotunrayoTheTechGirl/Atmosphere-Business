@@ -31,3 +31,23 @@ String formatDate(String date) {
       "${DateFormat('h:mm a').format(dateTime)}";
   return detailsDate;
 }
+
+String formatPhoneNumber(String phoneNumber) {
+  // String phoneNumber = phoneNumber;
+  String updatedNumber = phoneNumber.replaceFirst('0', '+234');
+  return updatedNumber;
+}
+
+String? validatePhoneNumber(
+  String? phoneNumber,
+) {
+  if (phoneNumber == null || phoneNumber.isEmpty) {
+    // isPhonNumberValid = false;
+    return 'Phone Number is required';
+  }
+  if (phoneNumber.length != 11 && RegExp(r'^\d+$').hasMatch(phoneNumber)) {
+    // isPhonNumberValid = true;
+    return 'Enter a valid Phone number';
+  }
+  return null;
+}

@@ -18,6 +18,9 @@ class AppTextField extends StatelessWidget {
   final bool filled;
   final String? prefixText;
   final Widget? suffix, prefixIcon;
+  final String? Function(String?)? validator;
+  final AutovalidateMode? autovalidateMode;
+  final void Function(String)? onChanged;
 
   const AppTextField(
       {required this.controller,
@@ -36,6 +39,9 @@ class AppTextField extends StatelessWidget {
       this.suffix,
       this.prefixStyle,
       this.prefixIcon,
+      this.validator,
+      this.autovalidateMode,
+      this.onChanged,
       Key? key})
       : super(key: key);
 
@@ -44,6 +50,9 @@ class AppTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
+      validator: validator,
+      autovalidateMode: autovalidateMode,
+      onChanged: onChanged,
       style: style ??
           AppTheme.lightTextTheme.titleLarge?.copyWith(
             fontSize: 32.sp,
@@ -71,7 +80,11 @@ class AppTextField extends StatelessWidget {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius ?? 24.0),
           borderSide: filled
-              ? BorderSide.none
+              // ? BorderSide.none
+              ? BorderSide(
+                  width: 0.2,
+                  color: AppColors.textFieldBorder.withOpacity(0.2),
+                )
               : BorderSide(
                   width: 1,
                   color: AppColors.textFieldBorder.withOpacity(0.2),
@@ -80,13 +93,21 @@ class AppTextField extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius ?? 24.0),
           borderSide: filled
-              ? BorderSide.none
+              // ? BorderSide.none
+              ? BorderSide(
+                  width: 0.2,
+                  color: AppColors.textFieldBorder.withOpacity(0.2),
+                )
               : const BorderSide(width: 1, color: AppColors.textFieldBorder),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius ?? 24.0),
           borderSide: filled
-              ? BorderSide.none
+              // ? BorderSide.none
+              ? BorderSide(
+                  width: 0.2,
+                  color: AppColors.textFieldBorder.withOpacity(0.2),
+                )
               : const BorderSide(width: 1, color: AppColors.primaryColor),
         ),
       ),

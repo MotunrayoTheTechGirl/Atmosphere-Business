@@ -6,9 +6,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const PrimaryAppBar({super.key, required this.title, required this.icon});
+  const PrimaryAppBar(
+      {super.key,
+      required this.title,
+      required this.icon,
+      this.onTap,
+      this.style});
 
   final String title, icon;
+  final void Function()? onTap;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +25,19 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: false,
       title: Text(
         title,
-        style: AppTheme.lightTextTheme.titleLarge?.copyWith(
-          fontSize: 26.sp,
-          color: AppColors.textColor,
-          fontWeight: FontWeight.w600,
-          fontFamily: AppTheme.montserratAlternate,
-        ),
+        style: style ??
+            AppTheme.lightTextTheme.titleLarge?.copyWith(
+              fontSize: 26.sp,
+              color: AppColors.textColor,
+              fontWeight: FontWeight.w600,
+              fontFamily: AppTheme.montserratAlternate,
+            ),
       ),
       actions: [
-        SvgPicture.asset(icon).padOnly(right: 20),
+        InkWell(
+          onTap: onTap,
+          child: SvgPicture.asset(icon).padOnly(right: 20),
+        ),
       ],
     );
   }

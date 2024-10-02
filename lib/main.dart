@@ -9,7 +9,7 @@ import 'core/utils/themes/app_themes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  DealerPoratlApi.initialize(Environment.production);
+  DealerPoratlApi.initialize(Environment.dev);
   runApp(const DealerPortal());
 }
 

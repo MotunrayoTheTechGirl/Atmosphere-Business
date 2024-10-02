@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_final_fields
 
-import 'dart:io';
-
 import 'package:dealer_portal_mobile/core/common_widgets/app_elevated_button.dart';
 import 'package:dealer_portal_mobile/core/common_widgets/status_button.dart';
 import 'package:dealer_portal_mobile/core/utils/app_icons.dart';
@@ -16,9 +14,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:screenshot/screenshot.dart';
 
 import '../../../../core/common_widgets/app_divider.dart';
@@ -28,8 +25,6 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/themes/app_themes.dart';
 import '../../../onboarding/data/controller/user_details_controller.dart';
 import '../../data/controller/create_order_controller.dart';
-import '../../data/controller/file_upload_controller.dart';
-import '../../data/controller/invoice_url_controller.dart';
 import '../../data/repository/order_invoice_repository.dart';
 
 class InvoiceScreen extends ConsumerStatefulWidget {
@@ -42,64 +37,64 @@ class InvoiceScreen extends ConsumerStatefulWidget {
 class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
   int invoiceId = 0;
   ScreenshotController _screenshotController = ScreenshotController();
-  Future<String> _generateTemporaryUrl(String filePath) async {
-    final temoraryDirectory = await getApplicationDocumentsDirectory();
-    final temporaryFile = File(
-        '${temoraryDirectory.path}/temp_${DateTime.now().millisecondsSinceEpoch}.pdf');
+  // Future<String> _generateTemporaryUrl(String filePath) async {
+  //   final temoraryDirectory = await getApplicationDocumentsDirectory();
+  //   final temporaryFile = File(
+  //       '${temoraryDirectory.path}/temp_${DateTime.now().millisecondsSinceEpoch}.pdf');
 
-    await temporaryFile.writeAsBytes(await File(filePath).readAsBytes());
-    final url = Uri.file(temporaryFile.path).toFilePath();
-    return url;
-  }
+  //   await temporaryFile.writeAsBytes(await File(filePath).readAsBytes());
+  //   final url = Uri.file(temporaryFile.path).toFilePath();
+  //   return url;
+  // }
 
-  Future<void> _captureScreenshot() async {
-    final directory = await getApplicationDocumentsDirectory();
-    final imagePath =
-        '${directory.path}/screenshot_${DateTime.now().millisecondsSinceEpoch}.png';
-    final pdfPath =
-        '${directory.path}/screenshot_${DateTime.now().millisecondsSinceEpoch}.pdf';
+  // Future<void> _captureScreenshot() async {
+  //   final directory = await getApplicationDocumentsDirectory();
+  //   final imagePath =
+  //       '${directory.path}/screenshot_${DateTime.now().millisecondsSinceEpoch}.png';
+  //   final pdfPath =
+  //       '${directory.path}/screenshot_${DateTime.now().millisecondsSinceEpoch}.pdf';
 
-    await _screenshotController.capture().then((image) async {
-      final file = File(imagePath);
-      await file.writeAsBytes(image!.cast<int>());
-      final pdfFile = File(pdfPath);
-      final pdf = pw.Document();
-      pdf.addPage(
-        pw.Page(build: (context) {
-          return pw.Center(
-            child: pw.Image(pw.MemoryImage(image)),
-          );
-        }),
-      );
-      await pdf.save().then((pdfBtyes) async {
-        pdfFile.writeAsBytesSync(pdfBtyes);
-        String temporaryUrl = await _generateTemporaryUrl(pdfFile.path);
+  //   await _screenshotController.capture().then((image) async {
+  //     final file = File(imagePath);
+  //     await file.writeAsBytes(image!.cast<int>());
+  //     final pdfFile = File(pdfPath);
+  //     final pdf = pw.Document();
+  //     pdf.addPage(
+  //       pw.Page(build: (context) {
+  //         return pw.Center(
+  //           child: pw.Image(pw.MemoryImage(image)),
+  //         );
+  //       }),
+  //     );
+  //     await pdf.save().then((pdfBtyes) async {
+  //       pdfFile.writeAsBytesSync(pdfBtyes);
+  //       String temporaryUrl = await _generateTemporaryUrl(pdfFile.path);
 
-        final isPdfUploaded =
-            await ref.read(fileUploadControllerProvider.notifier).uploadFile(
-                  file: File(pdfPath),
-                );
-        if (isPdfUploaded) {
-          final response = ref.read(fileUploadControllerProvider).data;
+  //       final isPdfUploaded =
+  //           await ref.read(fileUploadControllerProvider.notifier).uploadFile(
+  //                 file: File(pdfPath),
+  //               );
+  //       if (isPdfUploaded) {
+  //         final response = ref.read(fileUploadControllerProvider).data;
 
-          final trimmedData = response?.substring(
-            response.indexOf('/dealer'),
-          );
-          final hasUploadInvoice = await ref
-              .read(invoiceUrlControllerProvider.notifier)
-              .uploadInvoiceUrl(
-                  invoiceId: invoiceId, invoicefileUrl: trimmedData ?? '');
-          if (hasUploadInvoice) {
-            // log('...SuccessFull invoice upload...');
-          } else {
-            // log('...unSuccessFull invoice upload...');
-          }
-        } else {
-          // log('Invoice not  Uploaded');
-        }
-      });
-    }).catchError((onError) => print('image path error: $onError'));
-  }
+  //         final trimmedData = response?.substring(
+  //           response.indexOf('/dealer'),
+  //         );
+  //         final hasUploadInvoice = await ref
+  //             .read(invoiceUrlControllerProvider.notifier)
+  //             .uploadInvoiceUrl(
+  //                 invoiceId: invoiceId, invoicefileUrl: trimmedData ?? '');
+  //         if (hasUploadInvoice) {
+  //           // log('...SuccessFull invoice upload...');
+  //         } else {
+  //           // log('...unSuccessFull invoice upload...');
+  //         }
+  //       } else {
+  //         // log('Invoice not  Uploaded');
+  //       }
+  //     });
+  //   }).catchError((onError) => print('image path error: $onError'));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -163,8 +158,27 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                         setState(() {
                           invoiceId = data.id ?? 0;
                         });
-                        _captureScreenshot();
+                        // _captureScreenshot();
 
+                        String inputDate = data.createdAt.toString();
+
+                        // Parse the input date string into a DateTime object
+                        DateTime dateTime = DateTime.parse(inputDate);
+
+                        // Define a formatter to get the time in 12-hour format with AM/PM
+                        String formattedTime =
+                            DateFormat('hh:mma').format(dateTime).toLowerCase();
+
+                        String date = "2024-09-13T08:46:04.728Z";
+
+                        // Parse the input date string into a DateTime object
+                        DateTime parseDate = DateTime.parse(inputDate);
+
+                        // Format the DateTime object to the desired format
+                        String formattedDate =
+                            DateFormat('MMM dd, yyyy').format(parseDate);
+
+                        print(formattedDate);
                         return Column(
                           children: [
                             Column(
@@ -172,8 +186,9 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                               children: [
                                 RichText(
                                   text: TextSpan(
-                                      text: data.invoiceReference ??
-                                          'INV-10022004-001',
+                                      // text: data.invoiceReference ??
+                                      //     'INV-10022004-001',
+                                      text: 'INV-${data.id}',
                                       style: AppTheme.lightTextTheme.bodyLarge
                                           ?.copyWith(
                                         fontSize: 21,
@@ -226,6 +241,12 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                       rowIcon: AppIcons.share,
                                       width: 112.w,
                                       rowLabel: 'share',
+                                      rowLabelstyle: AppTheme
+                                          .lightTextTheme.bodyLarge
+                                          ?.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.lightBlue,
+                                      ),
                                       onTap: () {},
                                       isLightBlue: true,
                                     ),
@@ -241,6 +262,12 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                       rowLabel: 'Download',
                                       onTap: () {},
                                       isLightBlue: true,
+                                      rowLabelstyle: AppTheme
+                                          .lightTextTheme.bodyLarge
+                                          ?.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.lightBlue,
+                                      ),
                                     ),
                                     10.wi,
                                     AppElevatedButton(
@@ -250,6 +277,12 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                       rowLabel: 'Print',
                                       onTap: () {},
                                       isLightBlue: true,
+                                      rowLabelstyle: AppTheme
+                                          .lightTextTheme.bodyLarge
+                                          ?.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.lightBlue,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -272,9 +305,9 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const InvoiceSummary(
+                                        InvoiceSummary(
                                           leading: 'Invoice ID:',
-                                          trailing: ' INV-10022004-001',
+                                          trailing: '  INV-${data.id}',
                                         ),
                                         14.hi,
                                         InvoiceSummary(
@@ -299,14 +332,14 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                           trailing: ' Naira',
                                         ),
                                         14.hi,
-                                        const InvoiceSummary(
-                                          leading: 'Time:',
-                                          trailing: ' 10:00 PM',
+                                        InvoiceSummary(
+                                          leading: 'Time:  ',
+                                          trailing: formattedTime,
                                         ),
                                         14.hi,
-                                        const InvoiceSummary(
-                                          leading: 'Date:',
-                                          trailing: ' Feb 12, 2023',
+                                        InvoiceSummary(
+                                          leading: 'Date: ',
+                                          trailing: formattedDate,
                                         ),
                                       ],
                                     ),

@@ -69,9 +69,9 @@ class WelcomeBottomSheet extends ConsumerWidget {
                 MaterialPageRoute(
                   builder: (context) {
                     return const CustomInAppBrowser(
-                      url: AppConstants.prodAuthUrl,
+                      url: AppConstants.authurl,
                     );
-                    // return const FileUploadTest();
+                    // return const TestingScreen();
                   },
                 ),
               );

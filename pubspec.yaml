@@ -51,6 +51,8 @@ dependencies:
   screenshot: ^2.4.0
   path_provider: ^2.1.4
   pdf: ^3.11.1
+  pin_code_fields: ^7.4.0
+  
 
   
 

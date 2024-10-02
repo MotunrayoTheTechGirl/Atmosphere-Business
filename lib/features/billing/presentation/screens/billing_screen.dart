@@ -71,7 +71,10 @@ class BillingScreen extends ConsumerWidget {
                     height: .6.sh,
                     child: ListView.separated(
                       itemBuilder: (context, index) {
-                        final invoice = data[index];
+                        final dataList = data.reversed.toList();
+
+                        // final invoice = data[index];
+                        final invoice = dataList[index];
                         String duration = invoice.createdAt.toString();
                         DateTime dateTime = DateTime.parse(duration);
                         String formattedDate = DateFormat('hh:mm a, dd MMM')
