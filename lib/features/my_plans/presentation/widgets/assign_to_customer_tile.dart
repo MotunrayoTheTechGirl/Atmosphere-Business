@@ -163,6 +163,10 @@ class _AssignToCustomerTileState extends ConsumerState<AssignToCustomerTile> {
                         ref
                                 .watch(fetchDealerUserDetailsControllerProvider)
                                 .status ==
+                            ResponseStatus.loading ||
+                        ref
+                                .watch(createDigitalOrderControllerProvider)
+                                .status ==
                             ResponseStatus.loading,
                     onTap: !isFormValid
                         ? () {
@@ -202,13 +206,13 @@ class _AssignToCustomerTileState extends ConsumerState<AssignToCustomerTile> {
                                   .read(generateReferenceControllerProvider
                                       .notifier)
                                   .generateReference(
-                                    amount: widget.amount,
-                                    userId: dealerIdentityController
-                                            .data?.data?.dealerAuthId
-                                            .toString() ??
-                                        '',
-                                    paymentMethod: "offline",
-                                  );
+                                      amount: widget.amount,
+                                      userId: dealerIdentityController
+                                              .data?.data?.dealerAuthId
+                                              .toString() ??
+                                          '',
+                                      paymentMethod: "offline",
+                                      transactionType: "debit");
                               if (isReferenceGenerated) {
                                 final reference = ref
                                     .read(generateReferenceControllerProvider

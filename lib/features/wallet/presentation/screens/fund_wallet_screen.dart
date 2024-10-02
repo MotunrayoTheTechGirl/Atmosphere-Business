@@ -234,7 +234,7 @@ class _FundWalletScreenState extends ConsumerState<FundWalletScreen> {
                                     '',
                                 paymentMethod: "paystack",
                                 note: "fund wallet",
-                                transactionType: "fund wallet",
+                                transactionType: "credit",
                               );
                           if (isReferenceGenerated) {
                             final reference = ref

@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/features/wallet/data/repository/wallet_history_repo.dart';
@@ -18,7 +17,6 @@ import '../../../../core/utils/app_icons.dart';
 import '../../../../core/utils/themes/app_themes.dart';
 import '../../../../core/utils/ui_helper.dart';
 import '../../../my_plans/data/controller/user_balance_controller.dart';
-import '../../../my_plans/data/models/user_balance_res_model.dart';
 import '../../../onboarding/data/controller/user_details_controller.dart';
 import '../widgets/wallet_balance_card.dart';
 import '../widgets/wallet_history_tile.dart';
@@ -56,35 +54,23 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
   //   }
   // }
 
-  void _handleTopUp() async {
-    final shouldRefresh = await Navigator.push<bool>(
-      context,
-      MaterialPageRoute(builder: (context) => FundWalletScreen()),
-    );
-
-    if (shouldRefresh == true && mounted) {
-      // Refresh balance when returning with shouldRefresh = true
-      ref.read(fetchUserBalanceControllerProvider.notifier).userBalance();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    ref.listen<AsyncValue<UserBalanceResModel>>(
-        fetchUserBalanceControllerProvider, (previous, next) {
-      log('after');
-      if (next.hasValue && previous?.value != next.value) {
-        final previousBalance = previous?.value?.balance?.isDealerWalletBalance;
-        final currentBalance = next.value?.balance?.isDealerWalletBalance;
+    // ref.listen<AsyncValue<UserBalanceResModel>>(
+    //     fetchUserBalanceControllerProvider, (previous, next) {
+    //   log('after');
+    //   if (next.hasValue && previous?.value != next.value) {
+    //     final previousBalance = previous?.value?.balance?.isDealerWalletBalance;
+    //     final currentBalance = next.value?.balance?.isDealerWalletBalance;
 
-        if (int.parse(currentBalance ?? '') >
-            int.parse(previousBalance ?? '')) {
-          log('current is greater than previous');
-          ref.read(fetchUserBalanceControllerProvider.notifier).userBalance();
-        }
-      }
-      log('before');
-    });
+    //     if (int.parse(currentBalance ?? '') >
+    //         int.parse(previousBalance ?? '')) {
+    //       log('current is greater than previous');
+    //       ref.read(fetchUserBalanceControllerProvider.notifier).userBalance();
+    //     }
+    //   }
+    //   log('before');
+    // });
 
     final walletHistoryController = ref.watch(
         walletHistoryRepositoryFutureProvider(ref
@@ -106,6 +92,18 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
       body: SafeArea(
           child: RefreshIndicator.adaptive(
         onRefresh: () async {
+          // await ref
+          //     .read(fetchUserBalanceControllerProvider.notifier)
+          //     .userBalance(
+          //         userId: ref
+          //                 .watch(userDetailsControllerProvider.notifier)
+          //                 .state
+          //                 .data
+          //                 ?.data
+          //                 ?.user
+          //                 ?.id
+          //                 .toString() ??
+          //             '');
           await ref
               .read(fetchUserBalanceControllerProvider.notifier)
               .userBalance();
@@ -119,24 +117,23 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                   WalletBalanceCard(),
                   20.hi,
                   InkWell(
-                    // onTap: () {
-                    //   Navigator.push(context,
-                    //       MaterialPageRoute(builder: (context) {
-                    //     return FundWalletScreen();
-                    //   }));
-                    //   _refreshTimer =
-                    //       Timer.periodic(Duration(seconds: 5), (timer) {
-                    //     ref.read(fetchUserBalanceControllerProvider);
-                    //   });
-                    //   // if (mounted) {
-                    //   //   log('mounted');
-                    //   //   ref.read(fetchUserBalanceControllerProvider);
-                    //   // }
-                    //   Future.delayed(Duration(minutes: 2), () {
-                    //     _refreshTimer?.cancel();
-                    //   });
-                    // },
-                    onTap: _handleTopUp,
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return FundWalletScreen();
+                      }));
+                      _refreshTimer =
+                          Timer.periodic(Duration(seconds: 5), (timer) {
+                        ref.read(fetchUserBalanceControllerProvider);
+                      });
+                      // if (mounted) {
+                      //   log('mounted');
+                      //   ref.read(fetchUserBalanceControllerProvider);
+                      // }
+                      Future.delayed(Duration(minutes: 2), () {
+                        _refreshTimer?.cancel();
+                      });
+                    },
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     child: Container(
                       width: double.infinity,

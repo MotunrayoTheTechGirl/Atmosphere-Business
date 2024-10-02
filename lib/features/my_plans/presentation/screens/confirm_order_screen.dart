@@ -146,7 +146,7 @@ class _ConfirmOrderScreenState extends ConsumerState<ConfirmOrderScreen> {
                   otpController.clear();
                   Future.delayed(
                       Duration(
-                        seconds: 2,
+                        seconds: 1,
                       ), () {
                     Navigator.pop(context);
                     Navigator.pop(context);

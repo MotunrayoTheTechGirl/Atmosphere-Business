@@ -11,10 +11,12 @@ class CustomSnackBar {
         behavior: SnackBarBehavior.floating,
         margin: EdgeInsets.only(
             // bottom: MediaQuery.of(context).size.height - 130,
-            bottom: MediaQuery.of(context).size.height - 110,
+            // bottom: MediaQuery.of(context).size.height - 90,
+            bottom: MediaQuery.of(context).size.height - 190,
             right: 20.0,
             left: 20.0),
         backgroundColor: isError ? Colors.red : Colors.green,
+        duration: const Duration(seconds: 1),
         content: Text(message),
       ),
     );
