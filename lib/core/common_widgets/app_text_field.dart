@@ -25,10 +25,12 @@ class AppTextField extends StatelessWidget {
   final InputBorder? enabledBorder;
   final InputBorder? focusedBorder;
   final String? label;
+  final bool readOnly;
 
   const AppTextField(
       {required this.controller,
       required this.hintText,
+      this.readOnly = false,
       this.keyboardType,
       this.suffixText,
       this.suffixStyle,
@@ -66,6 +68,8 @@ class AppTextField extends StatelessWidget {
               color: AppColors.textColor),
         ),
         TextFormField(
+          // focusNode: ,
+          readOnly: readOnly,
           controller: controller,
           keyboardType: keyboardType,
           validator: validator,

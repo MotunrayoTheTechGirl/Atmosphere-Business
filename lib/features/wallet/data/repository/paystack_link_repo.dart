@@ -25,7 +25,8 @@ class GeneratePaystackLinkRepository {
           "identity": identity,
           "amount": amount,
           "reference": reference,
-          "redirectUrl": "https://wifi.atmosphere.net.ng/wallet"
+          "redirectUrl": "https://wifi.atmosphere.net.ng/wallet",
+          "paymentMethod": "paystack",
         },
       );
 

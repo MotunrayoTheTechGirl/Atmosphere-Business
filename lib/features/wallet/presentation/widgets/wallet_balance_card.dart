@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, unrelated_type_equality_checks
 
 import 'dart:developer';
 
@@ -61,13 +61,15 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
                         Row(
                           children: [
                             dealerBalanceController.when(data: (data) {
-                              final balance =
-                                  data.balance?.isDealerWalletBalance;
+                              final balance = data.balance;
+                              // final emptyBalance = data.balance;
                               return Text(
                                 isVisibiltyOn
-                                    ? balance == null
+                                    ? balance ==
+                                            "user account doesn't already exist"
                                         ? formatNaira("0")
-                                        : formatNaira(balance)
+                                        : formatNaira(
+                                            balance?.totalBalance ?? '0')
                                     : '********',
                                 style: AppTheme.lightTextTheme.displayMedium
                                     ?.copyWith(

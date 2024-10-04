@@ -36,6 +36,15 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(fetchUserBalanceControllerProvider.notifier).userBalance();
+      ref.read(walletHistoryRepositoryFutureProvider(ref
+              .watch(userDetailsControllerProvider.notifier)
+              .state
+              .data
+              ?.data
+              ?.user
+              ?.id
+              .toString() ??
+          ''));
     });
 
     super.initState();
@@ -56,22 +65,6 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ref.listen<AsyncValue<UserBalanceResModel>>(
-    //     fetchUserBalanceControllerProvider, (previous, next) {
-    //   log('after');
-    //   if (next.hasValue && previous?.value != next.value) {
-    //     final previousBalance = previous?.value?.balance?.isDealerWalletBalance;
-    //     final currentBalance = next.value?.balance?.isDealerWalletBalance;
-
-    //     if (int.parse(currentBalance ?? '') >
-    //         int.parse(previousBalance ?? '')) {
-    //       log('current is greater than previous');
-    //       ref.read(fetchUserBalanceControllerProvider.notifier).userBalance();
-    //     }
-    //   }
-    //   log('before');
-    // });
-
     final walletHistoryController = ref.watch(
         walletHistoryRepositoryFutureProvider(ref
                 .watch(userDetailsControllerProvider.notifier)
@@ -92,21 +85,18 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
       body: SafeArea(
           child: RefreshIndicator.adaptive(
         onRefresh: () async {
-          // await ref
-          //     .read(fetchUserBalanceControllerProvider.notifier)
-          //     .userBalance(
-          //         userId: ref
-          //                 .watch(userDetailsControllerProvider.notifier)
-          //                 .state
-          //                 .data
-          //                 ?.data
-          //                 ?.user
-          //                 ?.id
-          //                 .toString() ??
-          //             '');
           await ref
               .read(fetchUserBalanceControllerProvider.notifier)
               .userBalance();
+          ref.read(walletHistoryRepositoryFutureProvider(ref
+                  .watch(userDetailsControllerProvider.notifier)
+                  .state
+                  .data
+                  ?.data
+                  ?.user
+                  ?.id
+                  .toString() ??
+              ''));
         },
         child: CustomScrollView(
           slivers: <Widget>[
