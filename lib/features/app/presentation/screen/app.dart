@@ -33,16 +33,6 @@ class _AppState extends ConsumerState<App> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(userDetailsControllerProvider.notifier).getUserDetails();
-      // await ref.read(fetchUserBalanceControllerProvider.notifier).userBalance(
-      //     userId: ref
-      //             .watch(userDetailsControllerProvider.notifier)
-      //             .state
-      //             .data
-      //             ?.data
-      //             ?.user
-      //             ?.id
-      //             .toString() ??
-      //         '');
       await ref.read(fetchUserBalanceControllerProvider.notifier).userBalance();
       await ref
           .read(fetchDealerByIdentityControllerProvider.notifier)

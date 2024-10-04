@@ -113,7 +113,6 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  20.hi,
                   WalletBalanceCard(),
                   20.hi,
                   InkWell(
@@ -126,10 +125,6 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                           Timer.periodic(Duration(seconds: 5), (timer) {
                         ref.read(fetchUserBalanceControllerProvider);
                       });
-                      // if (mounted) {
-                      //   log('mounted');
-                      //   ref.read(fetchUserBalanceControllerProvider);
-                      // }
                       Future.delayed(Duration(minutes: 2), () {
                         _refreshTimer?.cancel();
                       });
