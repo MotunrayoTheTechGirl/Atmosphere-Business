@@ -1,16 +1,40 @@
+// class UserBalanceResModel {
+//   UserBalanceResModel({
+//     required this.balance,
+//   });
+
+//   final Balance? balance;
+
+//   factory UserBalanceResModel.fromJson(Map<String, dynamic> json) {
+//     return UserBalanceResModel(
+//       balance:
+//           json["balance"] == null ? null : Balance.fromJson(json["balance"]),
+//     );
+//   }
+// }
+
 class UserBalanceResModel {
-  UserBalanceResModel({
-    required this.balance,
-  });
+  UserBalanceResModel({required this.balance, required this.errorMessage});
 
   final Balance? balance;
+  final String? errorMessage;
 
   factory UserBalanceResModel.fromJson(Map<String, dynamic> json) {
-    return UserBalanceResModel(
-      balance:
-          json["balance"] == null ? null : Balance.fromJson(json["balance"]),
-    );
+    if (json["balance"] is String) {
+      return UserBalanceResModel(
+        balance: null,
+        errorMessage: json["balance"],
+      );
+    } else {
+      return UserBalanceResModel(
+          balance: json["balance"] == null
+              ? null
+              : Balance.fromJson(json["balance"]),
+          errorMessage: null);
+    }
   }
+  bool get hasBalance => balance != null;
+  bool get hasError => errorMessage != null;
 }
 
 class Balance {

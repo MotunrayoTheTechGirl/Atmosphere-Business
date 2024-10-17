@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,15 +9,20 @@ import '../../../../core/utils/app_icons.dart';
 import '../../../../core/utils/themes/app_themes.dart';
 
 class DropDownFormField extends StatefulWidget {
-  const DropDownFormField({Key? key}) : super(key: key);
+  DropDownFormField(
+      {required this.selectedListItem, required this.dropDownList, Key? key})
+      : super(key: key);
+
+  final List<String> dropDownList;
+  String selectedListItem;
 
   @override
   _DropDownFormFieldState createState() => _DropDownFormFieldState();
 }
 
 class _DropDownFormFieldState extends State<DropDownFormField> {
-  final List<String> _timeFrames = ['Daily', 'Weekly', 'Monthly'];
-  String _selectedTimeFrame = 'Weekly';
+  // final List<String> _timeFrames = ['Daily', 'Weekly', 'Monthly'];
+  // final String _selectedTimeFrame = 'Weekly';
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
@@ -31,8 +38,10 @@ class _DropDownFormFieldState extends State<DropDownFormField> {
             horizontal: 10.w,
           ),
         ),
-        value: _selectedTimeFrame,
-        items: _timeFrames.map((String value) {
+        // value: _selectedTimeFrame,
+        value: widget.selectedListItem,
+        // items: _timeFrames.map((String value) {
+        items: widget.dropDownList.map((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(
@@ -48,7 +57,8 @@ class _DropDownFormFieldState extends State<DropDownFormField> {
         onChanged: (String? newValue) {
           if (newValue != null) {
             setState(() {
-              _selectedTimeFrame = newValue;
+              // _selectedTimeFrame = newValue;
+              widget.selectedListItem = newValue;
             });
           }
         },

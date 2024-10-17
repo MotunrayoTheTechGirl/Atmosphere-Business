@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/themes/app_themes.dart';
+import '../../../../core/utils/ui_helper.dart';
 
 class OverviewCard extends StatelessWidget {
   const OverviewCard({
@@ -24,7 +25,7 @@ class OverviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: const BorderRadius.all(
@@ -44,9 +45,9 @@ class OverviewCard extends StatelessWidget {
               fontWeight: FontWeight.w400,
             ),
           ),
-          8.hi,
+          5.hi,
           Text(
-            amount ?? '',
+            formatNaira(amount ?? ''),
             style: AppTheme.lightTextTheme.titleLarge?.copyWith(
               fontSize: 24.sp,
             ),
@@ -82,6 +83,6 @@ class OverviewCard extends StatelessWidget {
               : const SizedBox(),
         ],
       ),
-    ).padHorizontal(20);
+    );
   }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "732187935499",
+    "project_id": "atmosphere-business",
+    "storage_bucket": "atmosphere-business.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732187935499:android:e98ae5455f09108479980e",
+        "android_client_info": {
+          "package_name": "com.example.dealer_portal_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7goyCxWCF9jAwqJzFj3r_VdXIS8sgBhU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

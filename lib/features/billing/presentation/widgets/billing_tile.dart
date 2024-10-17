@@ -41,7 +41,7 @@ class BillingTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                id ?? 'INV-10022004-001',
+                id ?? '',
                 style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.w400,
                   fontSize: 15.sp,
@@ -67,19 +67,19 @@ class BillingTile extends StatelessWidget {
           ),
           6.hi,
           Text(
-            dataPlan ?? 'Glo Atmosphere 30TB + 150K Hrs Plan',
+            dataPlan ?? '',
             style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w400,
-              fontSize: 17.sp,
+              fontSize: 15.sp,
               color: AppColors.deepBrown,
             ),
           ),
           6.hi,
           Text(
-            price ?? '₦3,0000,000',
+            price ?? '',
             style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w600,
-              fontSize: 25.sp,
+              fontSize: 20.sp,
               color: AppColors.deepBrown,
             ),
           ),
@@ -90,7 +90,7 @@ class BillingTile extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    name ?? 'Emeka Obi',
+                    name ?? '',
                     style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
                       fontSize: 15.sp,
                       color: AppColors.deepAsh,
@@ -98,7 +98,7 @@ class BillingTile extends StatelessWidget {
                   ),
                   6.wi,
                   Text(
-                    duration ?? '10:00 PM, 25 Jun',
+                    duration ?? '',
                     style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w400,

@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
-import 'package:dealer_portal_mobile/features/wallet/data/repository/wallet_history_repo.dart';
 import 'package:dealer_portal_mobile/features/wallet/presentation/screens/fund_wallet_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,7 +16,7 @@ import '../../../../core/utils/app_icons.dart';
 import '../../../../core/utils/themes/app_themes.dart';
 import '../../../../core/utils/ui_helper.dart';
 import '../../../my_plans/data/controller/user_balance_controller.dart';
-import '../../../onboarding/data/controller/user_details_controller.dart';
+import '../../data/controller/wallet_history_controller.dart';
 import '../widgets/wallet_balance_card.dart';
 import '../widgets/wallet_history_tile.dart';
 import 'wallet_history_screen.dart';
@@ -36,15 +35,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(fetchUserBalanceControllerProvider.notifier).userBalance();
-      ref.read(walletHistoryRepositoryFutureProvider(ref
-              .watch(userDetailsControllerProvider.notifier)
-              .state
-              .data
-              ?.data
-              ?.user
-              ?.id
-              .toString() ??
-          ''));
+      ref.read(walletHistoryControllerProvider.notifier).fetchWalletHistory();
     });
 
     super.initState();
@@ -55,26 +46,10 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
     _refreshTimer?.cancel();
     super.dispose();
   }
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   if (state == AppLifecycleState.resumed) {
-  //     // Refresh wallet balance when app is resumed
-  //     ref.read(fetchUserBalanceControllerProvider.notifier).userBalance();
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
-    final walletHistoryController = ref.watch(
-        walletHistoryRepositoryFutureProvider(ref
-                .watch(userDetailsControllerProvider.notifier)
-                .state
-                .data
-                ?.data
-                ?.user
-                ?.id
-                .toString() ??
-            ''));
+    final walletHistoryController = ref.watch(walletHistoryControllerProvider);
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: CustomAppBar(
@@ -88,15 +63,9 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
           await ref
               .read(fetchUserBalanceControllerProvider.notifier)
               .userBalance();
-          ref.read(walletHistoryRepositoryFutureProvider(ref
-                  .watch(userDetailsControllerProvider.notifier)
-                  .state
-                  .data
-                  ?.data
-                  ?.user
-                  ?.id
-                  .toString() ??
-              ''));
+          ref
+              .read(walletHistoryControllerProvider.notifier)
+              .fetchWalletHistory();
         },
         child: CustomScrollView(
           slivers: <Widget>[
@@ -197,22 +166,23 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                                             .format(history.createdAt ??
                                                 DateTime.now()),
                                         dataPlan: history.note ?? '',
-                                        amount: history.credit == "0"
-                                            ? history.debit == "0"
-                                                ? formatNaira(
-                                                    history.debit ?? '')
-                                                : '-${formatNaira(history.debit ?? '')}'
-                                            : '+${formatNaira(history.credit ?? '')}',
-                                        amountTextColor: history.credit == "0"
-                                            ? AppColors.redShade500
-                                            : AppColors.blackShade400,
-                                        icon: history.credit == "0"
-                                            ? AppIcons.redArrow
-                                            : AppIcons.greenArrow,
-                                        iconBgColor: history.credit == "0"
-                                            ? AppColors.redShade200
-                                            : AppColors.greenShade200
-                                                .withOpacity(0.3),
+                                        amount: history.transactionType ==
+                                                "credit"
+                                            ? '+${formatNaira(history.debit ?? '')}'
+                                            : '-${formatNaira(history.debit ?? '')}',
+                                        amountTextColor:
+                                            history.transactionType == "credit"
+                                                ? AppColors.blackShade400
+                                                : AppColors.redShade500,
+                                        icon:
+                                            history.transactionType == "credit"
+                                                ? AppIcons.greenArrow
+                                                : AppIcons.redArrow,
+                                        iconBgColor:
+                                            history.transactionType == "credit"
+                                                ? AppColors.greenShade200
+                                                    .withOpacity(0.2)
+                                                : AppColors.redShade200,
                                       );
                                     },
                                     separatorBuilder: (context, index) {

@@ -93,7 +93,6 @@ class _DataBalanceCardState extends State<DataBalanceCard> {
                       if (newValue != null) {
                         setState(() {
                           _selectedPlan = newValue;
-                          // initialTimeFrame = newValue;
                         });
                       }
                     },

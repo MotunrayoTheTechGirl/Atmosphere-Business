@@ -1,4 +1,4 @@
-// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: curly_braces_in_flow_control_structures, avoid_print
 
 import 'dart:async';
 import 'dart:developer';
@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../my_plans/data/controller/user_balance_controller.dart';
 import '../data/controller/verify_and_update_wallet_controller.dart';
+import '../data/controller/wallet_history_controller.dart';
 import '../presentation/screens/fund_wallet_screen.dart';
 import 'wallet_countdown_state.dart';
 
@@ -101,6 +102,7 @@ class CountdownController extends StateNotifier<CountdownState> {
     try {
       print("Updating final balance - ${DateTime.now()}");
       ref.read(fetchUserBalanceControllerProvider.notifier).userBalance();
+      ref.read(walletHistoryControllerProvider.notifier).fetchWalletHistory();
       print("Final balance update completed - ${DateTime.now()}");
     } catch (e, stackTrace) {
       print("Error updating final balance: $e");

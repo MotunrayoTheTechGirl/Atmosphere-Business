@@ -24,13 +24,10 @@ class WalletHistoryRepository {
           "accountType": "dealer",
         },
       );
-      log('Wallet History Response: $response');
 
       if (response?.data is String) {
-        log('--- Is String ----');
         return WalletHistoryResModel.fromJson(jsonDecode(response?.data));
       } else {
-        log('--- Is not  String ----');
         return WalletHistoryResModel.fromJson(response?.data);
       }
     } catch (e) {
@@ -40,9 +37,13 @@ class WalletHistoryRepository {
   }
 }
 
-final walletHistoryRepositoryFutureProvider =
-    FutureProvider.family<WalletHistoryResModel, String>((ref, userId) async {
-  final history = WalletHistoryRepository();
-  final historyProvider = await history.walletHistory(userId: userId);
-  return historyProvider;
-});
+final walletHistoryRepositoryProvider = Provider(
+  (ref) => WalletHistoryRepository(),
+);
+
+// final walletHistoryRepositoryFutureProvider =
+//     FutureProvider.family<WalletHistoryResModel, String>((ref, userId) async {
+//   final history = WalletHistoryRepository();
+//   final historyProvider = await history.walletHistory(userId: userId);
+//   return historyProvider;
+// });

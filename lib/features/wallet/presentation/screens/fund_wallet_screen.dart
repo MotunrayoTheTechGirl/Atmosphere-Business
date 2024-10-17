@@ -45,25 +45,12 @@ class _FundWalletScreenState extends ConsumerState<FundWalletScreen> {
   @override
   void initState() {
     amountCtrl.addListener(validateAmount);
-    // WidgetsBinding.instance.addObserver(this);
+
     super.initState();
   }
 
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   if (state == AppLifecycleState.resumed) {
-  //     // When app is resumed, refresh balance and pop back to WalletScreen
-  //     ref.read(fetchUserBalanceControllerProvider.notifier).userBalance();
-  //     if (mounted) {
-  //       Navigator.of(context).pop(true); // Pass true to indicate refresh needed
-  //     }
-  //   }
-  // }
-
   @override
   void dispose() {
-    amountCtrl.removeListener(validateAmount);
-    // WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -101,7 +88,6 @@ class _FundWalletScreenState extends ConsumerState<FundWalletScreen> {
         ),
         onTap: () {
           Navigator.pop(context);
-          // Navigator.of(context).pop(false);
         },
       ),
       body: SingleChildScrollView(

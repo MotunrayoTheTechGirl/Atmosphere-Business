@@ -31,7 +31,7 @@ class PaymentStatus extends StatelessWidget {
         style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
             color: color,
             fontWeight: FontWeight.w700,
-            fontSize: 14.sp,
+            fontSize: 12.sp,
             fontFamily: AppTheme.montserratAlternate),
       ),
     );

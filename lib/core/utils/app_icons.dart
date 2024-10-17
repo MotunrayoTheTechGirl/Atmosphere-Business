@@ -54,7 +54,7 @@ class AppIcons {
   static const String atmosphere = "assets/images/atmosp.png";
   static const String redArrow = "assets/images/red_arrow.png";
   static const String greenArrow = "assets/images/green_arrow.png";
-  static const String walletCard = "assets/images/wallet_card.png";
+  static const String walletCard = "assets/images/balance_card.png";
   static const String bank = "assets/images/bank.png";
   static const String visibility = "assets/images/visible_icon.png";
 }
