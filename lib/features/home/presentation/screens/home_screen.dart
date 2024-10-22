@@ -15,7 +15,6 @@ import '../../../../core/utils/ui_helper.dart';
 import '../../../billing/data/repository/billing_repository.dart';
 import '../../../billing/presentation/widgets/billing_tile.dart';
 import '../../../onboarding/data/controller/user_details_controller.dart';
-import '../widgets/drop_down_form_field.dart';
 import '../widgets/overview_card.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -65,17 +64,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           child: Column(
             children: [
               10.hi,
-              // SizedBox(
-              //   height: 200.h,
-              //   child: ListView(
-              //     scrollDirection: Axis.horizontal,
-              //     children: [
-              //       const AvailableDataBalanceCard().padOnly(right: 16),
-              //       const UsageCard(),
-              //     ],
-              //   ),
-              // ).padOnly(left: 20),
-              // 6.hi,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -86,13 +74,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       color: AppColors.blackText,
                     ),
                   ),
-                  SizedBox(
-                    width: 92.w,
-                    child: DropDownFormField(
-                      dropDownList: const ['Daily', 'Weekly', 'Monthly'],
-                      selectedListItem: 'Weekly',
-                    ),
-                  ),
+                  // SizedBox(
+                  //   width: 92.w,
+                  //   child: DropDownFormField(
+                  //     dropDownList: const ['Daily', 'Weekly', 'Monthly'],
+                  //     selectedListItem: 'Weekly',
+                  //   ),
+                  // ),
                 ],
               ),
               10.hi,
