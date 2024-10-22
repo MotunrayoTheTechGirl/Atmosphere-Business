@@ -60,7 +60,7 @@ Future<void> fundWalletconfirmationDialog({
                   AppElevatedButton(
                     width: 120.w,
                     onTap: () {},
-                    isLightBlue: true,
+                    isLightShade: true,
                     rowLabel: 'Delete',
                     rowLabelstyle:
                         AppTheme.lightTextTheme.displaySmall?.copyWith(

@@ -13,8 +13,8 @@ import '../../features/app/presentation/screen/app.dart';
 import '../../features/onboarding/data/controller/get_query_param.dart';
 import '../../features/wallet/data/controller/verify_and_update_wallet_controller.dart';
 import '../../features/wallet/logic/wallet_countdown_controller.dart';
-import '../../features/wallet/presentation/screens/fund_wallet_screen.dart';
 import '../../features/wallet/presentation/screens/wallet_screen.dart';
+import '../../features/wallet/presentation/widgets/fundwallet_tile.dart';
 
 class CustomInAppBrowser extends ConsumerStatefulWidget {
   final String url;

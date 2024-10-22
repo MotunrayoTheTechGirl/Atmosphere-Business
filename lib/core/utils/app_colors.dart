@@ -37,4 +37,5 @@ class AppColors {
   static const Color lilac = Color(0xFFF8F8FF);
   static const Color textFieldBorder = Color(0xFF1B1D21);
   static const Color buttonBg = Color(0xFFFBFCFE);
+  static const Color w5Color = Color(0xFF5A3D8B);
 }

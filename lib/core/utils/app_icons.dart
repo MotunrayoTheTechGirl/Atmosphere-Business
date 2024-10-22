@@ -57,4 +57,6 @@ class AppIcons {
   static const String walletCard = "assets/images/balance_card.png";
   static const String bank = "assets/images/bank.png";
   static const String visibility = "assets/images/visible_icon.png";
+  static const String wave5Logo = "assets/images/wave5_logo.png";
+  static const String fundWalletBg = "assets/images/fundwallet_bg.png";
 }

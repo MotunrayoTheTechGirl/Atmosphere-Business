@@ -145,7 +145,7 @@ class InviteDealerScreen extends StatelessWidget {
                   width: 160.w,
                   onTap: () {},
                   rowLabel: 'Cancel',
-                  isLightBlue: true,
+                  isLightShade: true,
                   rowLabelColor: AppColors.lightBlue,
                 ),
                 AppElevatedButton(

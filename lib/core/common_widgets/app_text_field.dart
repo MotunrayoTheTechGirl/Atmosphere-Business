@@ -106,7 +106,7 @@ class AppTextField extends StatelessWidget {
                       // ? BorderSide.none
                       ? BorderSide(
                           width: 0.2,
-                          color: AppColors.textFieldBorder.withOpacity(0.2),
+                          color: AppColors.textFieldBorder.withOpacity(0.1),
                         )
                       : BorderSide(
                           width: 0.2,

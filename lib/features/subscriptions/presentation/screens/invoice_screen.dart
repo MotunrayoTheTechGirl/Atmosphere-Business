@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_final_fields
 
+import 'dart:developer';
+
 import 'package:dealer_portal_mobile/core/common_widgets/app_elevated_button.dart';
 import 'package:dealer_portal_mobile/core/common_widgets/status_button.dart';
 import 'package:dealer_portal_mobile/core/utils/app_icons.dart';
@@ -161,24 +163,14 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                         // _captureScreenshot();
 
                         String inputDate = data.createdAt.toString();
-
-                        // Parse the input date string into a DateTime object
                         DateTime dateTime = DateTime.parse(inputDate);
-
-                        // Define a formatter to get the time in 12-hour format with AM/PM
                         String formattedTime =
                             DateFormat('hh:mma').format(dateTime).toLowerCase();
-
-                        String date = "2024-09-13T08:46:04.728Z";
-
-                        // Parse the input date string into a DateTime object
+                        // String date = "2024-09-13T08:46:04.728Z";
                         DateTime parseDate = DateTime.parse(inputDate);
-
-                        // Format the DateTime object to the desired format
                         String formattedDate =
                             DateFormat('MMM dd, yyyy').format(parseDate);
-
-                        print(formattedDate);
+                        log(formattedDate);
                         return Column(
                           children: [
                             Column(
@@ -186,8 +178,6 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                               children: [
                                 RichText(
                                   text: TextSpan(
-                                      // text: data.invoiceReference ??
-                                      //     'INV-10022004-001',
                                       text: 'INV-${data.id}',
                                       style: AppTheme.lightTextTheme.bodyLarge
                                           ?.copyWith(
@@ -248,7 +238,7 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                         color: AppColors.lightBlue,
                                       ),
                                       onTap: () {},
-                                      isLightBlue: true,
+                                      isLightShade: true,
                                     ),
                                   ],
                                 ),
@@ -261,7 +251,7 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                       width: 149.w,
                                       rowLabel: 'Download',
                                       onTap: () {},
-                                      isLightBlue: true,
+                                      isLightShade: true,
                                       rowLabelstyle: AppTheme
                                           .lightTextTheme.bodyLarge
                                           ?.copyWith(
@@ -276,7 +266,7 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                       width: 125.w,
                                       rowLabel: 'Print',
                                       onTap: () {},
-                                      isLightBlue: true,
+                                      isLightShade: true,
                                       rowLabelstyle: AppTheme
                                           .lightTextTheme.bodyLarge
                                           ?.copyWith(

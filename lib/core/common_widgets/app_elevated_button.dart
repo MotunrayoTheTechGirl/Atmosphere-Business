@@ -12,7 +12,7 @@ class AppElevatedButton extends StatelessWidget {
     this.labelFontSize,
     required this.onTap,
     this.width,
-    this.isLightBlue = false,
+    this.isLightShade = false,
     this.isLoading = false,
     this.isActive = true,
     this.rowIcon,
@@ -31,7 +31,7 @@ class AppElevatedButton extends StatelessWidget {
   final double? labelFontSize;
   final double? width, borderRadius;
   final void Function()? onTap;
-  final bool isLightBlue;
+  final bool isLightShade;
   final String? rowIcon, rowLabel;
   final double? rowIconHeight, rowIconWidth;
   final Color? rowLabelColor;
@@ -49,11 +49,11 @@ class AppElevatedButton extends StatelessWidget {
         width: width ?? double.infinity,
         padding: padding ?? const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isLightBlue
-              ? AppColors.lightBlue.withOpacity(0.05)
+          color: isLightShade
+              ? AppColors.w5Color.withOpacity(0.05)
               : isActive
-                  ? AppColors.primaryColor
-                  : AppColors.primaryColor.withOpacity(0.3),
+                  ? AppColors.w5Color
+                  : AppColors.w5Color.withOpacity(0.3),
           borderRadius: BorderRadius.all(
             Radius.circular(borderRadius ?? 16.5.r),
           ),
@@ -63,7 +63,7 @@ class AppElevatedButton extends StatelessWidget {
                 size: 20,
                 color: AppColors.white,
               )
-            : isLightBlue
+            : isLightShade
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -78,7 +78,7 @@ class AppElevatedButton extends StatelessWidget {
                         style: rowLabelstyle ??
                             AppTheme.lightTextTheme.displaySmall?.copyWith(
                               fontWeight: FontWeight.w500,
-                              color: rowLabelColor ?? AppColors.lightBlue,
+                              color: rowLabelColor ?? AppColors.w5Color,
                             ),
                       )
                     ],

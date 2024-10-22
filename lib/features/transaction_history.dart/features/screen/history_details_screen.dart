@@ -56,7 +56,7 @@ class HistoryDetailsScreen extends ConsumerWidget {
                   width: 112.w,
                   rowLabel: 'share',
                   onTap: () {},
-                  isLightBlue: true,
+                  isLightShade: true,
                 ),
               ],
             ),

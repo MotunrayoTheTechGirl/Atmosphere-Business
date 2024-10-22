@@ -46,130 +46,70 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
             image: AssetImage(AppIcons.walletCard),
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Stack(
-            children: [
-              Positioned(
-                top: 30,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Current Balance',
-                      style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.white),
-                    ),
-                    Row(
-                      children: [
-                        Row(
-                          children: [
-                            dealerBalanceController.when(data: (data) {
-                              return Text(
-                                isVisibiltyOn
-                                    ? getFormattedBalance(data)
-                                    : '********',
-                                style: AppTheme.lightTextTheme.displayMedium
-                                    ?.copyWith(
-                                        fontSize: 20.sp,
-                                        color: AppColors.white),
-                              );
-                            }, error: (error, str) {
-                              log('balance error: $error');
-                              return const Text('');
-                            }, loading: () {
-                              return const SpinKitChasingDots(
-                                size: 20,
-                                color: AppColors.white,
-                              );
-                            }),
-                            10.wi,
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  isVisibiltyOn = !isVisibiltyOn;
-                                });
-                              },
-                              child: SvgPicture.asset(
-                                isVisibiltyOn
-                                    ? AppIcons.visibiltyOn
-                                    : AppIcons.visibiltyOff,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )
-                  ],
-                ),
+        child: Stack(
+          children: [
+            Positioned(
+              top: 26,
+              left: 90,
+              right: 90,
+              child: Image.asset(
+                AppIcons.wave5Logo,
+                height: 21.h,
               ),
-              // Positioned(
-              //   bottom: 44,
-              //   left: 40,
-              //   child: GestureDetector(
-              //     onTap: () async => await Clipboard.setData(
-              //       const ClipboardData(text: '5003553283'),
-              //     ).then(
-              //       (value) => CustomSnackBar.showSnackBar(
-              //           context: context,
-              //           message: 'Account number copied to clipboard'),
-              //     ),
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //       children: [
-              //         Row(
-              //           children: [
-              //             Image.asset(
-              //               AppIcons.bank,
-              //               height: 26.h,
-              //               width: 26.h,
-              //             ),
-              //             10.wi,
-              //             Column(
-              //               crossAxisAlignment: CrossAxisAlignment.start,
-              //               children: [
-              //                 Text(
-              //                   'Wave 5 Wallet',
-              //                   style:
-              //                       AppTheme.lightTextTheme.bodySmall?.copyWith(
-              //                     fontSize: 8.sp,
-              //                     color: AppColors.white,
-              //                   ),
-              //                 ),
-              //                 Text(
-              //                   '5003553283',
-              //                   style:
-              //                       AppTheme.lightTextTheme.bodySmall?.copyWith(
-              //                     color: AppColors.white,
-              //                   ),
-              //                 ),
-              //               ],
-              //             )
-              //           ],
-              //         ),
-              //         110.wi,
-              //         SizedBox(
-              //           height: 30.h,
-              //           child: VerticalDivider(
-              //             width: 4,
-              //             color: AppColors.black.withOpacity(0.5),
-              //           ),
-              //         ),
-              //         20.wi,
-              //         Text(
-              //           'Copy',
-              //           style: AppTheme.lightTextTheme.bodySmall?.copyWith(
-              //             color: AppColors.white,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
-            ],
-          ),
+            ),
+            Positioned(
+              top: 66,
+              left: 130,
+              right: 120,
+              child: Text(
+                'Current Balance',
+                style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.white),
+              ),
+            ),
+            Positioned(
+                top: 88,
+                left: 110,
+                right: 100,
+                child: Row(
+                  children: [
+                    dealerBalanceController.when(data: (data) {
+                      return Text(
+                        isVisibiltyOn ? getFormattedBalance(data) : '********',
+                        style: AppTheme.lightTextTheme.displayMedium
+                            ?.copyWith(fontSize: 28.sp, color: AppColors.white),
+                      );
+                    }, error: (error, str) {
+                      log('balance error: $error');
+                      return const Text('');
+                    }, loading: () {
+                      return const SpinKitChasingDots(
+                        size: 20,
+                        color: AppColors.white,
+                      );
+                    }),
+                    6.wi,
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isVisibiltyOn = !isVisibiltyOn;
+                        });
+                      },
+                      child: SvgPicture.asset(
+                        // width: 19.34.w,
+                        // height: 17.25.h,
+                        isVisibiltyOn
+                            ? AppIcons.visibiltyOn
+                            : AppIcons.visibiltyOff,
+                        // width: 19.34.w,
+                        // height: 17.25.h,
+                      ),
+                    ),
+                  ],
+                ))
+          ],
         ));
   }
 }

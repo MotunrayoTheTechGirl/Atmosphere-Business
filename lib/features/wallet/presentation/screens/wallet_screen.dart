@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
-import 'package:dealer_portal_mobile/features/wallet/presentation/screens/fund_wallet_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +16,7 @@ import '../../../../core/utils/themes/app_themes.dart';
 import '../../../../core/utils/ui_helper.dart';
 import '../../../my_plans/data/controller/user_balance_controller.dart';
 import '../../data/controller/wallet_history_controller.dart';
+import '../widgets/fund_wallet_alert_dialog.dart';
 import '../widgets/wallet_balance_card.dart';
 import '../widgets/wallet_history_tile.dart';
 import 'wallet_history_screen.dart';
@@ -54,7 +54,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
       backgroundColor: AppColors.white,
       appBar: CustomAppBar(
         title: 'Wallet',
-        suffixIcon: AppIcons.notification,
+        // suffixIcon: AppIcons.notification,
         backgroundColor: AppColors.white,
       ),
       body: SafeArea(
@@ -76,10 +76,11 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                   20.hi,
                   InkWell(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return FundWalletScreen();
-                      }));
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) {
+                      //   return FundWalletScreen();
+                      // }));
+                      fundWalletAlertDialog(context: context);
                       _refreshTimer =
                           Timer.periodic(Duration(seconds: 5), (timer) {
                         ref.read(fetchUserBalanceControllerProvider);
@@ -91,12 +92,17 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     child: Container(
                       width: double.infinity,
-                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                       decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 1,
-                              color:
-                                  AppColors.textFieldBorder.withOpacity(0.5)),
+                          gradient: LinearGradient(
+                            colors: [
+                              Color(0xFF5A3D8B),
+                              Color(0xffe1206c).withOpacity(0.8)
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       child: Center(
                         child: Text(
@@ -104,14 +110,19 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                           style:
                               AppTheme.lightTextTheme.displayMedium?.copyWith(
                             fontSize: 15,
-                            color: AppColors.black.withOpacity(0.6),
+                            color: AppColors.white,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
                     ).padHorizontal(6),
                   ),
-                  20.hi,
+                  10.hi,
+                  Divider(
+                    thickness: 0.2,
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                  10.hi,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -143,7 +154,6 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                       ),
                     ],
                   ),
-                  10.hi,
                   walletHistoryController.when(
                     data: (data) {
                       return SizedBox(
@@ -153,46 +163,38 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                                 child: Text(
                                     'You currently have no transaction history'),
                               )
-                            : Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 17.0),
-                                child: ListView.separated(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: 17.0),
-                                    itemBuilder: (context, index) {
-                                      final history = data.data[index];
-                                      return WalletHistoryTile(
-                                        date: intl.DateFormat('dd/MM/yy')
-                                            .format(history.createdAt ??
-                                                DateTime.now()),
-                                        dataPlan: history.note ?? '',
-                                        amount: history.transactionType ==
-                                                "credit"
-                                            ? '+${formatNaira(history.debit ?? '')}'
-                                            : '-${formatNaira(history.debit ?? '')}',
-                                        amountTextColor:
-                                            history.transactionType == "credit"
-                                                ? AppColors.blackShade400
-                                                : AppColors.redShade500,
-                                        icon:
-                                            history.transactionType == "credit"
-                                                ? AppIcons.greenArrow
-                                                : AppIcons.redArrow,
-                                        iconBgColor:
-                                            history.transactionType == "credit"
-                                                ? AppColors.greenShade200
-                                                    .withOpacity(0.2)
-                                                : AppColors.redShade200,
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) {
-                                      return Divider(
-                                        thickness: 0.2,
-                                        color: Colors.black.withOpacity(0.5),
-                                      );
-                                    },
-                                    itemCount: data.data.length),
-                              ),
+                            : ListView.separated(
+                                padding: EdgeInsets.symmetric(vertical: 10.0),
+                                itemBuilder: (context, index) {
+                                  final history = data.data[index];
+                                  return WalletHistoryTile(
+                                    date: intl.DateFormat('dd/MM/yy').format(
+                                        history.createdAt ?? DateTime.now()),
+                                    dataPlan: history.note ?? '',
+                                    amount: history.transactionType == "credit"
+                                        ? '+${formatNaira(history.debit ?? '')}'
+                                        : '-${formatNaira(history.debit ?? '')}',
+                                    amountTextColor:
+                                        history.transactionType == "credit"
+                                            ? AppColors.blackShade400
+                                            : AppColors.redShade500,
+                                    icon: history.transactionType == "credit"
+                                        ? AppIcons.greenArrow
+                                        : AppIcons.redArrow,
+                                    iconBgColor:
+                                        history.transactionType == "credit"
+                                            ? AppColors.greenShade200
+                                                .withOpacity(0.2)
+                                            : AppColors.redShade200,
+                                  );
+                                },
+                                separatorBuilder: (context, index) {
+                                  return Divider(
+                                    thickness: 0.2,
+                                    color: Colors.black.withOpacity(0.5),
+                                  );
+                                },
+                                itemCount: data.data.length),
                       );
                     },
                     loading: () {

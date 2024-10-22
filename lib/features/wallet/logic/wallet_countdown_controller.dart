@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../my_plans/data/controller/user_balance_controller.dart';
 import '../data/controller/verify_and_update_wallet_controller.dart';
 import '../data/controller/wallet_history_controller.dart';
-import '../presentation/screens/fund_wallet_screen.dart';
+import '../presentation/widgets/fundwallet_tile.dart';
 import 'wallet_countdown_state.dart';
 
 final walletPaystackCountdownProvider =

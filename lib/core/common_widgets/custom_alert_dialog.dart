@@ -334,7 +334,7 @@ Future<void> customAlertDialog({
                                     }
                                   }
                                 },
-                                isLightBlue: true,
+                                isLightShade: true,
                                 rowLabel: 'Swap file',
                                 rowIcon: AppIcons.swap,
                                 rowIconWidth: 16.w,
@@ -351,7 +351,7 @@ Future<void> customAlertDialog({
                               AppElevatedButton(
                                 width: 120.w,
                                 onTap: () {},
-                                isLightBlue: true,
+                                isLightShade: true,
                                 rowLabel: 'Delete',
                                 rowLabelstyle: AppTheme
                                     .lightTextTheme.displaySmall
@@ -556,7 +556,7 @@ Future<void> customAlertDialog({
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    isLightBlue: true,
+                    isLightShade: true,
                     rowLabel: 'Close',
                   ),
                 ],
