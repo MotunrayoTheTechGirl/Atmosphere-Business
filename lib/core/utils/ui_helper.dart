@@ -6,34 +6,38 @@ String formatNaira(String amount) {
   return formatter.format(amountToDouble);
 }
 
-String formatDate(String date) {
-  DateTime dateTime = DateTime.parse(date);
-
-  String formatDayWithSuffix(int day) {
+String formatDate(String dateString) {
+  DateTime parsedDate = DateTime.parse(dateString);
+  String daySuffix(int day) {
     if (day >= 11 && day <= 13) {
-      return '${day}th';
+      return 'th';
     }
     switch (day % 10) {
       case 1:
-        return '${day}st';
+        return 'st';
       case 2:
-        return '${day}nd';
+        return 'nd';
       case 3:
-        return '${day}rd';
+        return 'rd';
       default:
-        return '${day}th';
+        return 'th';
     }
   }
 
-  String detailsDate = "${formatDayWithSuffix(dateTime.day)} "
-      "${DateFormat('MMMM').format(dateTime)} "
-      "${dateTime.year}, "
-      "${DateFormat('h:mm a').format(dateTime)}";
-  return detailsDate;
+  String day = DateFormat('d').format(parsedDate);
+  String suffix = daySuffix(parsedDate.day);
+  String formattedDate =
+      '$day$suffix ${DateFormat('MMM, yyyy').format(parsedDate)}';
+  return formattedDate;
+}
+
+String formatFirstName(String fullName) {
+  if (fullName.isEmpty) return '';
+  String firstName = fullName.split(' ').first;
+  return firstName[0].toUpperCase() + firstName.substring(1).toLowerCase();
 }
 
 String formatPhoneNumber(String phoneNumber) {
-  // String phoneNumber = phoneNumber;
   String updatedNumber = phoneNumber.replaceFirst('0', '+234');
   return updatedNumber;
 }
@@ -42,11 +46,9 @@ String? validatePhoneNumber(
   String? phoneNumber,
 ) {
   if (phoneNumber == null || phoneNumber.isEmpty) {
-    // isPhonNumberValid = false;
     return 'Phone Number is required';
   }
   if (phoneNumber.length != 11 && RegExp(r'^\d+$').hasMatch(phoneNumber)) {
-    // isPhonNumberValid = true;
     return 'Enter a valid Phone number';
   }
   return null;

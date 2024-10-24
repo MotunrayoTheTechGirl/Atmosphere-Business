@@ -3,13 +3,15 @@
 import 'dart:async';
 
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
+import 'package:dealer_portal_mobile/features/transaction_history.dart/features/screen/transaction_history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../../../../core/common_widgets/app_bars/custom_appbar.dart';
+import '../../../../core/common_widgets/app_bars/menu_appbar.dart';
+import '../../../../core/common_widgets/app_drawer/custom_drawer.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_icons.dart';
 import '../../../../core/utils/themes/app_themes.dart';
@@ -19,7 +21,6 @@ import '../../data/controller/wallet_history_controller.dart';
 import '../widgets/fund_wallet_alert_dialog.dart';
 import '../widgets/wallet_balance_card.dart';
 import '../widgets/wallet_history_tile.dart';
-import 'wallet_history_screen.dart';
 
 class WalletScreen extends ConsumerStatefulWidget {
   const WalletScreen({Key? key}) : super(key: key);
@@ -52,11 +53,10 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
     final walletHistoryController = ref.watch(walletHistoryControllerProvider);
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: CustomAppBar(
-        title: 'Wallet',
-        // suffixIcon: AppIcons.notification,
-        backgroundColor: AppColors.white,
+      appBar: MenuAppBar(
+        title: "Wallet",
       ),
+      drawer: const CustomDrawer(),
       body: SafeArea(
           child: RefreshIndicator.adaptive(
         onRefresh: () async {
@@ -72,6 +72,19 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
             SliverToBoxAdapter(
               child: Column(
                 children: [
+                  10.hi,
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Overview',
+                      style: AppTheme.lightTextTheme.displayMedium?.copyWith(
+                        fontSize: 15.sp,
+                        color: AppColors.black.withOpacity(0.6),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ).padOnly(left: 8),
+                  8.hi,
                   WalletBalanceCard(),
                   20.hi,
                   InkWell(
@@ -109,7 +122,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                           'Fund Wallet',
                           style:
                               AppTheme.lightTextTheme.displayMedium?.copyWith(
-                            fontSize: 15,
+                            fontSize: 15.sp,
                             color: AppColors.white,
                             fontWeight: FontWeight.w600,
                           ),
@@ -129,7 +142,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                       Text(
                         'Wallet History',
                         style: AppTheme.lightTextTheme.displayMedium?.copyWith(
-                            fontSize: 15,
+                            fontSize: 15.sp,
                             color: AppColors.black.withOpacity(0.6),
                             fontWeight: FontWeight.w600),
                       ),
@@ -138,7 +151,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) {
-                              return WalletHistoryScreen();
+                              return TransactionHistoryScreen();
                             }),
                           );
                         },
@@ -146,7 +159,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                           'See all',
                           style:
                               AppTheme.lightTextTheme.displayMedium?.copyWith(
-                            fontSize: 17,
+                            fontSize: 17.sp,
                             color: AppColors.black.withOpacity(0.6),
                             fontWeight: FontWeight.w500,
                           ),

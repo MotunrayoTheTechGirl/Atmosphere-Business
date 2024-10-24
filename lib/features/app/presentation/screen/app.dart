@@ -5,13 +5,10 @@ import 'package:dealer_portal_mobile/features/app/data/controller/app_controller
 import 'package:dealer_portal_mobile/features/billing/presentation/screens/billing_screen.dart';
 import 'package:dealer_portal_mobile/features/home/presentation/screens/home_screen.dart';
 import 'package:dealer_portal_mobile/features/my_plans/presentation/screens/my_plans_screen.dart';
-import 'package:dealer_portal_mobile/features/onboarding/data/controller/user_details_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/utils/app_colors.dart';
-import '../../../my_plans/data/controller/get_dealer_by_identity_controller.dart';
-import '../../../my_plans/data/controller/user_balance_controller.dart';
 import '../widgets/navbar_item.dart';
 
 class App extends ConsumerStatefulWidget {
@@ -29,26 +26,26 @@ class _AppState extends ConsumerState<App> {
     const MyPlansScreen(),
     BillingScreen(),
   ];
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(userDetailsControllerProvider.notifier).getUserDetails();
-      await ref.read(fetchUserBalanceControllerProvider.notifier).userBalance();
-      await ref
-          .read(fetchDealerByIdentityControllerProvider.notifier)
-          .dealerIdentity(
-              phoneNumber: ref
-                      .watch(userDetailsControllerProvider.notifier)
-                      .state
-                      .data
-                      ?.data
-                      ?.user
-                      ?.phoneNumber ??
-                  "");
-    });
+  // @override
+  // void initState() {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) async {
+  //     await ref.read(userDetailsControllerProvider.notifier).getUserDetails();
+  //     await ref.read(fetchUserBalanceControllerProvider.notifier).userBalance();
+  //     await ref
+  //         .read(fetchDealerByIdentityControllerProvider.notifier)
+  //         .dealerIdentity(
+  //             phoneNumber: ref
+  //                     .watch(userDetailsControllerProvider.notifier)
+  //                     .state
+  //                     .data
+  //                     ?.data
+  //                     ?.user
+  //                     ?.phoneNumber ??
+  //                 "");
+  //   });
 
-    super.initState();
-  }
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {

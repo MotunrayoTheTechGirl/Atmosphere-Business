@@ -78,8 +78,10 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
                     dealerBalanceController.when(data: (data) {
                       return Text(
                         isVisibiltyOn ? getFormattedBalance(data) : '********',
-                        style: AppTheme.lightTextTheme.displayMedium
-                            ?.copyWith(fontSize: 28.sp, color: AppColors.white),
+                        style: AppTheme.lightTextTheme.displayMedium?.copyWith(
+                          fontSize: 29.sp,
+                          color: AppColors.white,
+                        ),
                       );
                     }, error: (error, str) {
                       log('balance error: $error');
@@ -98,13 +100,9 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
                         });
                       },
                       child: SvgPicture.asset(
-                        // width: 19.34.w,
-                        // height: 17.25.h,
                         isVisibiltyOn
                             ? AppIcons.visibiltyOn
                             : AppIcons.visibiltyOff,
-                        // width: 19.34.w,
-                        // height: 17.25.h,
                       ),
                     ),
                   ],

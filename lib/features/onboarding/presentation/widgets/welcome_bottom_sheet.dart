@@ -71,10 +71,17 @@ class WelcomeBottomSheet extends ConsumerWidget {
                     return const CustomInAppBrowser(
                       url: AppConstants.authurl,
                     );
-                    // return const TestingScreen();
                   },
                 ),
               );
+              // Navigator.pushReplacement(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) {
+              //       return const App();
+              //     },
+              //   ),
+              // );
             },
             label: 'Sign in to continue',
           ),

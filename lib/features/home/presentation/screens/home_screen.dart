@@ -1,21 +1,22 @@
 import 'package:dealer_portal_mobile/core/utils/app_colors.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
+import 'package:dealer_portal_mobile/features/wallet/presentation/screens/wallet_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 
-import '../../../../core/common_widgets/app_divider.dart';
-import '../../../../core/common_widgets/custom_drawer.dart';
+import '../../../../core/common_widgets/app_drawer/custom_drawer.dart';
 import '../../../../core/utils/app_icons.dart';
 import '../../../../core/utils/ui_helper.dart';
 import '../../../billing/data/repository/billing_repository.dart';
-import '../../../billing/presentation/widgets/billing_tile.dart';
+import '../../../my_plans/data/controller/get_dealer_by_identity_controller.dart';
+import '../../../my_plans/data/controller/user_balance_controller.dart';
 import '../../../onboarding/data/controller/user_details_controller.dart';
+import '../../../wallet/presentation/widgets/wallet_balance_card.dart';
 import '../widgets/overview_card.dart';
+import '../widgets/quick_link_button.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -25,6 +26,27 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(userDetailsControllerProvider.notifier).getUserDetails();
+      await ref.read(fetchUserBalanceControllerProvider.notifier).userBalance();
+      await ref
+          .read(fetchDealerByIdentityControllerProvider.notifier)
+          .dealerIdentity(
+              phoneNumber: ref
+                      .watch(userDetailsControllerProvider.notifier)
+                      .state
+                      .data
+                      ?.data
+                      ?.user
+                      ?.phoneNumber ??
+                  "");
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final invoiceController = ref.watch(billingRepositoryFutureProvider);
@@ -49,7 +71,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           'Overview',
           style: AppTheme.lightTextTheme.displayLarge?.copyWith(
             fontWeight: FontWeight.w600,
-            fontSize: 16,
+            fontSize: 16.sp,
             color: AppColors.blackText,
           ),
         ),
@@ -60,19 +82,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       drawer: const CustomDrawer(),
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               10.hi,
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Filter by:',
+                    'Welcome back, ${formatFirstName(userDetailsController?.name ?? '')}',
                     style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.blackText,
+                      fontSize: 18.sp,
+                      color: AppColors.blackSupplementary,
                     ),
+                  ),
+                  8.wi,
+                  Image.asset(
+                    AppIcons.waveIcon,
+                    width: 18.w,
+                    height: 18.h,
                   ),
                   // SizedBox(
                   //   width: 92.w,
@@ -84,91 +111,53 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ],
               ),
               10.hi,
-              const OverviewCard(
-                title: 'Plan Amount Sold',
-                amount: '3465',
-                suffixNumber: '+234 ',
-                icon: AppIcons.greenGraph,
-                suffixColor: AppColors.green,
+              const WalletBalanceCard(),
+              16.hi,
+              const OverviewCard(),
+              30.hi,
+              Text(
+                'Quick links',
+                style: AppTheme.lightTextTheme.displayMedium?.copyWith(
+                  fontSize: 15.sp,
+                  color: AppColors.black.withOpacity(0.6),
+                ),
+              ),
+              8.hi,
+              Text(
+                'Essentials actions',
+                style: AppTheme.lightTextTheme.displayMedium?.copyWith(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.lighterText,
+                    fontFamily: AppTheme.montserratAlternate),
               ),
               16.hi,
-              const OverviewCard(
-                title: 'Total Revenue',
-                amount: '10000',
-                suffixNumber: '-134 ',
-                icon: AppIcons.redGraph,
-                suffixColor: AppColors.red,
-              ),
-              16.hi,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
                 children: [
-                  Text(
-                    'Invoice history',
-                    style: AppTheme.lightTextTheme.displaySmall?.copyWith(
-                        color: AppColors.black.withOpacity(0.6),
-                        fontWeight: FontWeight.w700,
-                        fontSize: 15.sp),
+                  QuickLinksButton(
+                    icon: AppIcons.access,
+                    label: 'Access Control',
+                    onTap: () {},
                   ),
-                  Text(
-                    'See all',
-                    style: AppTheme.lightTextTheme.displaySmall?.copyWith(
-                        color: AppColors.black.withOpacity(0.6),
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16.sp),
+                  QuickLinksButton(
+                    icon: AppIcons.walletNew,
+                    label: 'Wallet',
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return const WalletScreen();
+                      }));
+                    },
+                  ),
+                  QuickLinksButton(
+                    icon: AppIcons.report,
+                    label: 'Reports',
+                    onTap: () {},
                   ),
                 ],
-              ),
-              16.hi,
-              invoiceController.when(
-                data: (data) {
-                  return SizedBox(
-                    height: .3.sh,
-                    child: ListView.separated(
-                      itemBuilder: (context, index) {
-                        final dataList = data.reversed.toList();
-
-                        final invoice = dataList[index];
-                        String duration = invoice.createdAt.toString();
-                        DateTime dateTime = DateTime.parse(duration);
-                        String formattedDate = DateFormat('hh:mm a, dd MMM')
-                            .format(dateTime.toLocal());
-                        return BillingTile(
-                          onTap: () {},
-                          duration: formattedDate,
-                          id: 'INV-${invoice.id}',
-                          price: formatNaira(
-                            invoice.amount ?? '',
-                          ),
-                          dataPlan: 'Data Plan',
-                          name: userDetailsController?.name,
-                          status: invoice.paymentStatus ?? '',
-                          statusColorBg: invoice.paymentStatus == 'pending'
-                              ? AppColors.redShade50
-                              : AppColors.greenShade50,
-                          statusColor: invoice.paymentStatus == 'pending'
-                              ? AppColors.red
-                              : AppColors.green,
-                        );
-                      },
-                      itemCount: data.length,
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const AppDivider();
-                      },
-                    ),
-                  );
-                },
-                error: (e, str) {
-                  return const Text('Oops! something went wrong');
-                },
-                loading: () {
-                  return const Center(
-                    child: SpinKitSpinningLines(
-                      color: AppColors.primaryColor,
-                    ),
-                  );
-                },
-              ),
+              )
             ],
           ).padHorizontal(20),
         ),

@@ -42,9 +42,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Text(
           title,
           style: AppTheme.lightTextTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w500,
-            color: AppColors.activeText,
-          ),
+              fontWeight: FontWeight.w500,
+              color: AppColors.activeText,
+              fontSize: 18.sp),
         ),
       ),
       actions: [

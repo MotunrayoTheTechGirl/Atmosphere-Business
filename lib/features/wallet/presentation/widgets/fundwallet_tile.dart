@@ -8,14 +8,15 @@ import 'package:dealer_portal_mobile/features/wallet/data/controller/paystack_li
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/common_widgets/app_elevated_button.dart';
 import '../../../../core/common_widgets/app_text_field.dart';
+import '../../../../core/common_widgets/cancel_button.dart';
 import '../../../../core/enums.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_icons.dart';
+import '../../../../core/utils/custom_inapp_browser.dart';
 import '../../../../core/utils/themes/app_themes.dart';
+import '../../../../core/utils/thousand_formatter.dart';
 import '../../../onboarding/data/controller/user_details_controller.dart';
 import '../../../subscriptions/data/controller/create_order_controller.dart';
 import '../../../subscriptions/data/controller/generate_reference_controller.dart';
@@ -42,7 +43,7 @@ class _FundWalletTileState extends ConsumerState<FundWalletTile> {
 
   void validateAmount() {
     setState(() {
-      isAmountValid = valiadteAmountToFund(amountController.text) == null;
+      isAmountValid = validateAmountToFund(amountController.text) == null;
     });
   }
 
@@ -72,18 +73,27 @@ class _FundWalletTileState extends ConsumerState<FundWalletTile> {
   //   return null;
   // }
 
-  String? valiadteAmountToFund(String? amount) {
+  String? validateAmountToFund(String? amount) {
     if (amount == null || amount.isEmpty) {
       isAmountValid = false;
-      return 'Amount  cannot be blank';
-    }
-    if (int.parse(amount) < 300) {
-      isAmountValid = false;
-      return 'Amount cannot be less than ₦300';
+      return 'Amount cannot be blank';
     }
 
-    isAmountValid = true;
-    return null;
+    // Remove any non-digit characters (commas)
+    final cleanAmount = amount.replaceAll(RegExp(r'[^\d]'), '');
+
+    try {
+      final numericAmount = int.parse(cleanAmount);
+      if (numericAmount < 300) {
+        isAmountValid = false;
+        return 'Amount cannot be less than ₦300';
+      }
+      isAmountValid = true;
+      return null;
+    } catch (e) {
+      isAmountValid = false;
+      return 'Please enter a valid amount';
+    }
   }
 
   bool get isFormValid {
@@ -111,51 +121,29 @@ class _FundWalletTileState extends ConsumerState<FundWalletTile> {
                 style: AppTheme.lightTextTheme.bodySmall
                     ?.copyWith(fontWeight: FontWeight.w600, fontSize: 14.sp),
               ),
-              GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      // color: AppColors.whiteShade80.withOpacity(0.6),
-                      color: AppColors.lighterText.withOpacity(0.1),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(14.4),
-                      ),
-                    ),
-                    child: SvgPicture.asset(
-                      AppIcons.cancel,
-                      width: 12,
-                      height: 12,
-                    ),
-                  )),
+              CancelButton(),
             ],
           ),
           30.hi,
           Text(
             'Enter the amount you want to wallet your wallet with',
             style: AppTheme.lightTextTheme.displaySmall?.copyWith(
-              color: AppColors.deepAsh,
-              fontFamily: AppTheme.montserratAlternate,
-              fontWeight: FontWeight.w400,
-            ),
+                color: AppColors.deepAsh,
+                fontFamily: AppTheme.montserratAlternate,
+                fontWeight: FontWeight.w400,
+                fontSize: 16.sp),
           ),
           20.hi,
           Stack(
             children: [
               AppTextField(
                 fillColor: AppColors.lighterText.withOpacity(0.08),
-                // contentPadding: const EdgeInsets.symmetric(
-                //   vertical: 18,
-                //   horizontal: 8,
-                // ),
                 contentPadding: const EdgeInsets.only(
                   top: 40,
                   left: 8,
                   right: 8,
                 ),
-                validator: valiadteAmountToFund,
+                validator: validateAmountToFund,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 radius: 16.r,
                 style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
@@ -163,7 +151,9 @@ class _FundWalletTileState extends ConsumerState<FundWalletTile> {
                   fontSize: 28.sp,
                   color: AppColors.greyText,
                 ),
-
+                inputFormatters: [
+                  ThousandsSeparatorInputFormatter(),
+                ],
                 controller: amountController,
                 hintText: "",
                 keyboardType: TextInputType.number,
@@ -185,8 +175,10 @@ class _FundWalletTileState extends ConsumerState<FundWalletTile> {
                     child: Text(
                       'Amount',
                       style: AppTheme.lightTextTheme.displaySmall?.copyWith(
-                          color: AppColors.lighterText,
-                          fontWeight: FontWeight.w400),
+                        color: AppColors.lighterText,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16.sp,
+                      ),
                     ),
                   ))
             ],
@@ -209,17 +201,21 @@ class _FundWalletTileState extends ConsumerState<FundWalletTile> {
                     final hasCreateDigitalProduct = await ref
                         .read(createDigitalProductsControllerProvider.notifier)
                         .createDigitalPrd(
-                            amount: int.parse(amountController.text));
+                            amount: int.parse(
+                                amountController.text.replaceAll(',', '')));
                     if (hasCreateDigitalProduct) {
                       log('digital product created successfully');
                       //! checking if amount is above limit
-                      if (int.parse(amountController.text) >= 10000000) {
+                      if (int.parse(
+                              amountController.text.replaceAll(',', '')) >=
+                          10000000) {
                         log('--Amount is above limit----');
                         //! generate reference for offline payment
                         final isReferenceOfflineGenerated = await ref
                             .read(generateReferenceControllerProvider.notifier)
                             .generateReference(
-                              amount: int.parse(amountController.text),
+                              amount: int.parse(
+                                  amountController.text.replaceAll(',', '')),
                               userId: userDetailsController.data?.data?.user?.id
                                       .toString() ??
                                   '',
@@ -253,8 +249,10 @@ class _FundWalletTileState extends ConsumerState<FundWalletTile> {
                                 dealerUserId: userDetailsController
                                         .data?.data?.user?.id ??
                                     0,
-                                amount: int.parse(amountController.text),
-                                total: int.parse(amountController.text),
+                                amount: int.parse(
+                                    amountController.text.replaceAll(',', '')),
+                                total: int.parse(
+                                    amountController.text.replaceAll(',', '')),
                                 totalHrs: 24,
                                 orderItems: [
                                   {
@@ -296,7 +294,8 @@ class _FundWalletTileState extends ConsumerState<FundWalletTile> {
                         final isReferenceGenerated = await ref
                             .read(generateReferenceControllerProvider.notifier)
                             .generateReference(
-                              amount: int.parse(amountController.text),
+                              amount: int.parse(
+                                  amountController.text.replaceAll(',', '')),
                               userId: userDetailsController.data?.data?.user?.id
                                       .toString() ??
                                   '',
@@ -320,8 +319,9 @@ class _FundWalletTileState extends ConsumerState<FundWalletTile> {
                                           .data?.data?.user?.id
                                           .toString() ??
                                       '',
-                                  amount:
-                                      int.parse(amountController.text) * 100,
+                                  amount: int.parse(amountController.text
+                                          .replaceAll(',', '')) *
+                                      100,
                                   reference: reference ?? '');
                           if (hasgeneratedPaymentLink) {
                             final paymentLink = ref
@@ -332,7 +332,8 @@ class _FundWalletTileState extends ConsumerState<FundWalletTile> {
                                 ?.data
                                 ?.authorizationUrl;
                             ref.read(amountStateProvider.notifier).state =
-                                int.parse(amountController.text);
+                                int.parse(
+                                    amountController.text.replaceAll(',', ''));
                             ref
                                 .read(generatedReferenceStateProvider.notifier)
                                 .state = reference ?? '';
@@ -340,13 +341,13 @@ class _FundWalletTileState extends ConsumerState<FundWalletTile> {
                                 userDetailsController.data?.data?.user?.id
                                         .toString() ??
                                     '';
-                            // await Navigator.pushReplacement(context,
-                            //     MaterialPageRoute(builder: (context) {
-                            //   return CustomInAppBrowser(
-                            //     url: paymentLink ?? '',
-                            //     isFunding: true,
-                            //   );
-                            // }));
+                            await Navigator.pushReplacement(context,
+                                MaterialPageRoute(builder: (context) {
+                              return CustomInAppBrowser(
+                                url: paymentLink ?? '',
+                                isFunding: true,
+                              );
+                            }));
                           } else {
                             log('--failed to generate payment link ----');
                           }

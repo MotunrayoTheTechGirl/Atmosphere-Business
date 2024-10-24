@@ -52,15 +52,16 @@ class WalletHistoryTile extends StatelessWidget {
                     style: AppTheme.lightTextTheme.bodySmall?.copyWith(
                       color: AppColors.greyText,
                       fontWeight: FontWeight.w400,
+                      fontSize: 12.sp,
                     ),
                   ),
                   3.hi,
                   Text(
                     dataPlan,
                     style: AppTheme.lightTextTheme.displaySmall?.copyWith(
-                      color: AppColors.royalBlue,
-                      fontWeight: FontWeight.w500,
-                    ),
+                        color: AppColors.royalBlue,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18.sp),
                   ),
                 ],
               ),
@@ -69,7 +70,7 @@ class WalletHistoryTile extends StatelessWidget {
           Text(
             amount,
             style: AppTheme.lightTextTheme.displayMedium?.copyWith(
-              fontSize: 18,
+              fontSize: 18.sp,
               fontWeight: FontWeight.w600,
               color: amountTextColor ?? AppColors.redShade500,
             ),

@@ -33,13 +33,25 @@ class CustomTableHeader extends StatelessWidget {
         ),
       ),
       child: forInvoice
-          ? const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TableHeader(heading: 'Plan'),
-                TableHeader(heading: 'Quantity'),
-                TableHeader(heading: 'Amount'),
-              ],
+          ? const Padding(
+              padding: EdgeInsets.only(left: 2),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: TableHeader(heading: 'Top up'),
+                    ),
+                  ),
+                  // 160.wi,
+                  Expanded(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: TableHeader(heading: 'Amount'),
+                    ),
+                  ),
+                ],
+              ),
             )
           : const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,6 +1,7 @@
 import 'package:dealer_portal_mobile/core/utils/app_colors.dart';
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppTextField extends StatelessWidget {
@@ -26,6 +27,7 @@ class AppTextField extends StatelessWidget {
   final InputBorder? focusedBorder;
   final String? label;
   final bool readOnly;
+  final List<TextInputFormatter>? inputFormatters;
 
   const AppTextField(
       {required this.controller,
@@ -52,6 +54,7 @@ class AppTextField extends StatelessWidget {
       this.focusedBorder,
       this.border,
       this.label,
+      this.inputFormatters,
       Key? key})
       : super(key: key);
 
@@ -68,7 +71,7 @@ class AppTextField extends StatelessWidget {
               color: AppColors.textColor),
         ),
         TextFormField(
-          // focusNode: ,
+          inputFormatters: inputFormatters,
           readOnly: readOnly,
           controller: controller,
           keyboardType: keyboardType,

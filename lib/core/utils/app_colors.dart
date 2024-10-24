@@ -24,7 +24,9 @@ class AppColors {
   static const Color redShade200 = Color(0xFFFFF4F4);
   static const Color white = Color(0xFFFFFFFF);
   static const Color green = Color(0xFF17CF6B);
+  static const Color greenShade900 = Color(0xFF027A48);
   static const Color greenShade50 = Color(0xFFECFDF3);
+  static const Color greyShade100 = Color(0xFFECEDF0);
   static const Color greenShade200 = Color(0xFF4FBF67);
   static const Color textColor = Color(0xff575758);
   static const Color lighterText = Color(0xFF9D9D9D);
@@ -32,10 +34,12 @@ class AppColors {
   static const Color tabBarColor = Color(0xFFF2F4F8);
   static const Color whiteShade80 = Color(0xFFF9F9F9);
   static const Color greyText = Color(0XFF555E67);
+  static const Color greyTextShade100 = Color(0xFF9F9F9F);
   static const Color greyShade50 = Color(0xFFF5F5F5);
   static const Color dividerColor = Color(0xFFE8E6EA);
   static const Color lilac = Color(0xFFF8F8FF);
   static const Color textFieldBorder = Color(0xFF1B1D21);
   static const Color buttonBg = Color(0xFFFBFCFE);
   static const Color w5Color = Color(0xFF5A3D8B);
+  static const Color lightPurple = Color(0xFFF3F0FF);
 }

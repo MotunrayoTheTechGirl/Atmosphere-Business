@@ -1,3 +1,4 @@
+import 'package:dealer_portal_mobile/core/common_widgets/app_drawer/custom_drawer.dart';
 import 'package:dealer_portal_mobile/core/utils/app_colors.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/features/transaction_history.dart/features/screen/history_details_screen.dart';
@@ -6,40 +7,47 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:intl/intl.dart';
 
-import '../../../../core/common_widgets/app_bars/custom_appbar.dart';
-import '../../../../core/common_widgets/app_divider.dart';
+import '../../../../core/common_widgets/app_bars/menu_appbar.dart';
 import '../../../../core/common_widgets/app_text_field.dart';
 import '../../../../core/utils/app_icons.dart';
 import '../../../../core/utils/themes/app_themes.dart';
 import '../../../../core/utils/ui_helper.dart';
-import '../../../billing/presentation/widgets/billing_tile.dart';
-import '../../../onboarding/data/controller/user_details_controller.dart';
-import '../../data/repository/transaction_history_repository.dart';
+import '../../../wallet/data/controller/wallet_history_controller.dart';
+import '../../../wallet/presentation/widgets/wallet_history_tile.dart';
 
-class TransactionHistoryScreen extends ConsumerWidget {
+class TransactionHistoryScreen extends ConsumerStatefulWidget {
   const TransactionHistoryScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _TransactionHistoryScreenState createState() =>
+      _TransactionHistoryScreenState();
+}
+
+class _TransactionHistoryScreenState
+    extends ConsumerState<TransactionHistoryScreen> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(walletHistoryControllerProvider.notifier).fetchWalletHistory();
+    });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final walletHistoryController = ref.watch(walletHistoryControllerProvider);
     final searchController = TextEditingController();
-    final userId =
-        ref.watch(userDetailsControllerProvider).data?.data?.user?.id ?? 0;
-    final firstName =
-        ref.watch(userDetailsControllerProvider).data?.data?.user?.firstName ??
-            '';
-    final lastName =
-        ref.watch(userDetailsControllerProvider).data?.data?.user?.lastName ??
-            '';
-    final historyController =
-        ref.watch(transactionHistoryFutureProvider(userId));
+    // final historyController =
+    //     ref.watch(transactionHistoryFutureProvider(userId));
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: 'Transaction History',
-        suffixIcon: AppIcons.notification,
-        backgroundColor: AppColors.white,
+      appBar: const MenuAppBar(
+        title: "Transaction History",
       ),
+      drawer: const CustomDrawer(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -74,86 +82,112 @@ class TransactionHistoryScreen extends ConsumerWidget {
               10.hi,
               SizedBox(
                 height: .7.sh,
-                child: historyController.when(data: (data) {
-                  return ListView.separated(
-                    itemBuilder: (context, index) {
-                      final history = data.data[index];
-                      String duration = history.createdAt.toString();
-                      DateTime dateTime = DateTime.parse(duration);
-                      String formattedDate = DateFormat('hh:mm a, dd MMM')
-                          .format(dateTime.toLocal());
+                child: walletHistoryController.when(
+                  data: (data) {
+                    return SizedBox(
+                      height: .4.sh,
+                      child: data.data.isEmpty
+                          ? const Center(
+                              child: Text(
+                                  'You currently have no transaction history'),
+                            )
+                          : ListView.separated(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              itemBuilder: (context, index) {
+                                final history = data.data[index];
+                                String duration = history.createdAt.toString();
+                                DateTime dateTime = DateTime.parse(duration);
+                                // String formattedDate =
+                                //     DateFormat('hh:mm a, dd MMM')
+                                //         .format(dateTime.toLocal());
+                                String formatDayWithSuffix(int day) {
+                                  if (day >= 11 && day <= 13) {
+                                    return '${day}th';
+                                  }
+                                  switch (day % 10) {
+                                    case 1:
+                                      return '${day}st';
+                                    case 2:
+                                      return '${day}nd';
+                                    case 3:
+                                      return '${day}rd';
+                                    default:
+                                      return '${day}th';
+                                  }
+                                }
 
-                      // DateTime convertDate = DateTime.parse(duration);
-                      String formatDayWithSuffix(int day) {
-                        if (day >= 11 && day <= 13) {
-                          return '${day}th';
-                        }
-                        switch (day % 10) {
-                          case 1:
-                            return '${day}st';
-                          case 2:
-                            return '${day}nd';
-                          case 3:
-                            return '${day}rd';
-                          default:
-                            return '${day}th';
-                        }
-                      }
+                                String detailsDate =
+                                    "${formatDayWithSuffix(dateTime.day)} "
+                                    "${DateFormat('MMMM').format(dateTime)} "
+                                    "${dateTime.year}, ";
 
-                      String detailsDate =
-                          "${formatDayWithSuffix(dateTime.day)} "
-                          "${DateFormat('MMMM').format(dateTime)} "
-                          "${dateTime.year}, "
-                          "${DateFormat('h:mm a').format(dateTime)}";
-
-                      return BillingTile(
-                        id: history.transactionReference.toString(),
-                        dataPlan: 'Data Plan',
-                        price: formatNaira(
-                          history.total.toString(),
-                        ),
-                        duration: formattedDate,
-                        name: '$firstName $lastName',
-                        statusColorBg: history.orderStatus == 'pending'
-                            ? AppColors.redShade50
-                            : AppColors.greenShade50,
-                        status: history.paymentStatus ?? '',
-                        statusColor: history.orderStatus == 'pending'
-                            ? AppColors.red
-                            : AppColors.green,
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return HistoryDetailsScreen(
-                              orderId: history.id.toString(),
-                              price: formatNaira(
-                                history.total.toString(),
-                              ),
-                              validity: history.validity.toString(),
-                              dateTime: detailsDate,
-                              amount: formatNaira(
-                                history.total.toString(),
-                              ),
-                            );
-                          }));
-                        },
-                      );
-                    },
-                    itemCount: data.data.length,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const AppDivider();
-                    },
-                  );
-                }, error: (error, stackTrace) {
-                  return Text(error.toString());
-                }, loading: () {
-                  return const Center(
-                    child: SpinKitSpinningLines(
-                      color: AppColors.primaryColor,
-                    ),
-                  );
-                }),
-              ),
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return HistoryDetailsScreen(
+                                        transactionId: history.id.toString(),
+                                        description: history.note ?? '',
+                                        date: detailsDate,
+                                        amount: history.transactionType ==
+                                                "credit"
+                                            ? formatNaira(history.debit ?? '')
+                                            : formatNaira(history.debit ?? ''),
+                                        time: DateFormat('h : mm a')
+                                            .format(dateTime),
+                                        transactionType:
+                                            history.transactionType == "credit"
+                                                ? "credit"
+                                                : "debit",
+                                      );
+                                    }));
+                                  },
+                                  child: WalletHistoryTile(
+                                    date: intl.DateFormat('dd/MM/yy').format(
+                                        history.createdAt ?? DateTime.now()),
+                                    dataPlan: history.note ?? '',
+                                    amount: history.transactionType == "credit"
+                                        ? '+${formatNaira(history.debit ?? '')}'
+                                        : '-${formatNaira(history.debit ?? '')}',
+                                    amountTextColor:
+                                        history.transactionType == "credit"
+                                            ? AppColors.blackShade400
+                                            : AppColors.redShade500,
+                                    icon: history.transactionType == "credit"
+                                        ? AppIcons.greenArrow
+                                        : AppIcons.redArrow,
+                                    iconBgColor:
+                                        history.transactionType == "credit"
+                                            ? AppColors.greenShade200
+                                                .withOpacity(0.2)
+                                            : AppColors.redShade200,
+                                  ),
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return Divider(
+                                  thickness: 0.2,
+                                  color: Colors.black.withOpacity(0.5),
+                                );
+                              },
+                              itemCount: data.data.length),
+                    );
+                  },
+                  loading: () {
+                    return const Center(
+                      child: SpinKitSpinningLines(
+                        color: AppColors.primaryColor,
+                      ),
+                    );
+                  },
+                  error: (error, str) {
+                    return const Center(
+                      child: Text('Oops! something went wrong'),
+                    );
+                  },
+                ),
+              )
             ],
           ).padHorizontal(16),
         ),

@@ -21,7 +21,7 @@ class AppIcons {
   static const String cancel = "assets/svg/cancel.svg";
   static const String invoice = "assets/svg/invoice.svg";
   static const String share = "assets/svg/share.svg";
-  static const String download = "assets/svg/download.svg";
+  static const String download = "assets/svg/downloadd.svg";
   static const String print = "assets/svg/print.svg";
   static const String file = "assets/svg/file.svg";
   static const String swap = "assets/svg/swap.svg";
@@ -45,6 +45,22 @@ class AppIcons {
   static const String visibiltyOff = "assets/svg/visibilityOffIcon.svg";
   static const String filterIcon = "assets/svg/filter_icon.svg";
   static const String editIcon = "assets/svg/edit_icon.svg";
+  static const String report = "assets/svg/report.svg";
+  static const String walletNew = "assets/svg/wallet_new.svg";
+  static const String access = "assets/svg/access.svg";
+  static const String marketPlace = "assets/svg/market_place.svg";
+  static const wifiService = "assets/svg/wifi_service.svg";
+  static const advertise = "assets/svg/advertise.svg";
+  static const storefront = "assets/svg/storefront.svg";
+  static const subscription = "assets/svg/subsription.svg";
+  static const homeIcon = "assets/svg/home_icon.svg";
+  static const vending = "assets/svg/vending.svg";
+  static const serviceMgt = "assets/svg/service_mgt.svg";
+  static const promotion = "assets/svg/promotions.svg";
+  static const businessInfo = "assets/svg/business_info.svg";
+  static const curveArrowUp = "assets/svg/curve_arrow_up.svg";
+  static const bulletPoint = "assets/svg/bullet_point.svg";
+  static const leftArrow = "assets/svg/left_angle_arrow.svg";
 
   ///Png
   static const String activeHomeNew = "assets/images/active_home.png";
@@ -59,4 +75,5 @@ class AppIcons {
   static const String visibility = "assets/images/visible_icon.png";
   static const String wave5Logo = "assets/images/wave5_logo.png";
   static const String fundWalletBg = "assets/images/fundwallet_bg.png";
+  static const String waveIcon = "assets/images/waving.png";
 }

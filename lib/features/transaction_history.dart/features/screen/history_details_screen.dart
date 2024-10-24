@@ -3,6 +3,7 @@ import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/common_widgets/app_bars/custom_appbar.dart';
 import '../../../../core/common_widgets/app_elevated_button.dart';
@@ -13,25 +14,36 @@ import '../../../subscriptions/presentation/widgets/invoice_summary.dart';
 
 class HistoryDetailsScreen extends ConsumerWidget {
   const HistoryDetailsScreen(
-      {required this.orderId,
-      required this.price,
-      required this.validity,
-      required this.dateTime,
+      {required this.transactionId,
+      required this.transactionType,
+      required this.date,
       required this.amount,
-      // required this.status,
+      required this.description,
+      required this.time,
       Key? key})
       : super(key: key);
 
-  final String orderId, price, validity, dateTime, amount;
+  final String transactionId, description, transactionType, date, time, amount;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userDetailsController =
         ref.watch(userDetailsControllerProvider).data?.data?.user;
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: 'Transaction Details',
+      appBar: CustomAppBar(
+        title: 'Details',
         backgroundColor: AppColors.white,
+        icon: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: SvgPicture.asset(
+            AppIcons.leftArrow,
+            width: 16.w,
+            height: 8.h,
+            fit: BoxFit.scaleDown,
+          ),
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -41,8 +53,11 @@ class HistoryDetailsScreen extends ConsumerWidget {
             Row(
               children: [
                 SizedBox(
-                  width: 136.w,
+                  width: 150.w,
                   child: AppElevatedButton(
+                    width: 0,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
                     borderRadius: 8,
                     labelFontSize: 14.sp,
                     label: 'View Receipt',
@@ -50,57 +65,55 @@ class HistoryDetailsScreen extends ConsumerWidget {
                   ),
                 ),
                 10.wi,
-                AppElevatedButton(
-                  borderRadius: 8,
-                  rowIcon: AppIcons.share,
-                  width: 112.w,
-                  rowLabel: 'share',
-                  onTap: () {},
-                  isLightShade: true,
+                SizedBox(
+                  width: 150.w,
+                  child: AppElevatedButton(
+                    borderRadius: 8,
+                    rowIcon: AppIcons.share,
+                    width: 0,
+                    rowLabel: 'share',
+                    onTap: () {},
+                    isLightShade: true,
+                  ),
                 ),
               ],
             ),
             28.hi,
             InvoiceSummary(
-              leading: 'Order ID:  ',
-              trailing: orderId,
+              leading: 'Transaction ID:  ',
+              trailing: transactionId,
             ),
             14.hi,
             InvoiceSummary(
-              leading: 'Phone Number:  ',
-              trailing: userDetailsController?.phoneNumber ?? '',
-            ),
-            18.hi,
-            const InvoiceSummary(
-              leading: 'Data Plan:  ',
-              trailing: 'Data Plan',
+              leading: 'Description:  ',
+              trailing: description,
             ),
             18.hi,
             InvoiceSummary(
               leading: 'Amount:  ',
-              trailing: validity,
+              trailing: amount,
             ),
             18.hi,
             InvoiceSummary(
-              leading: 'Date / Time:  ',
-              trailing: dateTime,
+              leading: 'Date:  ',
+              trailing: date,
             ),
             18.hi,
             InvoiceSummary(
-              leading: 'Validity:  ',
-              trailing: validity,
+              leading: 'Time:  ',
+              trailing: time,
             ),
             18.hi,
-            const Row(
+            Row(
               children: [
-                InvoiceSummary(
+                const InvoiceSummary(
                   leading: 'Status:  ',
                   trailing: '',
                 ),
                 PaymentStatus(
-                  label: 'Used',
-                  color: AppColors.green,
-                  bgColor: AppColors.greyShade50,
+                  label: transactionType,
+                  color: AppColors.greenShade900,
+                  bgColor: AppColors.greenShade50,
                 )
               ],
             ),

@@ -15,7 +15,7 @@ class TableHeader extends StatelessWidget {
     return Text(
       heading,
       style: AppTheme.lightTextTheme.bodySmall?.copyWith(
-        fontSize: 11.sp,
+        fontSize: 13.sp,
         color: AppColors.greyText,
       ),
     );

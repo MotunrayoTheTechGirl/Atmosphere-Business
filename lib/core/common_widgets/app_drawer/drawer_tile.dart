@@ -1,7 +1,10 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:dealer_portal_mobile/core/utils/app_colors.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 class DrawerTile extends StatelessWidget {
@@ -14,6 +17,7 @@ class DrawerTile extends StatelessWidget {
   final void Function()? onTap;
   final String icon;
   final String label;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -26,10 +30,11 @@ class DrawerTile extends StatelessWidget {
             label,
             style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
               color: AppColors.blackSupplementary,
+              fontSize: 14.sp,
             ),
-          )
+          ),
         ],
       ),
-    );
+    ).padHorizontal(18);
   }
 }

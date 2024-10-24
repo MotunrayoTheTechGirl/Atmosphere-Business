@@ -1,7 +1,6 @@
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/themes/app_themes.dart';
@@ -9,78 +8,82 @@ import '../../../../core/utils/ui_helper.dart';
 
 class OverviewCard extends StatelessWidget {
   const OverviewCard({
-    this.amount,
-    this.suffixNumber,
-    this.title,
-    this.showWidget = true,
-    this.icon,
-    this.suffixColor,
     super.key,
   });
-  final String? title, amount, suffixNumber, icon;
-  final bool showWidget;
-  final Color? suffixColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       width: double.infinity,
-      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(10),
-        ),
         border: Border.all(
-          color: AppColors.lightBorder,
           width: 1,
+          color: AppColors.lightBorder,
+        ),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(20),
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title ?? '',
-            style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.w400,
+            'Subscriptions',
+            style: AppTheme.lightTextTheme.displaySmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.deepBrown,
+                fontSize: 16.sp),
+          ),
+          10.hi,
+          RichText(
+            text: TextSpan(
+              text: 'Last subscribed: ',
+              style: AppTheme.lightTextTheme.bodySmall?.copyWith(
+                  color: AppColors.greyText.withOpacity(0.8), fontSize: 12.sp),
+              children: [
+                TextSpan(
+                  text: formatDate('2024-10-22T09:44:20.224Z'),
+                  style: AppTheme.lightTextTheme.bodySmall
+                      ?.copyWith(color: AppColors.deepBrown, fontSize: 12.sp),
+                ),
+              ],
             ),
           ),
-          5.hi,
+          10.hi,
           Text(
-            formatNaira(amount ?? ''),
-            style: AppTheme.lightTextTheme.titleLarge?.copyWith(
-              fontSize: 24.sp,
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+            style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+              fontSize: 14.sp,
+              color: AppColors.deepAsh,
             ),
           ),
-          1.hi,
-          showWidget
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: suffixNumber,
-                            style: AppTheme.lightTextTheme.bodyLarge
-                                ?.copyWith(color: suffixColor),
-                          ),
-                          TextSpan(
-                            text: 'compared to last week',
-                            style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                              color: AppColors.blackText.withOpacity(0.5),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SvgPicture.asset(
-                      icon ?? '',
-                      height: 50.h,
-                    ),
-                  ],
-                )
-              : const SizedBox(),
+          16.hi,
+          GestureDetector(
+            onTap: () {},
+            child: Container(
+              padding: const EdgeInsets.only(
+                top: 15.1,
+                bottom: 15.1,
+                left: 50,
+                right: 50,
+              ),
+              decoration: const BoxDecoration(
+                color: AppColors.lightPurple,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(28.7),
+                ),
+              ),
+              child: Text(
+                'Check subscribed products',
+                style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14.sp,
+                  color: AppColors.w5Color,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

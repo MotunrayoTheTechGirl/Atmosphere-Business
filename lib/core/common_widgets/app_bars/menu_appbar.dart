@@ -20,7 +20,8 @@ class MenuAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: Builder(builder: (context) {
         return GestureDetector(
           onTap: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            Scaffold.of(context).openDrawer();
           },
           child: SvgPicture.asset(
             AppIcons.menu,

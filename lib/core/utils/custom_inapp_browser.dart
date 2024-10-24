@@ -1,7 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
+import 'package:dealer_portal_mobile/features/home/presentation/screens/home_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -9,7 +12,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../features/app/presentation/screen/app.dart';
 import '../../features/onboarding/data/controller/get_query_param.dart';
 import '../../features/wallet/data/controller/verify_and_update_wallet_controller.dart';
 import '../../features/wallet/logic/wallet_countdown_controller.dart';
@@ -107,17 +109,7 @@ class _CustomInAppBrowserState extends ConsumerState<CustomInAppBrowser> {
       },
       child: Scaffold(
         appBar: AppBar(
-          leading: const CloseButton(
-              // onPressed: () {
-              //   if (widget.isFunding == true) {
-              //     log('closed button pressed - stoping verification timer');
-              //     ref.read(walletPaystackCountdownProvider.notifier).stopTimer();
-              //     Navigator.of(context).pop();
-              //   }
-
-              //   Navigator.of(context).pop();
-              // },
-              ),
+          leading: const CloseButton(),
           actions: [
             IconButton(
               onPressed: () => webViewController?.reload(),
@@ -206,24 +198,6 @@ class _CustomInAppBrowserState extends ConsumerState<CustomInAppBrowser> {
                             this.url = url.toString();
                             isSecure = urlIsSecure(url);
                           });
-                          // if (url.toString().contains('atmosphere.net')) {
-
-                          //   ref
-                          //       .read(verifyAndUpdateWalletControllerProvider
-                          //           .notifier)
-                          //       .verifyPaymentAndUpdateWallet(
-                          //           amount: ref.watch(amountStateProvider),
-                          //           reference: ref
-                          //               .watch(generatedReferenceStateProvider),
-                          //           userId: ref.watch(userIdStateProvider));
-
-                          //   Navigator.pushAndRemoveUntil(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => const WalletScreen()),
-                          //     (Route<dynamic> route) => false,
-                          //   );
-                          // }
                         }
                       },
                       onLoadStop: (controller, url) async {
@@ -274,7 +248,7 @@ class _CustomInAppBrowserState extends ConsumerState<CustomInAppBrowser> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return const App();
+                                  return HomeScreen();
                                 },
                               ),
                             );
