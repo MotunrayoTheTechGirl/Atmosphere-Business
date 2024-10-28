@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields
+// ignore_for_file: prefer_final_fields, invalid_return_type_for_catch_error
 
 import 'dart:developer';
 import 'dart:io';
@@ -9,6 +9,7 @@ import 'package:dealer_portal_mobile/core/utils/app_icons.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/core/utils/ui_helper.dart';
 import 'package:dealer_portal_mobile/features/subscriptions/presentation/widgets/invoice_summary.dart';
+import 'package:dealer_portal_mobile/features/wallet/presentation/widgets/fundwallet_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +21,7 @@ import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/common_widgets/app_divider.dart';
 import '../../../../core/common_widgets/custom_alert_dialog.dart';
@@ -27,7 +29,6 @@ import '../../../../core/common_widgets/custom_snackbar.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/themes/app_themes.dart';
 import '../../../onboarding/data/controller/user_details_controller.dart';
-import '../../data/controller/create_order_controller.dart';
 import '../../data/controller/file_upload_controller.dart';
 import '../../data/controller/invoice_url_controller.dart';
 import '../../data/repository/order_invoice_repository.dart';
@@ -61,6 +62,8 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
 
     await _screenshotController.capture().then((image) async {
       final file = File(imagePath);
+      print('file: $file');
+      print('Image: $image');
       await file.writeAsBytes(image!.cast<int>());
       final pdfFile = File(pdfPath);
       final pdf = pw.Document();
@@ -74,7 +77,9 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
       await pdf.save().then((pdfBtyes) async {
         pdfFile.writeAsBytesSync(pdfBtyes);
         String temporaryUrl = await _generateTemporaryUrl(pdfFile.path);
-
+        log('pdf path: $pdfPath');
+        log('pdf: file: $pdfFile');
+        log('pdf: $pdf');
         final isPdfUploaded =
             await ref.read(fileUploadControllerProvider.notifier).uploadFile(
                   file: File(pdfPath),
@@ -90,15 +95,49 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
               .uploadInvoiceUrl(
                   invoiceId: invoiceId, invoicefileUrl: trimmedData ?? '');
           if (hasUploadInvoice) {
-            // log('...SuccessFull invoice upload...');
+            log('...SuccessFull invoice upload...');
           } else {
-            // log('...unSuccessFull invoice upload...');
+            log('...unSuccessFull invoice upload...');
           }
         } else {
-          // log('Invoice not  Uploaded');
+          log('Invoice not  Uploaded');
         }
       });
-    }).catchError((onError) => print('image path error: $onError'));
+    }).catchError((onError) => log('image path error: $onError'));
+  }
+
+  Future<void> shareInvoice() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final imagePath =
+        '${directory.path}/screenshot_${DateTime.now().millisecondsSinceEpoch}.png';
+    final pdfPath =
+        '${directory.path}/screenshot_${DateTime.now().millisecondsSinceEpoch}.pdf';
+
+    await _screenshotController.capture().then((image) async {
+      final file = File(imagePath);
+      log('file: $file');
+      log('Image: $image');
+      await file.writeAsBytes(image!.cast<int>());
+      final pdfFile = File(pdfPath);
+      final pdf = pw.Document();
+      pdf.addPage(
+        pw.Page(build: (context) {
+          return pw.Center(
+            child: pw.Image(pw.MemoryImage(image)),
+          );
+        }),
+      );
+      await pdf.save().then((pdfBtyes) async {
+        pdfFile.writeAsBytesSync(pdfBtyes);
+        // String temporaryUrl = await _generateTemporaryUrl(pdfFile.path);
+        log('pdf path: $pdfPath');
+        log('pdf: file: $pdfFile');
+        log('pdf: $pdf');
+        final List<XFile> files = [XFile(pdfPath)];
+        Share.shareXFiles(files, text: 'Check out this file!');
+        log('Made it here!!!');
+      });
+    }).catchError((onError) => log('screenshot image path error: $onError'));
   }
 
   @override
@@ -107,9 +146,10 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
       printer: PrettyPrinter(),
     );
 
-    final orderId = ref.watch(createDigitalOrderControllerProvider).data?.id;
-    final invoiceFutureController =
-        ref.watch(orderInvoiceRepositoryFutureProvider(orderId ?? 0));
+    // final orderId = ref.watch(createDigitalOrderControllerProvider).data?.id;
+    final invoiceFutureController = ref.watch(
+        orderInvoiceRepositoryFutureProvider(
+            ref.read(orderIdStateProvider) ?? 0));
     final userDetailsController =
         ref.watch(userDetailsControllerProvider).data?.data?.user;
     return Scaffold(
@@ -134,9 +174,9 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
         ],
       ),
       body: SafeArea(
-        child: Screenshot(
-          controller: _screenshotController,
-          child: SingleChildScrollView(
+        child: SingleChildScrollView(
+          child: Screenshot(
+            controller: _screenshotController,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -207,9 +247,16 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                       ]),
                                 ),
                                 10.hi,
-                                const PaymentStatus(
-                                  label: 'Unpaid',
-                                  color: AppColors.red,
+                                PaymentStatus(
+                                  label: data.status == 'pending'
+                                      ? 'Unpaid'
+                                      : 'Paid',
+                                  color: data.status == 'pending'
+                                      ? AppColors.red
+                                      : AppColors.greenShade900,
+                                  bgColor: data.status == 'pending'
+                                      ? AppColors.redShade50
+                                      : AppColors.greenShade50,
                                 ),
                                 40.hi,
                                 Row(
@@ -219,7 +266,9 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                       child: AppElevatedButton(
                                         borderRadius: 8,
                                         labelFontSize: 14.sp,
-                                        label: 'Submit Bank Receipt',
+                                        label: data.status == 'pending'
+                                            ? 'Submit Bank Receipt'
+                                            : 'View Uploaded Receipt',
                                         onTap: () {
                                           customAlertDialog(
                                               context: context,
@@ -240,7 +289,9 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                               fontWeight: FontWeight.w500,
                                               color: AppColors.w5Color,
                                               fontSize: 16.sp),
-                                      onTap: () {},
+                                      onTap: () {
+                                        shareInvoice();
+                                      },
                                       isLightShade: true,
                                     ),
                                   ],
@@ -400,7 +451,6 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                 18.hi,
                               ],
                             ).padHorizontal(16),
-
                             BreakDownTile(
                               prefix: 'Top up',
                               suffix: 'Amount',
@@ -416,32 +466,9 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                             10.hi,
                             BreakDownTile(
                               prefix: 'Tax (7.5%)',
-                              suffix: '',
+                              suffix: formatNaira('0'),
                             ),
                             const AppDivider(),
-                            // 10.hi,
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //   children: [
-                            //     Text(
-                            //       'Total:',
-                            //       style: AppTheme.lightTextTheme.bodyLarge
-                            //           ?.copyWith(
-                            //         color: AppColors.deepAsh,
-                            //         fontWeight: FontWeight.w600,
-                            //       ),
-                            //     ),
-                            //     Text(
-                            //       formatNaira(data.amount ?? ''),
-                            //       style: AppTheme.lightTextTheme.bodyLarge
-                            //           ?.copyWith(
-                            //         color: AppColors.deepAsh,
-                            //         fontWeight: FontWeight.w600,
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ).padHorizontal(12),
-
                             BreakDownTile(
                               prefix: 'Total:',
                               prefixTextStyle:

@@ -41,6 +41,7 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
     return Container(
         height: 250.h,
         width: 388.w,
+        // width: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(AppIcons.walletCard),

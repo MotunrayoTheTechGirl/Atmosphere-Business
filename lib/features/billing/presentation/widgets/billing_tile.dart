@@ -65,21 +65,12 @@ class BillingTile extends StatelessWidget {
               )
             ],
           ),
-          6.hi,
-          Text(
-            dataPlan ?? '',
-            style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.w400,
-              fontSize: 15.sp,
-              color: AppColors.deepBrown,
-            ),
-          ),
-          6.hi,
+          4.hi,
           Text(
             price ?? '',
             style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.w600,
-              fontSize: 20.sp,
+              fontWeight: FontWeight.w700,
+              fontSize: 22.sp,
               color: AppColors.deepBrown,
             ),
           ),
@@ -87,25 +78,33 @@ class BillingTile extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Text(
-                    name ?? '',
-                    style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                      fontSize: 15.sp,
-                      color: AppColors.deepAsh,
-                    ),
-                  ),
-                  6.wi,
-                  Text(
-                    duration ?? '',
-                    style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.deepAsh,
-                    ),
-                  ),
-                ],
+              // Row(
+              //   children: [
+              //     Text(
+              //       name ?? '',
+              //       style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+              //         fontSize: 15.sp,
+              //         color: AppColors.deepAsh,
+              //       ),
+              //     ),
+              //     6.wi,
+              //     Text(
+              //       duration ?? '',
+              //       style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+              //         fontSize: 13.sp,
+              //         fontWeight: FontWeight.w400,
+              //         color: AppColors.deepAsh,
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              Text(
+                duration ?? '',
+                style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.deepAsh,
+                ),
               ),
               InkWell(
                 onTap: onTap,

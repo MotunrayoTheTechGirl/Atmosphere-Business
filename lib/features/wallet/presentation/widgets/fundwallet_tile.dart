@@ -25,6 +25,7 @@ import '../../data/controller/create_digital_prd_controller.dart';
 final amountStateProvider = StateProvider<num>((ref) => 0);
 final generatedReferenceStateProvider = StateProvider<String>((ref) => "");
 final userIdStateProvider = StateProvider<String>((ref) => "");
+final orderIdStateProvider = StateProvider<num>((ref) => 0);
 
 class FundWalletTile extends ConsumerStatefulWidget {
   const FundWalletTile({
@@ -277,6 +278,13 @@ class _FundWalletTileState extends ConsumerState<FundWalletTile> {
                               );
                           if (hasCreateDigitalOrder) {
                             log('digital order created successfully');
+                            ref.read(orderIdStateProvider.notifier).state = ref
+                                    .read(createDigitalOrderControllerProvider
+                                        .notifier)
+                                    .state
+                                    .data
+                                    ?.id ??
+                                0;
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) {

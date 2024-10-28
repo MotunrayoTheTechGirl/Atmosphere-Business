@@ -9,7 +9,7 @@ import 'package:dealer_portal_mobile/core/utils/app_icons.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
 import 'package:dealer_portal_mobile/features/onboarding/presentation/screens/welcome_screen.dart';
-import 'package:dealer_portal_mobile/features/transaction_history.dart/features/screen/transaction_history_screen.dart';
+import 'package:dealer_portal_mobile/features/wallet/presentation/screens/transaction_history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +17,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../features/home/presentation/screens/home_screen.dart';
 import '../../../features/onboarding/data/controller/user_details_controller.dart';
+import '../../../features/vending/vending_overview_screen.dart';
+import '../../../features/wallet/presentation/screens/invoice_history_screen.dart';
 import '../../../features/wallet/presentation/screens/wallet_screen.dart';
 import '../../constants/app_constants.dart';
 import '../../storage/storage_service.dart';
@@ -155,7 +157,12 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                               ),
                               8.hi,
                               SubDrawerTile(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return InvoiceHistoryScreen();
+                                  }));
+                                },
                                 label: "Invoice History",
                               ),
                             ],
@@ -193,10 +200,10 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                             children: [
                               SubDrawerTile(
                                 onTap: () {
-                                  // Navigator.push(context,
-                                  //     MaterialPageRoute(builder: (context) {
-                                  //   return const WalletScreen();
-                                  // }));
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return VendingOverviewScreen();
+                                  }));
                                 },
                                 label: "Overview",
                               ),

@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
-import 'package:dealer_portal_mobile/features/transaction_history.dart/features/screen/transaction_history_screen.dart';
+import 'package:dealer_portal_mobile/features/wallet/presentation/screens/transaction_history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

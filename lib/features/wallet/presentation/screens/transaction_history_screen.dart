@@ -1,7 +1,7 @@
 import 'package:dealer_portal_mobile/core/common_widgets/app_drawer/custom_drawer.dart';
 import 'package:dealer_portal_mobile/core/utils/app_colors.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
-import 'package:dealer_portal_mobile/features/transaction_history.dart/features/screen/history_details_screen.dart';
+import 'package:dealer_portal_mobile/features/wallet/presentation/screens/history_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,8 +15,8 @@ import '../../../../core/common_widgets/app_text_field.dart';
 import '../../../../core/utils/app_icons.dart';
 import '../../../../core/utils/themes/app_themes.dart';
 import '../../../../core/utils/ui_helper.dart';
-import '../../../wallet/data/controller/wallet_history_controller.dart';
-import '../../../wallet/presentation/widgets/wallet_history_tile.dart';
+import '../../data/controller/wallet_history_controller.dart';
+import '../widgets/wallet_history_tile.dart';
 
 class TransactionHistoryScreen extends ConsumerStatefulWidget {
   const TransactionHistoryScreen({Key? key}) : super(key: key);

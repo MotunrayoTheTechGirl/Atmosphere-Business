@@ -21,7 +21,7 @@ class BillingRepository {
         final jsonResponse = jsonDecode(response?.data) as List<dynamic>;
         final List<BillingResModel> billing =
             jsonResponse.map((e) => BillingResModel.fromJson(e)).toList();
-        logger.i('billing: $billing');
+
         return billing;
       } else {
         final jsonResponse = response?.data as List<dynamic>;
