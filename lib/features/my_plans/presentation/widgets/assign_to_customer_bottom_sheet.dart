@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-//TODO: clean up
 final scaffoldMessengerKeyy = GlobalKey<ScaffoldMessengerState>();
 Future<dynamic> assignToCustomerBottomSheet({
   required BuildContext context,

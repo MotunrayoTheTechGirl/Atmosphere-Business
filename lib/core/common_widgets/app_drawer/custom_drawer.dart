@@ -16,6 +16,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../features/home/presentation/screens/home_screen.dart';
+import '../../../features/my_plans/presentation/screens/my_plans_screen.dart';
 import '../../../features/onboarding/data/controller/user_details_controller.dart';
 import '../../../features/vending/vending_overview_screen.dart';
 import '../../../features/wallet/presentation/screens/invoice_history_screen.dart';
@@ -86,6 +87,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                             fontWeight: FontWeight.w700,
                             fontSize: 16.sp,
                             fontFamily: AppTheme.montserratAlternate),
+                        overflow: TextOverflow.ellipsis,
                       ),
                       4.hi,
                       Text(
@@ -209,7 +211,13 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                               ),
                               8.hi,
                               SubDrawerTile(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) {
+                                      return const MyPlansScreen();
+                                    },
+                                  ));
+                                },
                                 label: "Data Plan",
                               ),
                               8.hi,

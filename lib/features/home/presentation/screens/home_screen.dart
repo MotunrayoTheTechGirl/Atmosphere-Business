@@ -112,6 +112,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               10.hi,
               const WalletBalanceCard(),
+              // const WalletBalanceCardd(),
               16.hi,
               const OverviewCard(),
               30.hi,

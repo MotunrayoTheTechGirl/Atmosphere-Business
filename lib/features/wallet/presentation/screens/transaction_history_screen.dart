@@ -122,7 +122,7 @@ class _TransactionHistoryScreenState
                                     "${DateFormat('MMMM').format(dateTime)} "
                                     "${dateTime.year}, ";
 
-                                return GestureDetector(
+                                return InkWell(
                                   onTap: () {
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {

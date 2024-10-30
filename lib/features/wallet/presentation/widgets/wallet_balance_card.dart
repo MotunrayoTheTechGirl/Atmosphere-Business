@@ -32,83 +32,82 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
   }
 
   bool isVisibiltyOn = true;
-
   @override
   Widget build(BuildContext context) {
     final dealerBalanceController =
         ref.watch(fetchUserBalanceControllerProvider);
-
     return Container(
-        height: 250.h,
-        width: 388.w,
-        // width: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(AppIcons.walletCard),
-          ),
+      width: double.infinity,
+      height: 218.h,
+      decoration: const BoxDecoration(
+        color: AppColors.w5Color,
+        borderRadius: BorderRadius.all(
+          Radius.circular(19.62),
         ),
-        child: Stack(
+        image: DecorationImage(
+            image: AssetImage(AppIcons.fivee), alignment: Alignment.topLeft),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 13),
+        child: Column(
           children: [
-            Positioned(
-              top: 26,
-              left: 90,
-              right: 90,
-              child: Image.asset(
+            Image(
+              image: const AssetImage(
                 AppIcons.wave5Logo,
-                height: 21.h,
               ),
+              fit: BoxFit.scaleDown,
+              width: 70.w,
+              height: 40.h,
+            ).padBottom(30),
+            Text(
+              'Wallet Amount',
+              style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.white),
             ),
-            Positioned(
-              top: 66,
-              left: 130,
-              right: 120,
-              child: Text(
-                'Current Balance',
-                style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.white),
-              ),
-            ),
-            Positioned(
-                top: 88,
-                left: 110,
-                right: 100,
-                child: Row(
-                  children: [
-                    dealerBalanceController.when(data: (data) {
-                      return Text(
-                        isVisibiltyOn ? getFormattedBalance(data) : '********',
-                        style: AppTheme.lightTextTheme.displayMedium?.copyWith(
-                          fontSize: 29.sp,
-                          color: AppColors.white,
-                        ),
-                      );
-                    }, error: (error, str) {
-                      log('balance error: $error');
-                      return const Text('');
-                    }, loading: () {
-                      return const SpinKitChasingDots(
-                        size: 20,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                dealerBalanceController.when(
+                  data: (data) {
+                    return Text(
+                      isVisibiltyOn ? getFormattedBalance(data) : '********',
+                      style: AppTheme.lightTextTheme.displayMedium?.copyWith(
+                        fontSize: 29.sp,
                         color: AppColors.white,
-                      );
-                    }),
-                    6.wi,
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isVisibiltyOn = !isVisibiltyOn;
-                        });
-                      },
-                      child: SvgPicture.asset(
-                        isVisibiltyOn
-                            ? AppIcons.visibiltyOn
-                            : AppIcons.visibiltyOff,
                       ),
-                    ),
-                  ],
-                ))
+                    );
+                  },
+                  error: (error, stackTrace) {
+                    log('balance error: $error');
+                    return const Text('');
+                  },
+                  loading: () {
+                    return const SpinKitChasingDots(
+                      size: 20,
+                      color: AppColors.white,
+                    );
+                  },
+                ),
+                6.wi,
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isVisibiltyOn = !isVisibiltyOn;
+                    });
+                  },
+                  child: SvgPicture.asset(
+                    isVisibiltyOn
+                        ? AppIcons.visibiltyOn
+                        : AppIcons.visibiltyOff,
+                  ),
+                ),
+              ],
+            ),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }

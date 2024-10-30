@@ -5,16 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/common_widgets/app_divider.dart';
 import '../../core/common_widgets/app_drawer/custom_drawer.dart';
 import '../../core/utils/app_colors.dart';
+import '../../core/utils/app_icons.dart';
 import '../../core/utils/themes/app_themes.dart';
 import '../../core/utils/ui_helper.dart';
 import '../billing/data/repository/billing_repository.dart';
 import '../billing/presentation/widgets/billing_tile.dart';
-import '../home/presentation/widgets/drop_down_form_field.dart';
 import '../onboarding/data/controller/user_details_controller.dart';
 
 class VendingOverviewScreen extends ConsumerStatefulWidget {
@@ -25,6 +26,8 @@ class VendingOverviewScreen extends ConsumerStatefulWidget {
 }
 
 class _VendingOverviewScreenState extends ConsumerState<VendingOverviewScreen> {
+  final List<String> _timeFrames = ['Daily', 'Weekly', 'Monthly'];
+  String _selectedTimeFrame = 'Weekly';
   @override
   Widget build(BuildContext context) {
     final invoiceController = ref.watch(billingRepositoryFutureProvider);
@@ -63,9 +66,42 @@ class _VendingOverviewScreenState extends ConsumerState<VendingOverviewScreen> {
                   ),
                   SizedBox(
                     width: 92.w,
-                    child: DropDownFormField(
-                      dropDownList: const ['Daily', 'Weekly', 'Monthly'],
-                      selectedListItem: 'Weekly',
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButtonFormField<String>(
+                        icon: SvgPicture.asset(
+                          AppIcons.arrowDown,
+                        ),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          fillColor: AppColors.white,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 0.h,
+                            horizontal: 10.w,
+                          ),
+                        ),
+                        value: _selectedTimeFrame,
+                        items: _timeFrames.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: AppTheme.lightTextTheme.bodySmall
+                                  ?.copyWith(
+                                      fontSize: 12.sp,
+                                      color: AppColors.blackText,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: AppTheme.montserratAlternate),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          if (newValue != null) {
+                            setState(() {
+                              _selectedTimeFrame = newValue;
+                            });
+                          }
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -108,7 +144,7 @@ class _VendingOverviewScreenState extends ConsumerState<VendingOverviewScreen> {
               invoiceController.when(
                 data: (data) {
                   return SizedBox(
-                    height: .3.sh,
+                    height: .5.sh,
                     child: ListView.separated(
                       itemBuilder: (context, index) {
                         final dataList = data.reversed.toList();

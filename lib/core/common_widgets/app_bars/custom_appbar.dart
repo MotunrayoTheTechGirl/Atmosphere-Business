@@ -25,10 +25,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: centerTitle,
-      toolbarHeight: 70.0.h,
+      toolbarHeight: 50.0.h,
       backgroundColor: backgroundColor ?? AppColors.appbarColor,
       leading: Padding(
-        padding: const EdgeInsets.only(top: 28.0),
+        padding: const EdgeInsets.only(top: 18.0),
         child: icon ??
             IconButton(
               onPressed: () {
@@ -38,7 +38,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
       ),
       title: Padding(
-        padding: const EdgeInsets.only(top: 28.0),
+        padding: const EdgeInsets.only(top: 18.0),
         child: Text(
           title,
           style: AppTheme.lightTextTheme.titleLarge?.copyWith(
@@ -62,5 +62,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   // TODO: implement preferredSize
-  Size get preferredSize => const Size(double.infinity, 75.0);
+  Size get preferredSize => const Size(double.infinity, 55.0);
 }

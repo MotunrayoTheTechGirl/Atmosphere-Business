@@ -3,6 +3,7 @@
 import 'dart:developer';
 
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
+import 'package:dealer_portal_mobile/features/my_plans/presentation/widgets/authorize_order_alertdialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,7 +21,6 @@ import '../../../subscriptions/data/controller/create_order_controller.dart';
 import '../../../subscriptions/data/controller/generate_reference_controller.dart';
 import '../../data/controller/dealer_user_details_controller.dart';
 import '../../data/controller/get_dealer_by_identity_controller.dart';
-import '../screens/confirm_order_screen.dart';
 
 class AssignToCustomerTile extends ConsumerStatefulWidget {
   const AssignToCustomerTile(
@@ -121,13 +121,14 @@ class _AssignToCustomerTileState extends ConsumerState<AssignToCustomerTile> {
                 12.hi,
                 AppTextField(
                   radius: 14,
-                  filled: true,
+                  // filled: true,
+                  fillColor: AppColors.tabBarColor,
                   controller: phoneNumberCrtl,
                   validator: valiadteNumber,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   keyboardType: TextInputType.number,
                   contentPadding: const EdgeInsets.symmetric(
-                    vertical: 2,
+                    vertical: 8,
                     horizontal: 8,
                   ),
                   hintText: 'Recipient phone number',
@@ -147,6 +148,7 @@ class _AssignToCustomerTileState extends ConsumerState<AssignToCustomerTile> {
                     AppIcons.phone,
                     width: 18.w,
                     height: 18.h,
+                    color: AppColors.w5Color,
                     fit: BoxFit.scaleDown,
                   ),
                 ),
@@ -256,12 +258,15 @@ class _AssignToCustomerTileState extends ConsumerState<AssignToCustomerTile> {
                                 if (hasCreatedDigitalOrder) {
                                   log('---Digital order created succesfully ---');
 
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return ConfirmOrderScreen(
-                                      amount: widget.amount,
-                                    );
-                                  }));
+                                  // Navigator.push(context,
+                                  //     MaterialPageRoute(builder: (context) {
+                                  //   return ConfirmOrderScreen(
+                                  //     amount: widget.amount,
+                                  //   );
+                                  // }));
+                                  Navigator.pop(context);
+                                  authorizeOrderAlertDialog(
+                                      context: context, amount: widget.amount);
                                 } else {
                                   log('---Digital order created Unsuccesfully ---');
                                 }

@@ -2,7 +2,6 @@
 
 import 'dart:developer';
 
-import 'package:dealer_portal_mobile/core/common_widgets/app_bars/primary_appbar.dart';
 import 'package:dealer_portal_mobile/core/common_widgets/app_elevated_button.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
@@ -10,11 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/common_widgets/cancel_button.dart';
 import '../../../../core/common_widgets/custom_pin_input_field.dart';
 import '../../../../core/common_widgets/custom_snackbar.dart';
 import '../../../../core/enums.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_icons.dart';
 import '../../../onboarding/data/controller/user_details_controller.dart';
 import '../../../subscriptions/data/controller/create_order_controller.dart';
 import '../../../subscriptions/data/controller/generate_reference_controller.dart';
@@ -49,131 +48,131 @@ class _ConfirmOrderScreenState extends ConsumerState<ConfirmOrderScreen> {
     final dealerIdentityController =
         ref.watch(fetchDealerByIdentityControllerProvider);
 
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: PrimaryAppBar(
-        title: 'Authorize Order',
-        icon: AppIcons.cancel,
-        style: AppTheme.lightTextTheme.titleLarge?.copyWith(
-          fontSize: 26.sp,
-          color: AppColors.textColor,
-          fontWeight: FontWeight.w600,
-          fontFamily: AppTheme.dmSans,
-        ),
-        onTap: () {
-          Navigator.pop(context);
-        },
-      ),
-      body: SingleChildScrollView(
-          child: Column(
-        children: [
-          20.hi,
-          Text(
-            'To complete this process,\nPlease enter the otp code sent to your phone number or email.',
-            style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-              fontSize: 16,
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Authorize Order',
+              style: AppTheme.lightTextTheme.bodySmall
+                  ?.copyWith(fontWeight: FontWeight.w600, fontSize: 14.sp),
             ),
+            CancelButton(),
+          ],
+        ),
+        30.hi,
+        Text(
+          'To complete this process,\nPlease enter the otp code sent to your phone number or email.',
+          style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+            fontSize: 16.sp,
+            color: AppColors.deepAsh,
+            fontWeight: FontWeight.w400,
+            fontFamily: AppTheme.montserratAlternate,
           ),
-          40.hi,
-          ValueListenableBuilder(
-              valueListenable: pin,
-              builder: (context, value, child) {
-                return CustomPinInputField(
-                  length: 4,
-                  controller: otpController,
-                  onCompleted: (val) {
-                    setState(() {
-                      pin.value = val;
-                    });
-                  },
-                ).padOnly(right: 30, left: 30);
-                // .padOnly(right: 30);
-              }),
-          50.hi,
-          AppElevatedButton(
-            isLoading: ref.watch(confirmOrderControllerProvider).status ==
-                    ResponseStatus.loading ||
-                ref.watch(generateReferenceControllerProvider).status ==
-                    ResponseStatus.loading ||
-                ref.watch(chargeDealerUserWalletControllerProvider).status ==
-                    ResponseStatus.loading,
-            onTap: () async {
-              //! confirm order endpoint
-              final hasConfirmedOrder = await ref
-                  .read(confirmOrderControllerProvider.notifier)
-                  .confirmOrder(
-                    orderId: digitalOrderController?.id ?? 0,
-                    email: userDetailsController?.email ?? '',
-                    dealerId: dealerIdentityController.data?.data?.id ?? 0,
-                    dealerPhoneNumber: userDetailsController?.phoneNumber ?? '',
-                    orderCode: otpController.text,
-                  );
-              if (hasConfirmedOrder) {
-                log('confirm order successful ');
+        ),
+        40.hi,
+        ValueListenableBuilder(
+            valueListenable: pin,
+            builder: (context, value, child) {
+              return CustomPinInputField(
+                length: 4,
+                controller: otpController,
+                onCompleted: (val) {
+                  setState(() {
+                    pin.value = val;
+                  });
+                },
+              );
+            }),
+        50.hi,
+        AppElevatedButton(
+          isLoading: ref.watch(confirmOrderControllerProvider).status ==
+                  ResponseStatus.loading ||
+              ref.watch(generateReferenceControllerProvider).status ==
+                  ResponseStatus.loading ||
+              ref.watch(chargeDealerUserWalletControllerProvider).status ==
+                  ResponseStatus.loading,
+          onTap: () async {
+            //! confirm order endpoint
+            final hasConfirmedOrder = await ref
+                .read(confirmOrderControllerProvider.notifier)
+                .confirmOrder(
+                  orderId: digitalOrderController?.id ?? 0,
+                  email: userDetailsController?.email ?? '',
+                  dealerId: dealerIdentityController.data?.data?.id ?? 0,
+                  dealerPhoneNumber: userDetailsController?.phoneNumber ?? '',
+                  orderCode: otpController.text,
+                );
+            if (hasConfirmedOrder) {
+              log('confirm order successful ');
 
-                ///!charge dealer wallet
-                final hasChargeDealerWallet = await ref
-                    .read(chargeDealerUserWalletControllerProvider.notifier)
-                    .chargeDealerWallet(
-                        reference: int.parse(reference ?? ""),
-                        userId: dealerCustomerDetailsController.data?.id
-                                .toString() ??
-                            '',
-                        orderId: digitalOrderController?.id ?? 0,
-                        amount: widget.amount,
-                        phoneNumber:
-                            dealerCustomerDetailsController.data?.phoneNumber ??
-                                '');
-                if (hasChargeDealerWallet) {
-                  log('----charge dealer wallet successful!--');
-                  // await ref
-                  //     .read(fetchUserBalanceControllerProvider.notifier)
-                  //     .userBalance(
-                  //         userId: ref
-                  //                 .watch(userDetailsControllerProvider.notifier)
-                  //                 .state
-                  //                 .data
-                  //                 ?.data
-                  //                 ?.user
-                  //                 ?.id
-                  //                 .toString() ??
-                  //             '');
-                  await ref
-                      .read(fetchUserBalanceControllerProvider.notifier)
-                      .userBalance();
-                  CustomSnackBar.showSnackBar(
-                      context: context, message: 'SuccessFul');
-                  otpController.clear();
-                  Future.delayed(
-                      Duration(
-                        seconds: 1,
-                      ), () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  });
-                } else {
-                  log('----charge dealer wallet Unsuccessful!--');
-                  CustomSnackBar.showSnackBar(
-                      context: context, message: 'UnSuccessFul', isError: true);
-                  otpController.clear();
-                  Future.delayed(
-                      Duration(
-                        seconds: 2,
-                      ), () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  });
-                }
-              } else {
-                log('confirm order successful ');
+              ///!charge dealer wallet
+              final hasChargeDealerWallet = await ref
+                  .read(chargeDealerUserWalletControllerProvider.notifier)
+                  .chargeDealerWallet(
+                      reference: int.parse(reference ?? ""),
+                      userId:
+                          dealerCustomerDetailsController.data?.id.toString() ??
+                              '',
+                      orderId: digitalOrderController?.id ?? 0,
+                      amount: widget.amount,
+                      phoneNumber:
+                          dealerCustomerDetailsController.data?.phoneNumber ??
+                              '');
+              if (hasChargeDealerWallet) {
+                log('----charge dealer wallet successful!--');
+                // await ref
+                //     .read(fetchUserBalanceControllerProvider.notifier)
+                //     .userBalance(
+                //         userId: ref
+                //                 .watch(userDetailsControllerProvider.notifier)
+                //                 .state
+                //                 .data
+                //                 ?.data
+                //                 ?.user
+                //                 ?.id
+                //                 .toString() ??
+                //             '');
+                await ref
+                    .read(fetchUserBalanceControllerProvider.notifier)
+                    .userBalance();
                 CustomSnackBar.showSnackBar(
-                    context: context, message: 'Order hasn\t been confirmed');
+                    context: context, message: 'SuccessFul');
+                otpController.clear();
+                Future.delayed(
+                    Duration(
+                      seconds: 1,
+                    ), () {
+                  Navigator.pop(context);
+                });
+              } else {
+                log('----charge dealer wallet Unsuccessful!--');
+                CustomSnackBar.showSnackBar(
+                    context: context, message: 'UnSuccessFul', isError: true);
+                otpController.clear();
+                Future.delayed(
+                    Duration(
+                      seconds: 1,
+                    ), () {
+                  Navigator.pop(context);
+                });
               }
-            },
-            label: 'Submit',
-          )
-        ],
-      ).padHorizontal(16)),
-    );
+            } else {
+              log('confirm order unsuccessful ');
+              final message = ref
+                  .watch(confirmOrderControllerProvider.notifier)
+                  .state
+                  .message;
+              CustomSnackBar.showSnackBar(
+                  context: context,
+                  message: message ?? "Order hasn\t been confirmed",
+                  isError: true);
+            }
+          },
+          label: 'Submit',
+        )
+      ],
+    ).padHorizontal(8);
   }
 }

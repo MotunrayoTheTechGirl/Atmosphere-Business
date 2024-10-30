@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/common_widgets/app_bars/custom_appbar.dart';
-import '../../../../core/common_widgets/app_elevated_button.dart';
 import '../../../../core/common_widgets/status_button.dart';
 import '../../../../core/utils/app_icons.dart';
 import '../../../onboarding/data/controller/user_details_controller.dart';
@@ -33,7 +32,7 @@ class HistoryDetailsScreen extends ConsumerWidget {
       appBar: CustomAppBar(
         title: 'Details',
         backgroundColor: AppColors.white,
-        icon: GestureDetector(
+        icon: InkWell(
           onTap: () {
             Navigator.pop(context);
           },
@@ -45,39 +44,11 @@ class HistoryDetailsScreen extends ConsumerWidget {
           ),
         ),
       ),
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            20.hi,
-            Row(
-              children: [
-                SizedBox(
-                  width: 150.w,
-                  child: AppElevatedButton(
-                    width: 0,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
-                    borderRadius: 8,
-                    labelFontSize: 14.sp,
-                    label: 'View Receipt',
-                    onTap: () {},
-                  ),
-                ),
-                10.wi,
-                SizedBox(
-                  width: 150.w,
-                  child: AppElevatedButton(
-                    borderRadius: 8,
-                    rowIcon: AppIcons.share,
-                    width: 0,
-                    rowLabel: 'share',
-                    onTap: () {},
-                    isLightShade: true,
-                  ),
-                ),
-              ],
-            ),
             28.hi,
             InvoiceSummary(
               leading: 'Transaction ID:  ',

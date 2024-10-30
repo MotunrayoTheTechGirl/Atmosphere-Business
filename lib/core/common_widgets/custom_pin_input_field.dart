@@ -43,8 +43,8 @@ class CustomPinInputField extends StatelessWidget {
       },
       onCompleted: onCompleted,
       textStyle: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w400,
+          fontSize: 16.sp,
+          fontWeight: FontWeight.w500,
           color: AppColors.greyText),
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       pinTheme: PinTheme(

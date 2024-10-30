@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, invalid_return_type_for_catch_error
+// ignore_for_file: prefer_final_fields, invalid_return_type_for_catch_error, use_build_context_synchronously
 
 import 'dart:developer';
 import 'dart:io';
@@ -20,6 +20,7 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -59,14 +60,13 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
         '${directory.path}/screenshot_${DateTime.now().millisecondsSinceEpoch}.png';
     final pdfPath =
         '${directory.path}/screenshot_${DateTime.now().millisecondsSinceEpoch}.pdf';
-
     await _screenshotController.capture().then((image) async {
       final file = File(imagePath);
-      print('file: $file');
-      print('Image: $image');
       await file.writeAsBytes(image!.cast<int>());
       final pdfFile = File(pdfPath);
       final pdf = pw.Document();
+      log('pdf file: $pdfFile');
+      log('pdf path: $pdfPath');
       pdf.addPage(
         pw.Page(build: (context) {
           return pw.Center(
@@ -77,9 +77,6 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
       await pdf.save().then((pdfBtyes) async {
         pdfFile.writeAsBytesSync(pdfBtyes);
         String temporaryUrl = await _generateTemporaryUrl(pdfFile.path);
-        log('pdf path: $pdfPath');
-        log('pdf: file: $pdfFile');
-        log('pdf: $pdf');
         final isPdfUploaded =
             await ref.read(fileUploadControllerProvider.notifier).uploadFile(
                   file: File(pdfPath),
@@ -115,8 +112,7 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
 
     await _screenshotController.capture().then((image) async {
       final file = File(imagePath);
-      log('file: $file');
-      log('Image: $image');
+
       await file.writeAsBytes(image!.cast<int>());
       final pdfFile = File(pdfPath);
       final pdf = pw.Document();
@@ -129,15 +125,21 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
       );
       await pdf.save().then((pdfBtyes) async {
         pdfFile.writeAsBytesSync(pdfBtyes);
-        // String temporaryUrl = await _generateTemporaryUrl(pdfFile.path);
-        log('pdf path: $pdfPath');
-        log('pdf: file: $pdfFile');
-        log('pdf: $pdf');
+
         final List<XFile> files = [XFile(pdfPath)];
-        Share.shareXFiles(files, text: 'Check out this file!');
-        log('Made it here!!!');
+        Share.shareXFiles(files, text: 'Atmosphere Business Invoice');
       });
     }).catchError((onError) => log('screenshot image path error: $onError'));
+  }
+
+  static Future<bool> _permissionRequest() async {
+    PermissionStatus result;
+    result = await Permission.storage.request();
+    if (result.isGranted) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override
@@ -304,7 +306,19 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                                       rowIcon: AppIcons.download,
                                       width: 149.w,
                                       rowLabel: 'Download',
-                                      onTap: () {},
+                                      onTap: () async {
+                                        // bool result =
+                                        //     await _permissionRequest();
+                                        // if (result) {
+                                        //   showDialog(
+                                        //       context: context,
+                                        //       builder: (dialogcontext) {
+                                        //         return const InvoiceDownloadProgressIndicator();
+                                        //       });
+                                        // } else {
+                                        //   log("No permission to read and write.");
+                                        // }
+                                      },
                                       isLightShade: true,
                                       rowLabelstyle: AppTheme
                                           .lightTextTheme.bodyLarge

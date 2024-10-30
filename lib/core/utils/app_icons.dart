@@ -61,6 +61,7 @@ class AppIcons {
   static const curveArrowUp = "assets/svg/curve_arrow_up.svg";
   static const bulletPoint = "assets/svg/bullet_point.svg";
   static const leftArrow = "assets/svg/left_angle_arrow.svg";
+  static const five = "assets/svg/five.svg";
 
   ///Png
   static const String activeHomeNew = "assets/images/active_home.png";
@@ -76,4 +77,9 @@ class AppIcons {
   static const String wave5Logo = "assets/images/wave5_logo.png";
   static const String fundWalletBg = "assets/images/fundwallet_bg.png";
   static const String waveIcon = "assets/images/waving.png";
+  static const String fivee = "assets/images/fivee.png";
+  static const String gloAtmosphere = "assets/images/glo_atmosphere.png";
+  static const String mtn = "assets/images/mtn.png";
+  static const String airtel = "assets/images/airtel.png";
+  static const String nineMobile = "assets/images/9mobile.png";
 }
