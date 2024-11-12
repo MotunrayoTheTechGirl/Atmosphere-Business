@@ -39,7 +39,7 @@ class FetchDealerByIdentityController
       return true;
     } catch (e) {
       state = ResponseState(status: ResponseStatus.error, message: "$e");
-      log('Error: $e');
+      log('fetch identity Error: $e');
       return false;
     }
   }

@@ -62,6 +62,13 @@ class AppIcons {
   static const bulletPoint = "assets/svg/bullet_point.svg";
   static const leftArrow = "assets/svg/left_angle_arrow.svg";
   static const five = "assets/svg/five.svg";
+  static const roundProfile = "assets/svg/cirlcle_profile.svg";
+  static const arrowRise = "assets/svg/ArrowRise.svg";
+  static const arrowFall = "assets/svg/arrow_fall.svg";
+  static const plusSign = "assets/svg/plus-sign.svg";
+  static const link = "assets/svg/link.svg";
+  static const info = "assets/svg/info.svg";
+  static const calendar = "assets/svg/calendarr.svg";
 
   ///Png
   static const String activeHomeNew = "assets/images/active_home.png";

@@ -42,7 +42,7 @@ class _VendingOverviewScreenState extends ConsumerState<VendingOverviewScreen> {
           physics: const NeverScrollableScrollPhysics(),
           child: Column(
             children: [
-              10.hi,
+              // 10.hi,
               // SizedBox(
               //   height: 200.h,
               //   child: ListView(
@@ -53,7 +53,7 @@ class _VendingOverviewScreenState extends ConsumerState<VendingOverviewScreen> {
               //     ],
               //   ),
               // ).padOnly(left: 20),
-              // 6.hi,
+              6.hi,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

@@ -41,23 +41,6 @@ class _CustomInAppBrowserState extends ConsumerState<CustomInAppBrowser> {
   bool? isSecure;
   InAppWebViewController? webViewController;
   late final CountdownController _countdownController;
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //     if (widget.isFunding == true) {
-  //       log('status is true');
-  //       // ref
-  //       //     .read(walletPaystackCountdownProvider.notifier)
-  //       //     .startVerificationTimer();
-  //       _countdownController =
-  //           ref.read(walletPaystackCountdownProvider.notifier);
-  //       _countdownController.setBrowserStatus(true);
-  //       _countdownController.startTimer();
-  //     }
-  //   });
-  //   url = widget.url;
-  // }
 
   @override
   void initState() {
@@ -79,15 +62,6 @@ class _CustomInAppBrowserState extends ConsumerState<CustomInAppBrowser> {
 
     url = widget.url;
   }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   webViewController?.dispose();
-  //   // ref.read(walletPaystackCountdownProvider.notifier).startTimer();
-  //   _countdownController.setBrowserStatus(false);
-  //   _countdownController.restartTimer();
-  // }
 
   @override
   void dispose() {
@@ -131,6 +105,7 @@ class _CustomInAppBrowserState extends ConsumerState<CustomInAppBrowser> {
                       title,
                       style: AppTheme.lightTextTheme.bodyMedium?.copyWith(
                         fontSize: 10.sp,
+                        color: Colors.black,
                       ),
                       overflow: TextOverflow.fade,
                     ),
@@ -154,7 +129,7 @@ class _CustomInAppBrowserState extends ConsumerState<CustomInAppBrowser> {
                           url,
                           style: AppTheme.lightTextTheme.bodyMedium?.copyWith(
                             color: Colors.black,
-                            fontSize: 14.sp,
+                            fontSize: 10.sp,
                           ),
                           overflow: TextOverflow.fade,
                         )),

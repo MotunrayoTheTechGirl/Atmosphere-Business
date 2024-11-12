@@ -14,13 +14,11 @@ class WelcomeScreen extends StatelessWidget {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
-          color: AppColors.primaryColor,
+          color: AppColors.w5Color,
         ),
         child: Stack(
           children: [
             Positioned(
-              // top: 220,
-
               top: 300,
               left: 100,
               child: Image.asset(

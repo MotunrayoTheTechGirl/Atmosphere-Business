@@ -1,0 +1,39 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_media_downloader/flutter_media_downloader.dart';
+
+class DownloadPdf extends StatefulWidget {
+  const DownloadPdf({super.key});
+
+  @override
+  State<DownloadPdf> createState() => _DownloadPdfState();
+}
+
+class _DownloadPdfState extends State<DownloadPdf> {
+  final _flutterMediaDownloaderPlugin = MediaDownload();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Plugin example app'),
+        ),
+        body: Center(
+          child: ElevatedButton(
+              onPressed: () async {
+                _flutterMediaDownloaderPlugin.downloadMedia(
+                    context,
+                    // 'https://www.kasandbox.org/programming-images/avatars/spunky-sam-green.png'
+                    'https://pdfobject.com/pdf/sample.pdf');
+              },
+              child: const Text('Media Download')),
+        ),
+      ),
+    );
+  }
+}

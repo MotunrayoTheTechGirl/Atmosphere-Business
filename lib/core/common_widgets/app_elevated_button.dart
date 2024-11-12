@@ -22,8 +22,12 @@ class AppElevatedButton extends StatelessWidget {
     this.rowIconWidth,
     this.borderRadius,
     this.rowLabelstyle,
+    this.labelStyle,
     this.child,
     this.padding,
+    this.isFilled = false,
+    this.bgColor,
+    this.labelColor,
     super.key,
   });
 
@@ -36,10 +40,12 @@ class AppElevatedButton extends StatelessWidget {
   final double? rowIconHeight, rowIconWidth;
   final Color? rowLabelColor;
   final bool isActive;
-  final TextStyle? rowLabelstyle;
+  final TextStyle? rowLabelstyle, labelStyle;
   final Widget? child;
   final bool isLoading;
   final EdgeInsetsGeometry? padding;
+  final bool isFilled;
+  final Color? bgColor, labelColor;
 
   @override
   Widget build(BuildContext context) {
@@ -49,15 +55,16 @@ class AppElevatedButton extends StatelessWidget {
         width: width ?? double.infinity,
         padding: padding ?? const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isLightShade
-              ? AppColors.w5Color.withOpacity(0.05)
-              : isActive
-                  ? AppColors.w5Color
-                  : AppColors.w5Color.withOpacity(0.3),
-          borderRadius: BorderRadius.all(
-            Radius.circular(borderRadius ?? 16.5.r),
-          ),
-        ),
+            color: isLightShade
+                ? AppColors.w5Color.withOpacity(0.05)
+                : isActive
+                    ? bgColor ?? AppColors.w5Color
+                    : AppColors.w5Color.withOpacity(0.3),
+            borderRadius:
+                BorderRadius.all(Radius.circular(borderRadius ?? 16.5.r)),
+            border: isFilled
+                ? Border.all(width: 1, color: AppColors.w5Color)
+                : null),
         child: isLoading
             ? const SpinKitChasingDots(
                 size: 20,
@@ -87,9 +94,10 @@ class AppElevatedButton extends StatelessWidget {
                     child: child ??
                         Text(
                           label ?? '',
-                          style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                              color: AppColors.white,
-                              fontSize: labelFontSize ?? 16.sp),
+                          style: labelStyle ??
+                              AppTheme.lightTextTheme.bodyLarge?.copyWith(
+                                  color: labelColor ?? AppColors.white,
+                                  fontSize: labelFontSize ?? 16.sp),
                         ),
                   ),
       ),

@@ -1,5 +1,6 @@
 import 'package:dealer_portal_mobile/core/common_widgets/app_bars/menu_appbar.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
+import 'package:dealer_portal_mobile/features/subscriptions/presentation/screens/invoice_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +18,7 @@ import '../../../../core/utils/ui_helper.dart';
 import '../../../billing/data/repository/billing_repository.dart';
 import '../../../billing/presentation/widgets/billing_tile.dart';
 import '../../../onboarding/data/controller/user_details_controller.dart';
+import '../widgets/fundwallet_tile.dart';
 
 class InvoiceHistoryScreen extends ConsumerWidget {
   InvoiceHistoryScreen({Key? key}) : super(key: key);
@@ -79,7 +81,18 @@ class InvoiceHistoryScreen extends ConsumerWidget {
                             DateFormat('hh:mm a, dd MMM, yyyy')
                                 .format(dateTime.toLocal());
                         return BillingTile(
-                          onTap: () {},
+                          onTap: () {
+                            ref.read(orderIdStateProvider.notifier).state =
+                                invoice.orderId ?? 0;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return const InvoiceScreen(
+                                  viewUploadedReceipt: true,
+                                );
+                              }),
+                            );
+                          },
                           duration: formattedDate,
                           id: 'INV-${invoice.id}',
                           price: formatNaira(

@@ -9,7 +9,7 @@ class AppImage extends StatelessWidget {
   final String url;
   final double width;
   final double height;
-  final BorderRadius borderRadius;
+  final BorderRadius? borderRadius;
   final bool hasGradient;
   final String tag;
   final double margin;
@@ -19,7 +19,7 @@ class AppImage extends StatelessWidget {
     this.url = '',
     this.width = 120,
     this.height = 120,
-    required this.borderRadius,
+    this.borderRadius,
     this.hasGradient = false,
     this.tag = '',
     this.margin = 6,
@@ -36,8 +36,9 @@ class AppImage extends StatelessWidget {
               width: width,
               height: height,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
+                // shape: BoxShape.circle,
                 color: AppColors.primaryColor.withOpacity(0.2),
+                borderRadius: borderRadius,
                 image: DecorationImage(
                   fit: BoxFit.cover,
                   image: imageProvider,

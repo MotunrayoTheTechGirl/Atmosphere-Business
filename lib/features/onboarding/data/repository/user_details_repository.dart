@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dealer_portal_mobile/core/api/api_endpoints.dart';
 import 'package:dealer_portal_mobile/core/api/dealer_portal_api.dart';
@@ -26,9 +27,11 @@ class UserDetailsRepository {
       final response = await api.post(ApiEndpoints.getUserDetails, body: {
         "nonce": nonce,
         "token": token,
-        "app_source": "dealer",
+        // "app_source": "dealer",
+        "app_source": "advertiser",
         "system_source": "atmosphere"
       });
+      log('login user details: $response');
       if (response?.data is String) {
         return LoginUserDetailsResModel.fromJson(jsonDecode(response?.data));
       } else {

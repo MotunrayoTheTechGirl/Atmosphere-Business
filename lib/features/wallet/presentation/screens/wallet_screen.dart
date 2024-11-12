@@ -76,7 +76,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                   ).padOnly(left: 8),
                   8.hi,
                   WalletBalanceCard(),
-                  20.hi,
+                  32.hi,
                   FundWalletButton(),
                   10.hi,
                   Divider(

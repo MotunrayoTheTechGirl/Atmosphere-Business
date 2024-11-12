@@ -8,6 +8,7 @@ import 'package:dealer_portal_mobile/core/utils/app_colors.dart';
 import 'package:dealer_portal_mobile/core/utils/app_icons.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
+import 'package:dealer_portal_mobile/features/advertiser/features/screens/ads_screen.dart';
 import 'package:dealer_portal_mobile/features/onboarding/presentation/screens/welcome_screen.dart';
 import 'package:dealer_portal_mobile/features/wallet/presentation/screens/transaction_history_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../../../features/advertiser/features/screens/ads_report_screen.dart';
+import '../../../features/advertiser/features/screens/advertiser_overview_screen.dart';
+import '../../../features/advertiser/features/screens/create_ads_screen.dart';
 import '../../../features/home/presentation/screens/home_screen.dart';
 import '../../../features/my_plans/presentation/screens/my_plans_screen.dart';
 import '../../../features/onboarding/data/controller/user_details_controller.dart';
@@ -177,10 +181,68 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                           icon: AppIcons.wifiService,
                         ),
                         27.hi,
-                        DrawerTile(
-                          onTap: () {},
-                          label: 'Advertise',
+                        // DrawerTile(
+                        //   onTap: () {
+                        //   },
+                        //   label: 'Advertise',
+                        //   icon: AppIcons.advertise,
+                        // ),
+                        DrawerTileDropDown(
                           icon: AppIcons.advertise,
+                          label: 'Advertise',
+                          subDrawer: Column(
+                            children: [
+                              SubDrawerTile(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return const AdvertiserOverviewScreen();
+                                  }));
+                                },
+                                label: "Overview",
+                              ),
+                              8.hi,
+                              SubDrawerTile(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return const AdsScreen();
+                                  }));
+                                },
+                                label: "Ads",
+                              ),
+                              8.hi,
+                              SubDrawerTile(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return const CreateAdsScreen();
+                                  }));
+                                },
+                                label: "Create Ads",
+                              ),
+                              8.hi,
+                              SubDrawerTile(
+                                onTap: () {},
+                                label: "Survey Report",
+                              ),
+                              8.hi,
+                              SubDrawerTile(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return const AdsReportScreen();
+                                  }));
+                                },
+                                label: "Ad Reports",
+                              ),
+                              8.hi,
+                              SubDrawerTile(
+                                onTap: () {},
+                                label: "Transaction history",
+                              ),
+                            ],
+                          ),
                         ),
                         27.hi,
                         DrawerTile(

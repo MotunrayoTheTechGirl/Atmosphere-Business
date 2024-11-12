@@ -10,7 +10,6 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../core/common_widgets/app_drawer/custom_drawer.dart';
 import '../../../../core/utils/app_icons.dart';
 import '../../../../core/utils/ui_helper.dart';
-import '../../../billing/data/repository/billing_repository.dart';
 import '../../../my_plans/data/controller/get_dealer_by_identity_controller.dart';
 import '../../../my_plans/data/controller/user_balance_controller.dart';
 import '../../../onboarding/data/controller/user_details_controller.dart';
@@ -49,7 +48,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final invoiceController = ref.watch(billingRepositoryFutureProvider);
+    // final invoiceController = ref.watch(billingRepositoryFutureProvider);
     final userDetailsController =
         ref.watch(userDetailsControllerProvider).data?.data?.user;
     return Scaffold(

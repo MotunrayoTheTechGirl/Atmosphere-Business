@@ -11,7 +11,7 @@ class AppTextField extends StatelessWidget {
   final String? suffixText;
   final TextStyle? suffixStyle;
   final TextStyle? style;
-  final TextStyle? hintStyle, prefixStyle;
+  final TextStyle? hintStyle, prefixStyle, defaultLabelStyle;
   final Widget? suffixIcon;
   final Color? fillColor;
   final double? radius;
@@ -25,9 +25,13 @@ class AppTextField extends StatelessWidget {
   final InputBorder? border;
   final InputBorder? enabledBorder;
   final InputBorder? focusedBorder;
-  final String? label;
+  final String? label, defaultLabelText;
   final bool readOnly;
   final List<TextInputFormatter>? inputFormatters;
+  final FloatingLabelBehavior? floatingLabelBehavior;
+  final Widget? defaultWidgetLabel;
+  final void Function()? onTap;
+  final int? maxLines;
 
   const AppTextField(
       {required this.controller,
@@ -36,6 +40,7 @@ class AppTextField extends StatelessWidget {
       this.keyboardType,
       this.suffixText,
       this.suffixStyle,
+      this.defaultLabelStyle,
       this.style,
       this.suffixIcon,
       this.fillColor,
@@ -54,7 +59,12 @@ class AppTextField extends StatelessWidget {
       this.focusedBorder,
       this.border,
       this.label,
+      this.defaultLabelText,
       this.inputFormatters,
+      this.floatingLabelBehavior,
+      this.defaultWidgetLabel,
+      this.onTap,
+      this.maxLines,
       Key? key})
       : super(key: key);
 
@@ -73,17 +83,28 @@ class AppTextField extends StatelessWidget {
         TextFormField(
           inputFormatters: inputFormatters,
           readOnly: readOnly,
+          maxLines: maxLines,
           controller: controller,
           keyboardType: keyboardType,
           validator: validator,
           autovalidateMode: autovalidateMode,
           onChanged: onChanged,
+          onTap: onTap,
           style: style ??
               AppTheme.lightTextTheme.titleLarge?.copyWith(
                 fontSize: 32.sp,
                 color: AppColors.greyText,
               ),
           decoration: InputDecoration(
+            label: defaultWidgetLabel,
+            labelText: defaultLabelText,
+            labelStyle: defaultLabelStyle ??
+                AppTheme.lightTextTheme.bodyLarge?.copyWith(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.deepAsh,
+                ),
+            floatingLabelBehavior: floatingLabelBehavior,
             prefixIcon: prefixIcon,
             prefixText: prefixText,
             prefixStyle: prefixStyle ??
@@ -109,30 +130,28 @@ class AppTextField extends StatelessWidget {
                       // ? BorderSide.none
                       ? BorderSide(
                           width: 0.2,
-                          color: AppColors.textFieldBorder.withOpacity(0.1),
-                        )
+                          color: AppColors.textFieldBorder.withOpacity(0.4))
                       : BorderSide(
                           width: 0.2,
-                          color: AppColors.textFieldBorder.withOpacity(0.2),
+                          color: AppColors.textFieldBorder.withOpacity(0.4),
                         ),
                 ),
             border: border ??
                 OutlineInputBorder(
                   borderRadius: BorderRadius.circular(radius ?? 24.0),
                   borderSide: filled
-                      // ? BorderSide.none
                       ? BorderSide(
                           width: 0.2,
                           color: AppColors.textFieldBorder.withOpacity(0.2),
                         )
-                      : const BorderSide(
-                          width: 1, color: AppColors.textFieldBorder),
+                      : BorderSide(
+                          width: 1,
+                          color: AppColors.textFieldBorder.withOpacity(0.2)),
                 ),
             focusedBorder: focusedBorder ??
                 OutlineInputBorder(
                   borderRadius: BorderRadius.circular(radius ?? 24.0),
                   borderSide: filled
-                      // ? BorderSide.none
                       ? BorderSide(
                           width: 0.2,
                           color: AppColors.textFieldBorder.withOpacity(0.2),

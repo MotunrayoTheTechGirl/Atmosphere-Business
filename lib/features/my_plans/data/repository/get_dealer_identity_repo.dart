@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,7 +22,7 @@ class FetchDealerByIdentityRepository {
           await api.get(ApiEndpoints.getDealerByIdentity, queryParameters: {
         "phoneNumber": phoneNumber,
       });
-
+      log('identity response: $response');
       if (response?.data is String) {
         return GetDealerByIdentityResModel.fromJson(jsonDecode(response?.data));
       } else {
