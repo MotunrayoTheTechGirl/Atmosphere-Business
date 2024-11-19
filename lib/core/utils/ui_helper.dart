@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 String formatNaira(String amount) {
@@ -53,15 +52,4 @@ String? validatePhoneNumber(
     return 'Enter a valid Phone number';
   }
   return null;
-}
-
-TextEditingController displaySize(TextEditingController textEditingController) {
-  if (textEditingController.text.isEmpty) {
-    return TextEditingController();
-  } else if (textEditingController.text == 'Mobile') {
-    return TextEditingController(text: '298 x 142');
-  } else if (textEditingController.text == 'Desktop') {
-    return TextEditingController(text: '741 x 170');
-  }
-  return TextEditingController();
 }

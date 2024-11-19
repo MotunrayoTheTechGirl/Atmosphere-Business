@@ -33,8 +33,8 @@ class VerifyAndUpdateWalletRepository {
           'narration': narration ?? 'Fund Wallet',
           'userId': userId,
           'system_source': "atmosphere",
-          'platform_source': "dealer",
-          'accountType': "dealer"
+          'platform_source': "business",
+          'accountType': "business"
         },
       );
       log('verifyPaymentAndUpdateWallet response: $response');

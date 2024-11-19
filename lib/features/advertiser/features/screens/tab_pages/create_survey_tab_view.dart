@@ -10,23 +10,27 @@ import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/themes/app_themes.dart';
 import '../survey_contents/survey_ads_info_contents.dart';
 import '../survey_contents/survey_questions_content.dart';
+import '../survey_contents/survey_questions_preview.dart';
 
 class SurveyTabView extends ConsumerStatefulWidget {
   const SurveyTabView({
     super.key,
   });
-
   @override
   ConsumerState<SurveyTabView> createState() => _SurveyTabViewState();
 }
 
 class _SurveyTabViewState extends ConsumerState<SurveyTabView> {
+  bool hasSwitchedContent = false;
+  bool isSurveySummary = false;
+
   Widget content() {
-    if (ref.watch(isSurveyInfoContentValidStateProvider) == true) {
+    if (isSurveySummary) {
+      return const SurveyQuestionsPreview();
+    } else if (hasSwitchedContent) {
       return const SurveyQuestionsContent();
-    } else {
-      return const SurveyAdsInfoContents();
     }
+    return const SurveyAdsInfoContents();
   }
 
   @override
@@ -36,7 +40,6 @@ class _SurveyTabViewState extends ConsumerState<SurveyTabView> {
       child: ListView(
         shrinkWrap: true,
         children: [
-          // const SurveyAdsInfoContents(),
           content(),
           30.hi,
           Row(
@@ -56,15 +59,28 @@ class _SurveyTabViewState extends ConsumerState<SurveyTabView> {
                 child: AppElevatedButton(
                   isActive: ref.watch(isSurveyInfoContentValidStateProvider),
                   isLoading: false,
-                  onTap: () {
-                    log('--title : ${ref.watch(surveyTitleStateProvider)}');
-                    log('description: ${ref.watch(surveyDescriptionStateProvider)}');
-                    log('entry amount: ${ref.watch(entityStateProvider)}');
-                    log('budget: ${ref.watch(budgetStateProvider)}');
-                    log('startDate: ${ref.watch(startDateStateProvider)}');
-                    log('duration: ${ref.watch(durationStateProvider)}');
-                    log('isFormValid: ${ref.watch(isSurveyInfoContentValidStateProvider)}');
-                  },
+                  onTap:
+                      ref.watch(isSurveyInfoContentValidStateProvider) == true
+                          ? () {
+                              setState(() {
+                                hasSwitchedContent = true;
+                                if (ref
+                                    .watch(surveyQuestionStateProvider)
+                                    .isNotEmpty) {
+                                  isSurveySummary = true;
+                                }
+                              });
+
+                              log('--title : ${ref.watch(surveyTitleStateProvider)}');
+                              log('description: ${ref.watch(surveyDescriptionStateProvider)}');
+                              log('entry amount: ${ref.watch(entityStateProvider)}');
+                              log('budget: ${ref.watch(budgetStateProvider)}');
+                              log('startDate: ${ref.watch(startDateStateProvider)}');
+                              log('duration: ${ref.watch(durationStateProvider)}');
+                              log('isFormValid: ${ref.watch(isSurveyInfoContentValidStateProvider)}');
+                              log('isSurveySummary: $isSurveySummary');
+                            }
+                          : () {},
                   label: 'Continue',
                 ),
               ),

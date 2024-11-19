@@ -33,6 +33,7 @@ class AppColors {
   static const Color greenShade200 = Color(0xFF4FBF67);
   static const Color deepGreen = Color(0xFF1A932E);
   static const Color brown900 = Color(0xFF312f2f);
+  static const Color brownShade800 = Color(0xFF312F2F);
   static const Color textColor = Color(0xff575758);
   static const Color lighterText = Color(0xFF9D9D9D);
   static const Color appbarColor = Color(0xFFEEF2F6);
@@ -50,6 +51,7 @@ class AppColors {
   static const Color buttonBg = Color(0xFFFBFCFE);
   static const Color w5Color = Color(0xFF5A3D8B);
   static const Color lightPurple = Color(0xFFF3F0FF);
+  static const Color lightPurpleShade800 = Color(0xFFFDFAFF);
   static const Color purpleShade700 = Color(0xFFBF7EFF);
   static const Color babyblue = Color(0xff44a9ec);
   static const Color babyShade100 = Color(0xFFF2F8ff);
@@ -57,5 +59,6 @@ class AppColors {
   static const Color lightOrange = Color(0xFFFFFAF0);
   static const Color goldenYellow = Color(0xFFEEB241);
   static const Color unSelectedTab = Color(0xFF3C3C43);
+  static const Color armyGreen = Color(0xFF414141);
   static const Color biroBlue = Color(0xFF2542EA);
 }

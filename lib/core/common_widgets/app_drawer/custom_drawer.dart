@@ -82,7 +82,8 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                       6.hi,
                       GenerateInitials(
                         tag:
-                            '${userDetailsController.data?.data?.user?.name ?? ''}',
+                            userDetailsController.data?.data?.user?.firstName ??
+                                '',
                       ),
                       16.hi,
                       Text(
@@ -95,7 +96,8 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                       ),
                       4.hi,
                       Text(
-                        'GLO WORLD',
+                        userDetailsController.data?.data?.user?.businessName ??
+                            '',
                         style: AppTheme.lightTextTheme.displaySmall?.copyWith(
                           fontWeight: FontWeight.w500,
                           fontSize: 12.sp,
@@ -181,74 +183,96 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                           icon: AppIcons.wifiService,
                         ),
                         27.hi,
-                        // DrawerTile(
-                        //   onTap: () {
-                        //   },
-                        //   label: 'Advertise',
-                        //   icon: AppIcons.advertise,
-                        // ),
                         DrawerTileDropDown(
-                          icon: AppIcons.advertise,
-                          label: 'Advertise',
+                          icon: AppIcons.businessIcon,
+                          label: 'Atmosphere for Business',
                           subDrawer: Column(
                             children: [
-                              SubDrawerTile(
-                                onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return const AdvertiserOverviewScreen();
-                                  }));
-                                },
-                                label: "Overview",
+                              DrawerTileDropDown(
+                                color: AppColors.w5Color,
+                                iconColor: AppColors.white,
+                                icon: AppIcons.advertise,
+                                padding: const EdgeInsets.all(16),
+                                labelColor: AppColors.white,
+                                label: 'Advertise',
+                                leftPadding: 0,
+                                rightPadding: 0,
+                                subDrawer: Column(
+                                  children: [
+                                    SubDrawerTile(
+                                      onTap: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return const AdvertiserOverviewScreen();
+                                        }));
+                                      },
+                                      label: "Overview",
+                                    ),
+                                    8.hi,
+                                    SubDrawerTile(
+                                      onTap: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return const AdsScreen();
+                                        }));
+                                      },
+                                      label: "Ads",
+                                    ),
+                                    8.hi,
+                                    SubDrawerTile(
+                                      onTap: () async {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return const CreateAdsScreen();
+                                        }));
+                                        // final userId = ref
+                                        //     .watch(
+                                        //         userDetailsControllerProvider)
+                                        //     .data
+                                        //     ?.data
+                                        //     ?.user
+                                        //     ?.id;
+                                        // final hasFetchedAdviserId = await ref
+                                        //     .read(
+                                        //         fetchAdvertiserByUserIdControllerProvider
+                                        //             .notifier)
+                                        //     .getAdvertiserId(
+                                        //         userId: userId.toString());
+                                      },
+                                      label: "Create Ads",
+                                    ),
+                                    8.hi,
+                                    SubDrawerTile(
+                                      onTap: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return const AdsReportScreen();
+                                        }));
+                                      },
+                                      label: "Ad Reports",
+                                    ),
+                                  ],
+                                ),
                               ),
-                              8.hi,
-                              SubDrawerTile(
-                                onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return const AdsScreen();
-                                  }));
-                                },
-                                label: "Ads",
-                              ),
-                              8.hi,
-                              SubDrawerTile(
-                                onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return const CreateAdsScreen();
-                                  }));
-                                },
-                                label: "Create Ads",
-                              ),
-                              8.hi,
-                              SubDrawerTile(
-                                onTap: () {},
-                                label: "Survey Report",
-                              ),
-                              8.hi,
-                              SubDrawerTile(
-                                onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return const AdsReportScreen();
-                                  }));
-                                },
-                                label: "Ad Reports",
-                              ),
-                              8.hi,
-                              SubDrawerTile(
-                                onTap: () {},
-                                label: "Transaction history",
+                              const DrawerTileDropDown(
+                                color: AppColors.w5Color,
+                                iconColor: AppColors.white,
+                                padding: EdgeInsets.all(16),
+                                labelColor: AppColors.white,
+                                icon: AppIcons.storefront,
+                                leftPadding: 0,
+                                rightPadding: 0,
+                                label: 'Storefront',
+                                subDrawer: Column(
+                                  children: [],
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                        27.hi,
-                        DrawerTile(
-                          onTap: () {},
-                          label: 'Storefront',
-                          icon: AppIcons.storefront,
                         ),
                         27.hi,
                         DrawerTile(

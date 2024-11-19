@@ -69,6 +69,8 @@ class AppIcons {
   static const link = "assets/svg/link.svg";
   static const info = "assets/svg/info.svg";
   static const calendar = "assets/svg/calendarr.svg";
+  static const radioButton = "assets/svg/radio_button.svg";
+  static const businessIcon = "assets/svg/business_icon.svg";
 
   ///Png
   static const String activeHomeNew = "assets/images/active_home.png";

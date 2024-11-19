@@ -23,4 +23,7 @@ class ApiEndpoints {
       "/wallet/verifyPaymentAndUpdateWallet";
   static const String createDigitalProducts = "/product/createGigitalProduct";
   static const String walletHistory = "/wallet/user-transactions/";
+  static const String createAdvert = "/ads/createAdvert";
+  static const String getAdvertiserId = "/ads/getAdvertiserByUserId/";
+  static const String createAdvertiser = '/ads/createAdvertiser';
 }

@@ -14,11 +14,20 @@ class DrawerTileDropDown extends StatefulWidget {
     required this.icon,
     required this.label,
     required this.subDrawer,
+    this.padding,
+    this.color,
+    this.iconColor,
+    this.labelColor,
+    this.leftPadding,
+    this.rightPadding,
     Key? key,
   }) : super(key: key);
 
   final String icon, label;
   final Widget subDrawer;
+  final Color? color, iconColor, labelColor;
+  final EdgeInsetsGeometry? padding;
+  final double? leftPadding, rightPadding;
 
   @override
   _DrawerTileDropDownState createState() => _DrawerTileDropDownState();
@@ -37,11 +46,13 @@ class _DrawerTileDropDownState extends State<DrawerTileDropDown> {
             });
           },
           child: Container(
-            padding: isOpen ? const EdgeInsets.all(16) : EdgeInsets.zero,
+            padding: isOpen
+                ? const EdgeInsets.all(16)
+                : widget.padding ?? EdgeInsets.zero,
             decoration: BoxDecoration(
                 color: isOpen
-                    ? AppColors.w5Color.withOpacity(0.1)
-                    : Colors.transparent,
+                    ? widget.color ?? AppColors.w5Color.withOpacity(0.1)
+                    : widget.color ?? Colors.transparent,
                 border: Border(
                     right: isOpen
                         ? const BorderSide(
@@ -51,19 +62,28 @@ class _DrawerTileDropDownState extends State<DrawerTileDropDown> {
                         : BorderSide.none)),
             child: Row(
               children: [
-                SvgPicture.asset(widget.icon),
+                SvgPicture.asset(
+                  widget.icon,
+                  color: widget.iconColor,
+                ),
                 16.wi,
-                Text(
-                  widget.label,
-                  style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                    color: AppColors.blackSupplementary,
-                    fontSize: 14.sp,
+                SizedBox(
+                  width: 149.w,
+                  child: Text(
+                    widget.label,
+                    style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+                      color: widget.labelColor ?? AppColors.blackSupplementary,
+                      fontSize: 14.sp,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
                 ),
                 const Spacer(),
                 SvgPicture.asset(
-                        isOpen ? AppIcons.arrowDown : AppIcons.curveArrowUp)
-                    .padRight(20)
+                  isOpen ? AppIcons.arrowDown : AppIcons.curveArrowUp,
+                  color: widget.iconColor,
+                ).padRight(20)
               ],
             ),
           ),
@@ -71,6 +91,8 @@ class _DrawerTileDropDownState extends State<DrawerTileDropDown> {
         8.hi,
         if (isOpen) widget.subDrawer
       ],
-    ).padOnly(left: isOpen ? 0 : 18, right: 18);
+    ).padOnly(
+        left: isOpen ? 0 : widget.leftPadding ?? 18,
+        right: widget.rightPadding ?? 18);
   }
 }

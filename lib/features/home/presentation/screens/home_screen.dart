@@ -88,7 +88,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Row(
                 children: [
                   Text(
-                    'Welcome back, ${formatFirstName(userDetailsController?.name ?? '')}',
+                    'Welcome back, ${formatFirstName(userDetailsController?.firstName ?? '')}',
                     style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
                       fontSize: 18.sp,
                       color: AppColors.blackSupplementary,

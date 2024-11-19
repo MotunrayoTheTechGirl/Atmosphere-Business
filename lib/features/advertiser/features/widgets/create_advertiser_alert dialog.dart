@@ -1,10 +1,10 @@
-import 'package:dealer_portal_mobile/features/wallet/presentation/widgets/fundwallet_tile.dart';
+import 'package:dealer_portal_mobile/features/advertiser/features/widgets/create_advertiser_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/utils/app_colors.dart';
 
-Future<void> fundWalletAlertDialog({
+Future<void> createAdvertiserAlertDialog({
   required BuildContext context,
 }) {
   return showDialog(
@@ -13,9 +13,9 @@ Future<void> fundWalletAlertDialog({
         return AlertDialog(
           backgroundColor: AppColors.whiteShade80,
           content: SizedBox(
-            height: .6.sh,
+            height: .5.sh,
             child: const SingleChildScrollView(
-              child: FundWalletTile(),
+              child: CreateAdvertiserContent(),
             ),
           ),
         );

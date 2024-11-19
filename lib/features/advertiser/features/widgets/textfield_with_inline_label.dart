@@ -9,8 +9,9 @@ class TextfieldWithInlineLabel extends StatelessWidget {
   const TextfieldWithInlineLabel(
       {required this.controller,
       this.hintText,
-      required this.label,
+      this.label,
       this.isRequired = true,
+      this.hasInlineLAbel = true,
       this.suffixIcon,
       this.onTap,
       this.maxLines,
@@ -19,13 +20,15 @@ class TextfieldWithInlineLabel extends StatelessWidget {
       this.contentPadding,
       this.keyboardType,
       this.onChanged,
+      this.radius,
       Key? key})
       : super(key: key);
 
   final TextEditingController controller;
   final String? hintText;
-  final String label;
+  final String? label;
   final bool isRequired;
+  final bool hasInlineLAbel;
   final Widget? suffixIcon;
   final void Function()? onTap;
   final int? maxLines;
@@ -34,6 +37,7 @@ class TextfieldWithInlineLabel extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final TextInputType? keyboardType;
   final void Function(String)? onChanged;
+  final double? radius;
 
   @override
   Widget build(BuildContext context) {
@@ -50,31 +54,29 @@ class TextfieldWithInlineLabel extends StatelessWidget {
         fontWeight: FontWeight.w400,
         color: AppColors.greyShade200,
       ),
-      defaultWidgetLabel: RichText(
-        text: TextSpan(
-          text: label,
-          style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w400,
-            color: AppColors.deepAsh,
-          ),
-          children: [
-            TextSpan(
-              text: isRequired ? ' * ' : '',
-              style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.red,
+      defaultWidgetLabel: hasInlineLAbel
+          ? RichText(
+              text: TextSpan(
+                text: label,
+                style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.deepAsh,
+                ),
+                children: [
+                  TextSpan(
+                    text: isRequired ? ' * ' : '',
+                    style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.red,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      ),
-      // const TopAlignedTextfieldLabel(
-      //   label: 'Region',
-      //   isRequired: false,
-      // ),
-      radius: 10.r,
+            )
+          : const SizedBox(),
+      radius: radius ?? 10.r,
       contentPadding: contentPadding ??
           const EdgeInsets.symmetric(
             vertical: 2,

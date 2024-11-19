@@ -21,7 +21,7 @@ class WalletHistoryRepository {
         queryParameters: {
           "limit": 50,
           "offset": 0,
-          "accountType": "dealer",
+          "accountType": "business",
         },
       );
 

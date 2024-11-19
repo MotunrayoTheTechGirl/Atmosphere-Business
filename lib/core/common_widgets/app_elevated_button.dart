@@ -28,6 +28,7 @@ class AppElevatedButton extends StatelessWidget {
     this.isFilled = false,
     this.bgColor,
     this.labelColor,
+    this.border,
     super.key,
   });
 
@@ -46,6 +47,7 @@ class AppElevatedButton extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final bool isFilled;
   final Color? bgColor, labelColor;
+  final BoxBorder? border;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +66,7 @@ class AppElevatedButton extends StatelessWidget {
                 BorderRadius.all(Radius.circular(borderRadius ?? 16.5.r)),
             border: isFilled
                 ? Border.all(width: 1, color: AppColors.w5Color)
-                : null),
+                : border),
         child: isLoading
             ? const SpinKitChasingDots(
                 size: 20,

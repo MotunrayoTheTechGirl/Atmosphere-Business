@@ -17,11 +17,13 @@ import '../../../../../core/common_widgets/custom_snackbar.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_icons.dart';
 import '../../../../../core/utils/themes/app_themes.dart';
-import '../../../../../core/utils/ui_helper.dart';
 import '../../../../subscriptions/data/controller/file_upload_controller.dart';
 import '../../widgets/size_guide_text_button.dart';
 import '../../widgets/textfield_with_inline_label.dart';
 import '../../widgets/upload_box_text.dart';
+
+final videoAdSizeStateProvider = StateProvider<String>((ref) => '');
+final videoUrlStateProvider = StateProvider<String>((ref) => '');
 
 class VideoAdsTabView extends ConsumerStatefulWidget {
   const VideoAdsTabView({Key? key}) : super(key: key);
@@ -77,6 +79,20 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
       return isFormValid = true;
     }
     return false;
+  }
+
+  TextEditingController displaySize(
+      TextEditingController textEditingController) {
+    if (textEditingController.text.isEmpty) {
+      return TextEditingController();
+    } else if (textEditingController.text == 'Mobile') {
+      ref.read(videoAdSizeStateProvider.notifier).state = '298 x 142';
+      return TextEditingController(text: '298 x 142');
+    } else if (textEditingController.text == 'Desktop') {
+      ref.read(videoAdSizeStateProvider.notifier).state = '741 x 170';
+      return TextEditingController(text: '741 x 170');
+    }
+    return TextEditingController();
   }
 
   @override
@@ -400,6 +416,8 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                       final trimmedData =
                           data?.substring(data.indexOf('/dealer'));
                       log('trimmed Data: $trimmedData');
+                      ref.read(videoUrlStateProvider.notifier).state =
+                          trimmedData ?? '';
                       //! value for createAds endpoint expects
                       //'https://api-dev.wave5wireless.ng/content$trimmedData'
                     } catch (e) {
@@ -450,7 +468,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                 child: AppElevatedButton(
                   isActive: valiadteForm(),
                   isLoading: false,
-                  onTap: () {},
+                  onTap: valiadteForm() ? () async {} : () {},
                   label: 'Submit',
                 ),
               ),

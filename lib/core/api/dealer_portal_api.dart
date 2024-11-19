@@ -94,21 +94,26 @@ class DealerPoratlApi {
   }
 
   Future<ApiResponse?> post(
-    String string, {
+    String endpoint, {
+    String? customPath,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? body,
     FormData? formData,
     bool isFormData = false,
   }) async {
-    log('$_baseUrl$string');
+    final url = customPath ?? '$_baseUrl$endpoint';
+
+    log('Request URL: $url');
     log('Request Body: $body');
+
     try {
-      // log('Headers: $_headers');
-      final response = await _dio.post('$_baseUrl$string',
-          data: isFormData ? formData : body,
-          options: Options(headers: _headers),
-          queryParameters: queryParameters);
+      final response = await _dio.post(
+        url,
+        data: isFormData ? formData : body,
+        options: Options(headers: {..._headers, ...?headers}),
+        queryParameters: queryParameters,
+      );
 
       if (response.statusCode == 200 ||
           response.statusCode == 201 ||
@@ -118,7 +123,6 @@ class DealerPoratlApi {
         return ApiUtils.toApiResponse(response);
       } else {
         log('${response.statusCode}');
-
         throw ApiResponseException(
             'Request failed with status code ${response.statusCode}');
       }
@@ -130,7 +134,7 @@ class DealerPoratlApi {
                 'Oops! Something went wrong on our end. Please try again later.');
           }
           final errorMessage = e.response?.data['message'];
-          log('This is the dio error: $errorMessage');
+          log('Dio error: $errorMessage');
           throw ApiResponseException(errorMessage ?? '');
         }
       } else if (e.type == DioExceptionType.connectionError ||
@@ -203,7 +207,6 @@ class DealerPoratlApi {
     return null;
   }
 
-  //Power of Attorney
   Future<ApiResponse?> delete(
     String string, {
     Map<String, dynamic>? headers,

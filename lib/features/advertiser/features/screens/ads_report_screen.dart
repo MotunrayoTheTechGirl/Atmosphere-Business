@@ -86,6 +86,7 @@ class _AdsReportScreenState extends ConsumerState<AdsReportScreen> {
                       fillColor: AppColors.tabBarColor,
                       controller: searchController,
                       hintText: 'Search Ads',
+                      border: InputBorder.none,
                       hintStyle: AppTheme.lightTextTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w400,
                         fontSize: 16.sp,

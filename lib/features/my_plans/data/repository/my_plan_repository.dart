@@ -15,16 +15,12 @@ class MyPlanRepository {
   );
 
   Future<CaptiveDigitalPrdResModel> fetchCaptivePlans() async {
-    log('Captive');
     try {
       final response = await api.get(ApiEndpoints.getCaptiveDigitalPlans);
-      log('Captive Response: $response');
 
       if (response?.data is String) {
-        log('--- Is String ----');
         return CaptiveDigitalPrdResModel.fromJson(jsonDecode(response?.data));
       } else {
-        log('--- Is not  String ----');
         return CaptiveDigitalPrdResModel.fromJson(response?.data);
       }
     } catch (e) {

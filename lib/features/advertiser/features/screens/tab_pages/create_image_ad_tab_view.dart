@@ -4,7 +4,9 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dealer_portal_mobile/core/common_widgets/app_elevated_button.dart';
+import 'package:dealer_portal_mobile/core/enums.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
+import 'package:dealer_portal_mobile/features/advertiser/features/screens/create_ads_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/widgets/upload_box_text.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
@@ -18,10 +20,14 @@ import '../../../../../core/common_widgets/custom_snackbar.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_icons.dart';
 import '../../../../../core/utils/themes/app_themes.dart';
-import '../../../../../core/utils/ui_helper.dart';
+import '../../../../onboarding/data/controller/user_details_controller.dart';
 import '../../../../subscriptions/data/controller/file_upload_controller.dart';
+import '../../../data/controller/create_advert_controller.dart';
 import '../../widgets/size_guide_text_button.dart';
 import '../../widgets/textfield_with_inline_label.dart';
+
+final adSizeStateProvider = StateProvider<String>((ref) => '');
+final imageStateProvider = StateProvider<String>((ref) => '');
 
 class ImageAdTabBiew extends ConsumerStatefulWidget {
   const ImageAdTabBiew({
@@ -81,8 +87,25 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
     return false;
   }
 
+  TextEditingController displaySize(
+      TextEditingController textEditingController) {
+    if (textEditingController.text.isEmpty) {
+      return TextEditingController();
+    } else if (textEditingController.text == 'Mobile') {
+      ref.read(adSizeStateProvider.notifier).state = '298 x 142';
+      return TextEditingController(text: '298 x 142');
+    } else if (textEditingController.text == 'Desktop') {
+      ref.read(adSizeStateProvider.notifier).state = '741 x 170';
+      return TextEditingController(text: '741 x 170');
+    }
+    return TextEditingController();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final userDetailsController =
+        ref.watch(userDetailsControllerProvider).data?.data?.user;
+
     return SizedBox(
       height: .9.sh,
       child: ListView(
@@ -401,6 +424,8 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                           ref.read(receiptFileUploadControllerProvider).data;
                       final trimmedData =
                           data?.substring(data.indexOf('/dealer'));
+                      ref.read(imageStateProvider.notifier).state =
+                          trimmedData ?? '';
                       log('trimmed Data: $trimmedData');
                       //! value for createAds endpoint expects
                       //'https://api-dev.wave5wireless.ng/content$trimmedData'
@@ -449,8 +474,91 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
               Expanded(
                 child: AppElevatedButton(
                   isActive: valiadteForm(),
-                  isLoading: false,
-                  onTap: () {},
+                  isLoading:
+                      // ref
+                      //             .watch(fetchAdvertiserByUserIdControllerProvider)
+                      //             .status ==
+                      //         ResponseStatus.loading ||
+                      ref.watch(createAdvertControllerProvider).status ==
+                          ResponseStatus.loading,
+                  onTap: valiadteForm()
+                      ? () async {
+                          // final hasFetchedAdviserId = await ref
+                          //     .read(fetchAdvertiserByUserIdControllerProvider
+                          //         .notifier)
+                          //     .getAdvertiserId(
+                          //         userId:
+                          //             userDetailsController?.id.toString() ??
+                          //                 '');
+                          // if (hasFetchedAdviserId) {
+                          //   final hasCreatedImageAds = await ref
+                          //       .read(createAdvertControllerProvider.notifier)
+                          //       .createAds(
+                          //           advertiserId: 5,
+                          //           title: adTitleController.text,
+                          //           description: adDescriptionController.text,
+                          //           adType: 'image',
+                          //           adSize: ref.watch(adSizeStateProvider),
+                          //           mediaUrl:
+                          //               'https://api-dev.wave5wireless.ng/content${ref.watch(imageStateProvider)}',
+                          //           targetUrl: targetUrlController.text,
+                          //           budget: int.parse(bugetController.text),
+                          //           duration:
+                          //               int.parse(durationController.text),
+                          //           startDate: startDateController.text,
+                          //           businessCategory:
+                          //               businessCategoryController.text,
+                          //           deviceType:
+                          //               int.parse(deviceTypeController.text),
+                          //           callToActionText:
+                          //               callToActionController.text,
+                          //           desiredScreen: desiredScreenController.text,
+                          //           regionIds: []);
+                          //   if (hasCreatedImageAds) {
+                          //     CustomSnackBar.showSnackBar(
+                          //         context: context,
+                          //         message: 'Image Advert created SuccessFully');
+                          //   } else {
+                          //     CustomSnackBar.showSnackBar(
+                          //         context: context,
+                          //         isError: true,
+                          //         message: 'An Error occurred!');
+                          //   }
+                          // }
+                          final hasCreatedImageAds = await ref
+                              .read(createAdvertControllerProvider.notifier)
+                              .createAds(
+                                  advertiserId: int.parse(
+                                      ref.watch(advertiserIdStateProvider)),
+                                  title: adTitleController.text,
+                                  description: adDescriptionController.text,
+                                  adType: 'image',
+                                  adSize: ref.watch(adSizeStateProvider),
+                                  mediaUrl:
+                                      'https://api-dev.wave5wireless.ng/content${ref.watch(imageStateProvider)}',
+                                  targetUrl: targetUrlController.text,
+                                  budget: int.parse(bugetController.text),
+                                  duration: int.parse(durationController.text),
+                                  startDate: startDateController.text,
+                                  businessCategory:
+                                      businessCategoryController.text,
+                                  deviceType:
+                                      int.parse(deviceTypeController.text),
+                                  callToActionText: callToActionController.text,
+                                  desiredScreen: desiredScreenController.text,
+                                  regionIds: []);
+                          if (hasCreatedImageAds) {
+                            CustomSnackBar.showSnackBar(
+                                context: context,
+                                message: 'Image Advert created SuccessFully');
+                          } else {
+                            CustomSnackBar.showSnackBar(
+                                context: context,
+                                isError: true,
+                                message: 'An Error occurred!');
+                          }
+                        }
+                      : () {},
                   label: 'Submit',
                 ),
               ),

@@ -3,6 +3,7 @@
 import 'package:dealer_portal_mobile/core/common_widgets/app_divider.dart';
 import 'package:dealer_portal_mobile/core/common_widgets/app_elevated_button.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
+import 'package:dealer_portal_mobile/features/advertiser/features/screens/ads_details_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/ads_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/draft_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/portfolio_account_screen.dart';
@@ -269,7 +270,14 @@ class _AdvertiserOverviewScreenState extends State<AdvertiserOverviewScreen> {
                         status: 'Active',
                         statusTextColor: AppColors.deepGreen,
                         statusBgColor: AppColors.greenShade50.withOpacity(0.5),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return const AdsDetailsScreen();
+                            }),
+                          );
+                        },
                       ),
                     );
                   },
