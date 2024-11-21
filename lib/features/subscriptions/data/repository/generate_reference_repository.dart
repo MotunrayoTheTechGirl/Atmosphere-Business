@@ -26,7 +26,7 @@ class GenerateReferenceRepository {
         "narration": "Additional details",
         "userId": userId,
         "system_source": "atmosphere",
-        "platform_source": "dealer"
+        "platform_source": "business"
       });
       return response?.data;
     } catch (e) {

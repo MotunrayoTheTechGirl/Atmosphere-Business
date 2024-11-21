@@ -46,6 +46,8 @@ class AppColors {
   static const Color greyShade200 = Color(0xFF949292);
   static const Color dividerColor = Color(0xFFE8E6EA);
   static const Color greyShade300 = Color(0xFFd9d9d9);
+  static const Color lightGrey = Color(0xFFFCFCFC);
+  static const Color greyWhite = Color(0xFFE7E7E7);
   static const Color lilac = Color(0xFFF8F8FF);
   static const Color textFieldBorder = Color(0xFF1B1D21);
   static const Color buttonBg = Color(0xFFFBFCFE);

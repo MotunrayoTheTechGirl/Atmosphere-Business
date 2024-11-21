@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/api/api_endpoints.dart';
 import '../../../../core/api/dealer_portal_api.dart';
 import '../models/create_ads_res_model.dart';
 
@@ -19,38 +20,35 @@ class CreateAdvertRepository {
     required String description,
     required String adType,
     required String adSize,
+    required String deviceType,
     required String mediaUrl,
     required String targetUrl,
     required num budget,
+    required String businessCategory,
+    required String callToActionText,
     required num duration,
     required String startDate,
-    required String businessCategory,
-    required num deviceType,
-    required String callToActionText,
     required String desiredScreen,
     List? regionIds,
   }) async {
     try {
-      final response = await api
-          .post('https://w2kdvsgp-3000.euw.devtunnels.ms/ads/createAdvert',
-              // ApiEndpoints.createAdvert,
-              body: {
-            "advertiser_id": advertiserId,
-            "title": title,
-            "description": description,
-            "ad_type": adType,
-            "ad_size": adSize,
-            "media_url": mediaUrl,
-            "target_url": targetUrl,
-            "budget": budget,
-            "duration": duration,
-            "start_date": startDate,
-            "business_category": businessCategory,
-            "device_type": deviceType,
-            "call_to_action_text": callToActionText,
-            "desired_screen": desiredScreen,
-            "region_ids": regionIds ?? []
-          });
+      final response = await api.post(ApiEndpoints.createAdvert, body: {
+        "advertiserId": advertiserId,
+        "title": title,
+        "description": description,
+        "type": adType,
+        "size": adSize,
+        "device_type": deviceType,
+        "displayContentUrl": mediaUrl,
+        "target_url": targetUrl,
+        "budget": budget,
+        "category": businessCategory,
+        "callToActionText": callToActionText,
+        "duration": duration,
+        "startDate": startDate,
+        "screens": desiredScreen,
+        "region_ids": regionIds ?? []
+      });
 
       if (response?.data is String) {
         return CreateAdsResModel.fromJson(jsonDecode(response?.data));

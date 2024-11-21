@@ -28,16 +28,6 @@ class _CreateAdsScreenState extends ConsumerState<CreateAdsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  // void isAdvertiser() async {
-  // final userId =
-  //     ref.watch(userDetailsControllerProvider).data?.data?.user?.id;
-  // final hasFetchedAdviserId = await ref
-  //     .read(fetchAdvertiserByUserIdControllerProvider.notifier)
-  //     .getAdvertiserId(userId: userId.toString());
-  //       if(!hasFetchedAdviserId){
-  //       }
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -65,8 +55,12 @@ class _CreateAdsScreenState extends ConsumerState<CreateAdsScreen>
       body: SingleChildScrollView(
           child: advertiserIdController.when(
         data: (data) {
-          final advertiserId = data.data?.id ?? '';
-          ref.read(advertiserIdStateProvider.notifier).state = advertiserId;
+          // final advertiserId = data.id;
+          // ref.read(advertiserIdStateProvider.notifier).state =
+          //     advertiserId ?? '';
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ref.read(advertiserIdStateProvider.notifier).state = data.id ?? '';
+          });
           return Column(
             children: [
               10.hi,

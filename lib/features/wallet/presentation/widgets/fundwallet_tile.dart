@@ -4,7 +4,7 @@ import 'dart:developer';
 
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/features/subscriptions/presentation/screens/invoice_screen.dart';
-import 'package:dealer_portal_mobile/features/wallet/data/controller/paystack_link_controller.dart';
+import 'package:dealer_portal_mobile/features/wallet/presentation/widgets/payment_method_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,7 +14,6 @@ import '../../../../core/common_widgets/app_text_field.dart';
 import '../../../../core/common_widgets/cancel_button.dart';
 import '../../../../core/enums.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/custom_inapp_browser.dart';
 import '../../../../core/utils/themes/app_themes.dart';
 import '../../../../core/utils/thousand_formatter.dart';
 import '../../../onboarding/data/controller/user_details_controller.dart';
@@ -180,7 +179,7 @@ class _FundWalletTileState extends ConsumerState<FundWalletTile> {
                         ResponseStatus.loading ||
                     ref.watch(generateReferenceControllerProvider).status ==
                         ResponseStatus.loading ||
-                    ref.watch(generatePaystackLinResModelProvider).status ==
+                    ref.watch(createDigitalOrderControllerProvider).status ==
                         ResponseStatus.loading,
             onTap: isFormValid
                 ? () {
@@ -289,71 +288,11 @@ class _FundWalletTileState extends ConsumerState<FundWalletTile> {
                       }
                     } else {
                       //!The amount can be processed to paystack
-
-                      //! generate reference
-                      final isReferenceGenerated = await ref
-                          .read(generateReferenceControllerProvider.notifier)
-                          .generateReference(
-                            amount: int.parse(
-                                amountController.text.replaceAll(',', '')),
-                            userId: userDetailsController.data?.data?.user?.id
-                                    .toString() ??
-                                '',
-                            paymentMethod: "paystack",
-                            note: "fund wallet",
-                            transactionType: "credit",
-                          );
-                      if (isReferenceGenerated) {
-                        final reference = ref
-                            .read(generateReferenceControllerProvider.notifier)
-                            .state
-                            .data;
-                        log('--generated reference---: $reference');
-                        //! generate payment url
-                        final hasgeneratedPaymentLink = await ref
-                            .read(generatePaystackLinResModelProvider.notifier)
-                            .paystackPaymentLink(
-                                identity: userDetailsController
-                                        .data?.data?.user?.id
-                                        .toString() ??
-                                    '',
-                                amount: int.parse(amountController.text
-                                        .replaceAll(',', '')) *
-                                    100,
-                                reference: reference ?? '');
-                        if (hasgeneratedPaymentLink) {
-                          final paymentLink = ref
-                              .read(
-                                  generatePaystackLinResModelProvider.notifier)
-                              .state
-                              .data
-                              ?.data
-                              ?.authorizationUrl;
-                          ref.read(amountStateProvider.notifier).state =
-                              int.parse(
-                                  amountController.text.replaceAll(',', ''));
-                          ref
-                              .read(generatedReferenceStateProvider.notifier)
-                              .state = reference ?? '';
-                          ref.read(userIdStateProvider.notifier).state =
-                              userDetailsController.data?.data?.user?.id
-                                      .toString() ??
-                                  '';
-                          await Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (context) {
-                            return CustomInAppBrowser(
-                              url: paymentLink ?? '',
-                              isFunding: true,
-                            );
-                          }));
-                        } else {
-                          log('--failed to generate payment link ----');
-                        }
-                      } else {
-                        log('--failed to generate refernce for online payment----');
-                      }
+                      ref.read(amountStateProvider.notifier).state =
+                          int.parse(amountController.text.replaceAll(',', ''));
+                      Navigator.pop(context);
+                      paymentMethodAlertDialog(context: context);
                     }
-                    //!------ revamping the implementation
 
                     // else {
                     //   log('--failed to create digital product----');

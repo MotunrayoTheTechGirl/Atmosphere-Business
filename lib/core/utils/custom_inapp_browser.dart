@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:developer';
 import 'dart:io';
@@ -12,20 +12,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../features/my_plans/data/controller/user_balance_controller.dart';
 import '../../features/onboarding/data/controller/get_query_param.dart';
 import '../../features/wallet/data/controller/verify_and_update_wallet_controller.dart';
+import '../../features/wallet/data/controller/wallet_history_controller.dart';
 import '../../features/wallet/logic/wallet_countdown_controller.dart';
 import '../../features/wallet/presentation/screens/wallet_screen.dart';
 import '../../features/wallet/presentation/widgets/fundwallet_tile.dart';
+import '../../features/wallet/presentation/widgets/payment_method_tile.dart';
 
 class CustomInAppBrowser extends ConsumerStatefulWidget {
   final String url;
-  final bool? isFunding;
+  final bool isFunding;
 
   const CustomInAppBrowser({
     Key? key,
     required this.url,
-    this.isFunding,
+    this.isFunding = false,
   }) : super(key: key);
 
   @override
@@ -42,34 +45,33 @@ class _CustomInAppBrowserState extends ConsumerState<CustomInAppBrowser> {
   InAppWebViewController? webViewController;
   late final CountdownController _countdownController;
 
-  @override
-  void initState() {
-    super.initState();
-    print("CustomInAppBrowser initState called - ${DateTime.now()}");
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   print("CustomInAppBrowser initState called - ${DateTime.now()}");
 
-    // Start timer immediately instead of using post-frame callback
-    if (widget.isFunding == true) {
-      print(
-          "isFunding is true, starting timer immediately - ${DateTime.now()}");
-      Future.microtask(() {
-        ref
-            .read(walletPaystackCountdownProvider.notifier)
-            .startVerificationTimer();
-      });
-    } else {
-      print("isFunding is false, not starting timer - ${DateTime.now()}");
-    }
+  //   if (widget.isFunding == true) {
+  //     print(
+  //         "isFunding is true, starting timer immediately - ${DateTime.now()}");
+  //     Future.microtask(() {
+  //       ref
+  //           .read(walletPaystackCountdownProvider.notifier)
+  //           .startVerificationTimer();
+  //     });
+  //   } else {
+  //     print("isFunding is false, not starting timer - ${DateTime.now()}");
+  //   }
 
-    url = widget.url;
-  }
+  //   url = widget.url;
+  // }
 
-  @override
-  void dispose() {
-    print("CustomInAppBrowser dispose called"); // Log disposal
-    ref.read(walletPaystackCountdownProvider.notifier).stopTimer();
-    webViewController?.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   print("CustomInAppBrowser dispose called"); // Log disposal
+  //   ref.read(walletPaystackCountdownProvider.notifier).stopTimer();
+  //   webViewController?.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +85,32 @@ class _CustomInAppBrowserState extends ConsumerState<CustomInAppBrowser> {
       },
       child: Scaffold(
         appBar: AppBar(
-          leading: const CloseButton(),
+          leading: CloseButton(
+              onPressed: widget.isFunding
+                  ? () async {
+                      log('pressed');
+                      await ref
+                          .read(
+                              verifyAndUpdateWalletControllerProvider.notifier)
+                          .verifyPaymentAndUpdateWallet(
+                            amount: ref.read(amountStateProvider),
+                            reference:
+                                ref.read(generatedReferenceStateProvider),
+                            userId: ref.read(userIdStateProvider),
+                            paymentMethod:
+                                ref.watch(paymentMethodStateProvider),
+                          );
+                      ref
+                          .read(fetchUserBalanceControllerProvider.notifier)
+                          .userBalance();
+                      ref
+                          .read(walletHistoryControllerProvider.notifier)
+                          .fetchWalletHistory();
+                      Navigator.pop(context);
+                    }
+                  : () {
+                      Navigator.pop(context);
+                    }),
           actions: [
             IconButton(
               onPressed: () => webViewController?.reload(),

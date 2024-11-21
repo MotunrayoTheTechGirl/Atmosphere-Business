@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:dealer_portal_mobile/features/wallet/presentation/widgets/payment_method_tile.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../my_plans/data/controller/user_balance_controller.dart';
@@ -79,9 +80,11 @@ class CountdownController extends StateNotifier<CountdownState> {
       ref
           .read(verifyAndUpdateWalletControllerProvider.notifier)
           .verifyPaymentAndUpdateWallet(
-              amount: ref.read(amountStateProvider),
-              reference: ref.read(generatedReferenceStateProvider),
-              userId: ref.read(userIdStateProvider));
+            amount: ref.read(amountStateProvider),
+            reference: ref.read(generatedReferenceStateProvider),
+            userId: ref.read(userIdStateProvider),
+            paymentMethod: ref.watch(paymentMethodStateProvider),
+          );
       print("Payment verification completed - ${DateTime.now()}");
     } catch (e, stackTrace) {
       print("Error during payment verification: $e");

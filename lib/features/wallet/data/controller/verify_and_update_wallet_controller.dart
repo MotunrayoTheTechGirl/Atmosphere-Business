@@ -36,6 +36,7 @@ class VerifyAndUpdateWalletController
         amount: amount,
         reference: reference,
         userId: userId,
+        paymentMethod: paymentMethod,
       );
       state = ResponseState(
         status: ResponseStatus.success,
@@ -45,7 +46,7 @@ class VerifyAndUpdateWalletController
       return true;
     } catch (e) {
       state = ResponseState(status: ResponseStatus.error, message: "$e");
-      log('Error: $e');
+      log(' verify payment Error: $e');
       return false;
     }
   }

@@ -1,48 +1,37 @@
 class GetAdvertiserIdResModel {
   GetAdvertiserIdResModel({
-    required this.status,
-    required this.code,
-    required this.message,
-    required this.data,
-  });
-
-  final String? status;
-  final int? code;
-  final String? message;
-  final Data? data;
-
-  factory GetAdvertiserIdResModel.fromJson(Map<String, dynamic> json) {
-    return GetAdvertiserIdResModel(
-      status: json["status"],
-      code: json["code"],
-      message: json["message"],
-      data: json["data"] == null ? null : Data.fromJson(json["data"]),
-    );
-  }
-}
-
-class Data {
-  Data({
     required this.id,
-    required this.businessName,
-    required this.email,
     required this.name,
+    required this.businessName,
+    required this.businessCategory,
+    required this.businessAddress,
     required this.userId,
+    required this.email,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   final String? id;
-  final String? businessName;
-  final String? email;
   final String? name;
+  final String? businessName;
+  final dynamic businessCategory;
+  final dynamic businessAddress;
   final int? userId;
+  final String? email;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
-  factory Data.fromJson(Map<String, dynamic> json) {
-    return Data(
+  factory GetAdvertiserIdResModel.fromJson(Map<String, dynamic> json) {
+    return GetAdvertiserIdResModel(
       id: json["id"],
-      businessName: json["business_name"],
-      email: json["email"],
       name: json["name"],
-      userId: json["user_id"],
+      businessName: json["business_name"],
+      businessCategory: json["business_category"],
+      businessAddress: json["business_address"],
+      userId: json["userId"],
+      email: json["email"],
+      createdAt: DateTime.tryParse(json["created_at"] ?? ""),
+      updatedAt: DateTime.tryParse(json["updated_at"] ?? ""),
     );
   }
 }

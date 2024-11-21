@@ -26,7 +26,7 @@ class CreateAdvertiserRepository {
       final response = await api.post(ApiEndpoints.createAdvertiser, body: {
         "name": name,
         "business_name": businessName,
-        "user_id": userId,
+        "userId": userId,
         "business_category": businessCategory,
         "business_address": businessAddress,
       });

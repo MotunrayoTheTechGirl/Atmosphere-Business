@@ -118,7 +118,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                   walletHistoryController.when(
                     data: (data) {
                       return SizedBox(
-                        height: .4.sh,
+                        height: .5.sh,
                         child: data.data.isEmpty
                             ? Center(
                                 child: Text(

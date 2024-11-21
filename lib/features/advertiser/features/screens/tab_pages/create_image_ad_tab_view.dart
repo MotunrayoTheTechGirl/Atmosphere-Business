@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, deprecated_member_use
 
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:dealer_portal_mobile/core/common_widgets/app_elevated_button.dart';
 import 'package:dealer_portal_mobile/core/enums.dart';
@@ -21,7 +20,6 @@ import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_icons.dart';
 import '../../../../../core/utils/themes/app_themes.dart';
 import '../../../../onboarding/data/controller/user_details_controller.dart';
-import '../../../../subscriptions/data/controller/file_upload_controller.dart';
 import '../../../data/controller/create_advert_controller.dart';
 import '../../widgets/size_guide_text_button.dart';
 import '../../widgets/textfield_with_inline_label.dart';
@@ -92,10 +90,14 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
     if (textEditingController.text.isEmpty) {
       return TextEditingController();
     } else if (textEditingController.text == 'Mobile') {
-      ref.read(adSizeStateProvider.notifier).state = '298 x 142';
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(adSizeStateProvider.notifier).state = '298 x 142';
+      });
       return TextEditingController(text: '298 x 142');
     } else if (textEditingController.text == 'Desktop') {
-      ref.read(adSizeStateProvider.notifier).state = '741 x 170';
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(adSizeStateProvider.notifier).state = '741 x 170';
+      });
       return TextEditingController(text: '741 x 170');
     }
     return TextEditingController();
@@ -110,6 +112,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
       height: .9.sh,
       child: ListView(
         shrinkWrap: true,
+        // physics: const BouncingScrollPhysics(),
         children: [
           Text(
             'Ad Information',
@@ -158,6 +161,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
               width: 14.w,
               height: 14.h,
             ),
+            keyboardType: TextInputType.number,
           ),
           15.hi,
           Row(
@@ -202,6 +206,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
           TextfieldWithInlineLabel(
             controller: deviceTypeController,
             label: 'Device Type',
+            readOnly: true,
             suffixIcon: const Icon(
               Icons.keyboard_arrow_down,
               size: 20,
@@ -210,7 +215,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
             onTap: () async {
               final selected = await showMenu<String>(
                 context: context,
-                position: RelativeRect.fromLTRB(30, 580.h, 0, 60.w),
+                position: RelativeRect.fromLTRB(30, 580.h, 0, 580.w),
                 color: AppColors.white,
                 items: [
                   'Mobile',
@@ -238,6 +243,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
           ),
           8.hi,
           TextfieldWithInlineLabel(
+            readOnly: true,
             controller: desiredScreenController,
             label: 'Desired Screen',
             suffixIcon: const Icon(
@@ -248,7 +254,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
             onTap: () async {
               final selected = await showMenu<String>(
                 context: context,
-                position: RelativeRect.fromLTRB(30, 650.h, 0, 60.w),
+                position: RelativeRect.fromLTRB(30, 450.h, 0, 460.w),
                 color: AppColors.white,
                 items: [
                   'Welcome page',
@@ -273,6 +279,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
           TextfieldWithInlineLabel(
             controller: callToActionController,
             label: 'Call to Action Text',
+            readOnly: true,
             suffixIcon: const Icon(
               Icons.keyboard_arrow_down,
               size: 20,
@@ -281,7 +288,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
             onTap: () async {
               final selected = await showMenu<String>(
                 context: context,
-                position: RelativeRect.fromLTRB(30, 650.h, 0, 60.w),
+                position: RelativeRect.fromLTRB(30, 450.h, 0, 460.w),
                 color: AppColors.white,
                 items: [
                   'Learn more',
@@ -306,6 +313,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
           TextfieldWithInlineLabel(
             controller: businessCategoryController,
             label: 'Business Category',
+            readOnly: true,
             suffixIcon: const Icon(
               Icons.keyboard_arrow_down,
               size: 20,
@@ -314,7 +322,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
             onTap: () async {
               final selected = await showMenu<String>(
                 context: context,
-                position: RelativeRect.fromLTRB(30, 750.h, 0, 60.w),
+                position: RelativeRect.fromLTRB(30, 450.h, 0, 760.w),
                 color: AppColors.white,
                 items: [
                   'Manufacturing',
@@ -400,41 +408,57 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
           14.hi,
           InkWell(
               onTap: () async {
-                result = await FilePicker.platform.pickFiles(
+                final pickedResult = await FilePicker.platform.pickFiles(
                   allowMultiple: false,
                   type: FileType.image,
                 );
-                if (result == null) {
+                if (pickedResult == null) {
                   log("No file selected");
                 } else {
                   setState(() {});
-                  for (var element in result!.files) {
+                  for (var element in pickedResult.files) {
                     log('Selected File: ${element.name}');
+                    log('Selected File sizr: ${result?.files.first.extension ?? ''} | ${(pickedResult.files.first.size ?? 0) / 1024}MB');
                   }
-                  if (result != null && result!.files.isNotEmpty) {
-                    final file = File(result?.files.first.path ?? '');
-                    try {
-                      // upload image endpoint
-                      await ref
-                          .read(receiptFileUploadControllerProvider.notifier)
-                          .uploadFile(file: file);
-
-                      log('file upload successful');
-                      final data =
-                          ref.read(receiptFileUploadControllerProvider).data;
-                      final trimmedData =
-                          data?.substring(data.indexOf('/dealer'));
-                      ref.read(imageStateProvider.notifier).state =
-                          trimmedData ?? '';
-                      log('trimmed Data: $trimmedData');
-                      //! value for createAds endpoint expects
-                      //'https://api-dev.wave5wireless.ng/content$trimmedData'
-                    } catch (e) {
-                      log('Error during upload process: $e');
+                  if (pickedResult.files.isNotEmpty) {
+                    // final file = File(result?.files.first.path ?? '');
+                    final file = pickedResult.files.first;
+                    final fileSize = file.size;
+                    if (fileSize < 1024 || fileSize > 1024 * 1024 * 5) {
+                      setState(() {
+                        result = null;
+                      });
+                      print('image size above limit');
                       CustomSnackBar.showSnackBar(
-                          context: context,
-                          message: 'An error occurred during upload');
+                        context: context,
+                        message: 'File size must be between 1 KB and 1 MB',
+                      );
+                    } else {
+                      setState(() {
+                        result = pickedResult;
+                        log('final result = $result');
+                      });
+                      print('Selected File: ${file.name}');
                     }
+                    // try {
+                    //   //! upload image endpoint
+                    //   await ref
+                    //       .read(receiptFileUploadControllerProvider.notifier)
+                    //       .uploadFile(file: file);
+                    //   final data =
+                    //       ref.read(receiptFileUploadControllerProvider).data;
+                    //   final trimmedData =
+                    //       data?.substring(data.indexOf('/dealer'));
+                    //   ref.read(imageStateProvider.notifier).state =
+                    //       trimmedData ?? '';
+                    //   log('trimmed Data: $trimmedData');
+
+                    // } catch (e) {
+                    //   log('Error during upload process: $e');
+                    //   CustomSnackBar.showSnackBar(
+                    //       context: context,
+                    //       message: 'An error occurred during upload');
+                    // }
                   }
                 }
               },
@@ -542,8 +566,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                   startDate: startDateController.text,
                                   businessCategory:
                                       businessCategoryController.text,
-                                  deviceType:
-                                      int.parse(deviceTypeController.text),
+                                  deviceType: deviceTypeController.text,
                                   callToActionText: callToActionController.text,
                                   desiredScreen: desiredScreenController.text,
                                   regionIds: []);
@@ -553,9 +576,15 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                 message: 'Image Advert created SuccessFully');
                           } else {
                             CustomSnackBar.showSnackBar(
-                                context: context,
-                                isError: true,
-                                message: 'An Error occurred!');
+                              context: context,
+                              isError: true,
+                              message: ref
+                                      .read(createAdvertControllerProvider
+                                          .notifier)
+                                      .state
+                                      .message ??
+                                  '',
+                            );
                           }
                         }
                       : () {},
