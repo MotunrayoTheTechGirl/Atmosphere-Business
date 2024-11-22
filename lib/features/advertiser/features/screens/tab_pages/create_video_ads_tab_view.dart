@@ -14,16 +14,20 @@ import 'package:intl/intl.dart';
 
 import '../../../../../core/common_widgets/app_elevated_button.dart';
 import '../../../../../core/common_widgets/custom_snackbar.dart';
+import '../../../../../core/enums.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_icons.dart';
 import '../../../../../core/utils/themes/app_themes.dart';
 import '../../../../subscriptions/data/controller/file_upload_controller.dart';
+import '../../../data/controller/create_advert_controller.dart';
 import '../../widgets/size_guide_text_button.dart';
 import '../../widgets/textfield_with_inline_label.dart';
 import '../../widgets/upload_box_text.dart';
+import '../create_ads_screen.dart';
 
 final videoAdSizeStateProvider = StateProvider<String>((ref) => '');
-final videoUrlStateProvider = StateProvider<String>((ref) => '');
+// final videoUrlStateProvider = StateProvider<String>((ref) => '');
+final videoPickedStateProvider = StateProvider<File>((ref) => File(''));
 
 class VideoAdsTabView extends ConsumerStatefulWidget {
   const VideoAdsTabView({Key? key}) : super(key: key);
@@ -75,7 +79,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
         desiredScreenController.text.isNotEmpty &&
         callToActionController.text.isNotEmpty &&
         businessCategoryController.text.isNotEmpty &&
-        result == null) {
+        result != null) {
       return isFormValid = true;
     }
     return false;
@@ -86,10 +90,14 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
     if (textEditingController.text.isEmpty) {
       return TextEditingController();
     } else if (textEditingController.text == 'Mobile') {
-      ref.read(videoAdSizeStateProvider.notifier).state = '298 x 142';
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(videoAdSizeStateProvider.notifier).state = '298 x 142';
+      });
       return TextEditingController(text: '298 x 142');
     } else if (textEditingController.text == 'Desktop') {
-      ref.read(videoAdSizeStateProvider.notifier).state = '741 x 170';
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(videoAdSizeStateProvider.notifier).state = '741 x 170';
+      });
       return TextEditingController(text: '741 x 170');
     }
     return TextEditingController();
@@ -139,6 +147,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
           ),
           15.hi,
           TextfieldWithInlineLabel(
+            keyboardType: TextInputType.number,
             controller: bugetController,
             hintText: 'e.g 50,000',
             label: 'Budget',
@@ -155,6 +164,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
             children: [
               Expanded(
                 child: TextfieldWithInlineLabel(
+                  readOnly: true,
                   controller: startDateController,
                   hintText: startDateController.text.isNotEmpty
                       ? DateFormat('yyyy-MM-dd').format(startDate)
@@ -185,6 +195,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                   controller: durationController,
                   hintText: 'e.g 10 Days',
                   label: 'Duration (Days)',
+                  keyboardType: TextInputType.number,
                 ),
               ),
             ],
@@ -198,6 +209,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
               size: 20,
               color: AppColors.black,
             ),
+            readOnly: true,
             onTap: () async {
               final selected = await showMenu<String>(
                 context: context,
@@ -224,6 +236,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
           ),
           8.hi,
           TextfieldWithInlineLabel(
+            readOnly: true,
             controller: displaySize(deviceTypeController),
             label: 'Size',
           ),
@@ -231,6 +244,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
           TextfieldWithInlineLabel(
             controller: desiredScreenController,
             label: 'Desired Screen',
+            readOnly: true,
             suffixIcon: const Icon(
               Icons.keyboard_arrow_down,
               size: 20,
@@ -269,6 +283,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
               size: 20,
               color: AppColors.black,
             ),
+            readOnly: true,
             onTap: () async {
               final selected = await showMenu<String>(
                 context: context,
@@ -302,6 +317,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
               size: 20,
               color: AppColors.black,
             ),
+            readOnly: true,
             onTap: () async {
               final selected = await showMenu<String>(
                 context: context,
@@ -336,6 +352,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
           ),
           8.hi,
           TextfieldWithInlineLabel(
+            readOnly: true,
             controller: regionController,
             label: 'Region',
             isRequired: false,
@@ -391,41 +408,64 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
           14.hi,
           InkWell(
               onTap: () async {
-                result = await FilePicker.platform.pickFiles(
+                final pickedVideoResult = await FilePicker.platform.pickFiles(
                   allowMultiple: false,
                   type: FileType.video,
                 );
-                if (result == null) {
+                if (pickedVideoResult == null) {
                   log("No file selected");
                 } else {
                   setState(() {});
-                  for (var element in result!.files) {
-                    log('Selected File: ${element.name}');
+                  for (var element in pickedVideoResult.files) {
+                    log('Selected video: ${element.name}');
+                    log('Selected video size: ${result?.files.first.extension ?? ''} | ${(pickedVideoResult.files.first.size) / 1024}MB');
                   }
-                  if (result != null && result!.files.isNotEmpty) {
-                    final file = File(result?.files.first.path ?? '');
-                    try {
-                      // upload image endpoint
-                      await ref
-                          .read(receiptFileUploadControllerProvider.notifier)
-                          .uploadFile(file: file);
-
-                      log('file upload successful');
-                      final data =
-                          ref.read(receiptFileUploadControllerProvider).data;
-                      final trimmedData =
-                          data?.substring(data.indexOf('/dealer'));
-                      log('trimmed Data: $trimmedData');
-                      ref.read(videoUrlStateProvider.notifier).state =
-                          trimmedData ?? '';
-                      //! value for createAds endpoint expects
-                      //'https://api-dev.wave5wireless.ng/content$trimmedData'
-                    } catch (e) {
-                      log('Error during upload process: $e');
+                  if (pickedVideoResult.files.isNotEmpty) {
+                    final file = pickedVideoResult.files.first;
+                    final fileSize = file.size;
+                    if (fileSize < 1024 || fileSize > 1024 * 1024 * 5) {
+                      setState(() {
+                        result = null;
+                      });
+                      log('video size above limit');
                       CustomSnackBar.showSnackBar(
-                          context: context,
-                          message: 'An error occurred during upload');
+                        context: context,
+                        message: 'Video size must be between 1 KB and 5 MB',
+                      );
+                    } else {
+                      setState(() {
+                        result = pickedVideoResult;
+                        final resultFile =
+                            File(pickedVideoResult.files.first.path ?? '');
+                        ref.read(videoPickedStateProvider.notifier).state =
+                            resultFile;
+
+                        log('final result = $result');
+                      });
+                      log('Selected video: ${file.name}');
                     }
+                    // try {
+                    //   // upload image endpoint
+                    //   await ref
+                    //       .read(receiptFileUploadControllerProvider.notifier)
+                    //       .uploadFile(file: file);
+
+                    //   log('file upload successful');
+                    //   final data =
+                    //       ref.read(receiptFileUploadControllerProvider).data;
+                    //   final trimmedData =
+                    //       data?.substring(data.indexOf('/dealer'));
+                    //   log('trimmed Data: $trimmedData');
+                    //   ref.read(videoUrlStateProvider.notifier).state =
+                    //       trimmedData ?? '';
+                    //   //! value for createAds endpoint expects
+                    //   //'https://api-dev.wave5wireless.ng/content$trimmedData'
+                    // } catch (e) {
+                    //   log('Error during upload process: $e');
+                    //   CustomSnackBar.showSnackBar(
+                    //       context: context,
+                    //       message: 'An error occurred during upload');
+                    // }
                   }
                 }
               },
@@ -467,8 +507,78 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
               Expanded(
                 child: AppElevatedButton(
                   isActive: valiadteForm(),
-                  isLoading: false,
-                  onTap: valiadteForm() ? () async {} : () {},
+                  isLoading:
+                      ref.watch(receiptFileUploadControllerProvider).status ==
+                              ResponseStatus.loading ||
+                          ref.watch(createAdvertControllerProvider).status ==
+                              ResponseStatus.loading,
+                  onTap: valiadteForm()
+                      ? () async {
+                          //! upload video endpoint
+                          final hasUploadedVideo = await ref
+                              .read(
+                                  receiptFileUploadControllerProvider.notifier)
+                              .uploadFile(
+                                file: ref.watch(videoPickedStateProvider),
+                              );
+                          if (hasUploadedVideo) {
+                            final data = ref
+                                .read(receiptFileUploadControllerProvider)
+                                .data;
+                            final trimmedData =
+                                data?.substring(data.indexOf('/dealer'));
+                            log('trimmed Data: $trimmedData');
+                            //! create  video adverts
+                            final hasCreatedVideoAds = await ref
+                                .read(createAdvertControllerProvider.notifier)
+                                .createAds(
+                              advertiserId: int.parse(
+                                  ref.watch(advertiserIdStateProvider)),
+                              title: adTitleController.text,
+                              description: adDescriptionController.text,
+                              adType: 'video',
+                              adSize: ref.watch(videoAdSizeStateProvider),
+                              mediaUrl:
+                                  'https://api-dev.wave5wireless.ng/content$trimmedData}',
+                              targetUrl: targetUrlController.text,
+                              budget: int.parse(bugetController.text),
+                              duration: int.parse(durationController.text),
+                              startDate: startDateController.text,
+                              businessCategory: businessCategoryController.text,
+                              deviceType: deviceTypeController.text,
+                              callToActionText: callToActionController.text,
+                              desiredScreen: desiredScreenController.text,
+                              regionIds: [],
+                            );
+                            if (hasCreatedVideoAds) {
+                              CustomSnackBar.showSnackBar(
+                                  context: context,
+                                  message: 'Video Advert created SuccessFully');
+
+                              adTitleController.clear();
+                              adDescriptionController.clear();
+                              targetUrlController.clear();
+                              bugetController.clear();
+                              startDateController.clear();
+                              durationController.clear();
+                              deviceTypeController.clear();
+                              desiredScreenController.clear();
+                              callToActionController.clear();
+                              businessCategoryController.clear();
+                              result = null;
+                            }
+                          } else {
+                            CustomSnackBar.showSnackBar(
+                              context: context,
+                              isError: true,
+                              message:
+                                  'Oops! Video size must be between 1 KB and 5 MB '
+                                  '',
+                            );
+                            log('Error during upload process');
+                          }
+                        }
+                      : () {},
                   label: 'Submit',
                 ),
               ),

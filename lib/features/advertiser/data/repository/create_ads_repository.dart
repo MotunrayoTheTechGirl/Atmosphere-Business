@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -31,6 +32,16 @@ class CreateAdvertRepository {
     required String desiredScreen,
     List? regionIds,
   }) async {
+    const isoDate = 'T00:00:00.000Z';
+    final formattedIsoStartDate = startDate + isoDate;
+    final formatStartDate = DateTime.parse(startDate);
+    final endDateDuration = formatStartDate
+            .add(Duration(days: duration.toInt()))
+            .toString()
+            .split(' ')[0] +
+        isoDate;
+    log('end date duration: $endDateDuration');
+
     try {
       final response = await api.post(ApiEndpoints.createAdvert, body: {
         "advertiserId": advertiserId,
@@ -45,7 +56,8 @@ class CreateAdvertRepository {
         "category": businessCategory,
         "callToActionText": callToActionText,
         "duration": duration,
-        "startDate": startDate,
+        "startDate": formattedIsoStartDate,
+        "endDate": endDateDuration,
         "screens": desiredScreen,
         "region_ids": regionIds ?? []
       });

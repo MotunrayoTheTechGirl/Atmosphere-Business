@@ -122,7 +122,7 @@ class DealerPoratlApi {
         log('Response: ${response.data}');
         return ApiUtils.toApiResponse(response);
       } else {
-        log('${response.statusCode}');
+        // log('Status code: ${response.statusCode}');
         throw ApiResponseException(
             'Request failed with status code ${response.statusCode}');
       }
@@ -130,6 +130,7 @@ class DealerPoratlApi {
       if (e.type == DioExceptionType.badResponse) {
         if (e.response != null) {
           if (e.response!.statusCode! >= 500 && e.response!.statusCode! < 600) {
+            log('Status code: ${e.response!.statusCode}');
             throw const ApiResponseException(
                 'Oops! Something went wrong on our end. Please try again later.');
           }
@@ -177,7 +178,7 @@ class DealerPoratlApi {
 
         return ApiUtils.toApiResponse(response);
       } else {
-        log('${response.statusCode}');
+        log('Status code: ${response.statusCode}');
 
         throw ApiResponseException(
             'Request failed with status code ${response.statusCode}');
@@ -279,7 +280,7 @@ class DealerPoratlApi {
         log('${response.statusCode}');
         return ApiUtils.toApiResponse(response);
       } else {
-        log('${response.statusCode}');
+        log('Status code: ${response.statusCode}');
 
         throw ApiResponseException(
             'Request failed with status code ${response.statusCode}');

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, deprecated_member_use
 
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dealer_portal_mobile/core/common_widgets/app_elevated_button.dart';
 import 'package:dealer_portal_mobile/core/enums.dart';
@@ -20,12 +21,15 @@ import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_icons.dart';
 import '../../../../../core/utils/themes/app_themes.dart';
 import '../../../../onboarding/data/controller/user_details_controller.dart';
+import '../../../../subscriptions/data/controller/file_upload_controller.dart';
 import '../../../data/controller/create_advert_controller.dart';
 import '../../widgets/size_guide_text_button.dart';
 import '../../widgets/textfield_with_inline_label.dart';
 
 final adSizeStateProvider = StateProvider<String>((ref) => '');
-final imageStateProvider = StateProvider<String>((ref) => '');
+// final imageStateProvider = StateProvider<String>((ref) => '');
+
+final imagePickedStateProvider = StateProvider<File>((ref) => File(''));
 
 class ImageAdTabBiew extends ConsumerStatefulWidget {
   const ImageAdTabBiew({
@@ -79,7 +83,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
         desiredScreenController.text.isNotEmpty &&
         callToActionController.text.isNotEmpty &&
         businessCategoryController.text.isNotEmpty &&
-        result == null) {
+        result != null) {
       return isFormValid = true;
     }
     return false;
@@ -168,6 +172,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
             children: [
               Expanded(
                 child: TextfieldWithInlineLabel(
+                  readOnly: true,
                   controller: startDateController,
                   hintText: startDateController.text.isNotEmpty
                       ? DateFormat('yyyy-MM-dd').format(startDate)
@@ -198,6 +203,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                   controller: durationController,
                   hintText: 'e.g 10 Days',
                   label: 'Duration (Days)',
+                  keyboardType: TextInputType.number,
                 ),
               ),
             ],
@@ -238,6 +244,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
           ),
           8.hi,
           TextfieldWithInlineLabel(
+            readOnly: true,
             controller: displaySize(deviceTypeController),
             label: 'Size',
           ),
@@ -361,6 +368,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
               size: 20,
               color: AppColors.black,
             ),
+            readOnly: true,
             onTap: () async {
               final selected = await showMenu<String>(
                 context: context,
@@ -418,47 +426,32 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                   setState(() {});
                   for (var element in pickedResult.files) {
                     log('Selected File: ${element.name}');
-                    log('Selected File sizr: ${result?.files.first.extension ?? ''} | ${(pickedResult.files.first.size ?? 0) / 1024}MB');
+                    log('Selected File size: ${result?.files.first.extension ?? ''} | ${(pickedResult.files.first.size ?? 0) / 1024}MB');
                   }
                   if (pickedResult.files.isNotEmpty) {
-                    // final file = File(result?.files.first.path ?? '');
                     final file = pickedResult.files.first;
                     final fileSize = file.size;
                     if (fileSize < 1024 || fileSize > 1024 * 1024 * 5) {
                       setState(() {
                         result = null;
                       });
-                      print('image size above limit');
+                      log('image size above limit');
                       CustomSnackBar.showSnackBar(
                         context: context,
-                        message: 'File size must be between 1 KB and 1 MB',
+                        message: 'Image size must be between 1 KB and 5 MB',
                       );
                     } else {
                       setState(() {
                         result = pickedResult;
+                        final resultFile =
+                            File(pickedResult.files.first.path ?? '');
+                        ref.read(imagePickedStateProvider.notifier).state =
+                            resultFile;
+
                         log('final result = $result');
                       });
-                      print('Selected File: ${file.name}');
+                      log('Selected File: ${file.name}');
                     }
-                    // try {
-                    //   //! upload image endpoint
-                    //   await ref
-                    //       .read(receiptFileUploadControllerProvider.notifier)
-                    //       .uploadFile(file: file);
-                    //   final data =
-                    //       ref.read(receiptFileUploadControllerProvider).data;
-                    //   final trimmedData =
-                    //       data?.substring(data.indexOf('/dealer'));
-                    //   ref.read(imageStateProvider.notifier).state =
-                    //       trimmedData ?? '';
-                    //   log('trimmed Data: $trimmedData');
-
-                    // } catch (e) {
-                    //   log('Error during upload process: $e');
-                    //   CustomSnackBar.showSnackBar(
-                    //       context: context,
-                    //       message: 'An error occurred during upload');
-                    // }
                   }
                 }
               },
@@ -499,92 +492,87 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                 child: AppElevatedButton(
                   isActive: valiadteForm(),
                   isLoading:
-                      // ref
-                      //             .watch(fetchAdvertiserByUserIdControllerProvider)
-                      //             .status ==
-                      //         ResponseStatus.loading ||
-                      ref.watch(createAdvertControllerProvider).status ==
-                          ResponseStatus.loading,
+                      ref.watch(receiptFileUploadControllerProvider).status ==
+                              ResponseStatus.loading ||
+                          ref.watch(createAdvertControllerProvider).status ==
+                              ResponseStatus.loading,
                   onTap: valiadteForm()
                       ? () async {
-                          // final hasFetchedAdviserId = await ref
-                          //     .read(fetchAdvertiserByUserIdControllerProvider
-                          //         .notifier)
-                          //     .getAdvertiserId(
-                          //         userId:
-                          //             userDetailsController?.id.toString() ??
-                          //                 '');
-                          // if (hasFetchedAdviserId) {
-                          //   final hasCreatedImageAds = await ref
-                          //       .read(createAdvertControllerProvider.notifier)
-                          //       .createAds(
-                          //           advertiserId: 5,
-                          //           title: adTitleController.text,
-                          //           description: adDescriptionController.text,
-                          //           adType: 'image',
-                          //           adSize: ref.watch(adSizeStateProvider),
-                          //           mediaUrl:
-                          //               'https://api-dev.wave5wireless.ng/content${ref.watch(imageStateProvider)}',
-                          //           targetUrl: targetUrlController.text,
-                          //           budget: int.parse(bugetController.text),
-                          //           duration:
-                          //               int.parse(durationController.text),
-                          //           startDate: startDateController.text,
-                          //           businessCategory:
-                          //               businessCategoryController.text,
-                          //           deviceType:
-                          //               int.parse(deviceTypeController.text),
-                          //           callToActionText:
-                          //               callToActionController.text,
-                          //           desiredScreen: desiredScreenController.text,
-                          //           regionIds: []);
-                          //   if (hasCreatedImageAds) {
-                          //     CustomSnackBar.showSnackBar(
-                          //         context: context,
-                          //         message: 'Image Advert created SuccessFully');
-                          //   } else {
-                          //     CustomSnackBar.showSnackBar(
-                          //         context: context,
-                          //         isError: true,
-                          //         message: 'An Error occurred!');
-                          //   }
-                          // }
-                          final hasCreatedImageAds = await ref
-                              .read(createAdvertControllerProvider.notifier)
-                              .createAds(
-                                  advertiserId: int.parse(
-                                      ref.watch(advertiserIdStateProvider)),
-                                  title: adTitleController.text,
-                                  description: adDescriptionController.text,
-                                  adType: 'image',
-                                  adSize: ref.watch(adSizeStateProvider),
-                                  mediaUrl:
-                                      'https://api-dev.wave5wireless.ng/content${ref.watch(imageStateProvider)}',
-                                  targetUrl: targetUrlController.text,
-                                  budget: int.parse(bugetController.text),
-                                  duration: int.parse(durationController.text),
-                                  startDate: startDateController.text,
-                                  businessCategory:
-                                      businessCategoryController.text,
-                                  deviceType: deviceTypeController.text,
-                                  callToActionText: callToActionController.text,
-                                  desiredScreen: desiredScreenController.text,
-                                  regionIds: []);
-                          if (hasCreatedImageAds) {
-                            CustomSnackBar.showSnackBar(
+                          //! upload image endpoint
+                          final hasUploadedImage = await ref
+                              .read(
+                                  receiptFileUploadControllerProvider.notifier)
+                              .uploadFile(
+                                file: ref.watch(imagePickedStateProvider),
+                              );
+                          if (hasUploadedImage) {
+                            final data = ref
+                                .read(receiptFileUploadControllerProvider)
+                                .data;
+                            final trimmedData =
+                                data?.substring(data.indexOf('/dealer'));
+                            log('trimmed Data: $trimmedData');
+
+                            //! create  image adverts
+                            final hasCreatedImageAds = await ref
+                                .read(createAdvertControllerProvider.notifier)
+                                .createAds(
+                                    advertiserId: int.parse(
+                                        ref.watch(advertiserIdStateProvider)),
+                                    title: adTitleController.text,
+                                    description: adDescriptionController.text,
+                                    adType: 'image',
+                                    adSize: ref.watch(adSizeStateProvider),
+                                    mediaUrl:
+                                        'https://api-dev.wave5wireless.ng/content$trimmedData}',
+                                    targetUrl: targetUrlController.text,
+                                    budget: int.parse(bugetController.text),
+                                    duration:
+                                        int.parse(durationController.text),
+                                    startDate: startDateController.text,
+                                    businessCategory:
+                                        businessCategoryController.text,
+                                    deviceType: deviceTypeController.text,
+                                    callToActionText:
+                                        callToActionController.text,
+                                    desiredScreen: desiredScreenController.text,
+                                    regionIds: []);
+                            if (hasCreatedImageAds) {
+                              CustomSnackBar.showSnackBar(
+                                  context: context,
+                                  message: 'Image Advert created SuccessFully');
+                              adTitleController.clear();
+                              adDescriptionController.clear();
+                              targetUrlController.clear();
+                              bugetController.clear();
+                              startDateController.clear();
+                              durationController.clear();
+                              deviceTypeController.clear();
+                              desiredScreenController.clear();
+                              callToActionController.clear();
+                              businessCategoryController.clear();
+                              result = null;
+                            } else {
+                              CustomSnackBar.showSnackBar(
                                 context: context,
-                                message: 'Image Advert created SuccessFully');
+                                isError: true,
+                                message: ref
+                                        .read(createAdvertControllerProvider
+                                            .notifier)
+                                        .state
+                                        .message ??
+                                    '',
+                              );
+                            }
                           } else {
                             CustomSnackBar.showSnackBar(
                               context: context,
                               isError: true,
-                              message: ref
-                                      .read(createAdvertControllerProvider
-                                          .notifier)
-                                      .state
-                                      .message ??
+                              message:
+                                  'Oops! Image size must be between 1 KB and 5 MB '
                                   '',
                             );
+                            log('Error during upload process');
                           }
                         }
                       : () {},
