@@ -53,7 +53,13 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final userDetailsController = ref.watch(userDetailsControllerProvider);
+    final userDetailsController =
+        ref.watch(userDetailsControllerProvider).data?.data?.user;
+    // final advertiserIdController = ref.watch(
+    //     getAdvertiserByUserIdRepositoryFutureProvider(
+    //         userDetailsController?.id.toString() ?? ''
+    //         // "68216"
+    //         ));
     return Drawer(
       width: .7.sw,
       backgroundColor: Colors.white,
@@ -81,13 +87,11 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                       ),
                       6.hi,
                       GenerateInitials(
-                        tag:
-                            userDetailsController.data?.data?.user?.firstName ??
-                                '',
-                      ),
+                          tag: userDetailsController?.name ??
+                              '${userDetailsController?.firstName} ${userDetailsController?.lastName}'),
                       16.hi,
                       Text(
-                        userDetailsController.data?.data?.user?.email ?? '',
+                        userDetailsController?.email ?? '',
                         style: AppTheme.lightTextTheme.displaySmall?.copyWith(
                             fontWeight: FontWeight.w700,
                             fontSize: 16.sp,
@@ -96,8 +100,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                       ),
                       4.hi,
                       Text(
-                        userDetailsController.data?.data?.user?.businessName ??
-                            '',
+                        userDetailsController?.businessName ?? '',
                         style: AppTheme.lightTextTheme.displaySmall?.copyWith(
                           fontWeight: FontWeight.w500,
                           fontSize: 12.sp,
@@ -197,6 +200,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                                 label: 'Advertise',
                                 leftPadding: 0,
                                 rightPadding: 0,
+                                isAdvertise: true,
                                 subDrawer: Column(
                                   children: [
                                     SubDrawerTile(
@@ -228,19 +232,6 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                                                 builder: (context) {
                                           return const CreateAdsScreen();
                                         }));
-                                        // final userId = ref
-                                        //     .watch(
-                                        //         userDetailsControllerProvider)
-                                        //     .data
-                                        //     ?.data
-                                        //     ?.user
-                                        //     ?.id;
-                                        // final hasFetchedAdviserId = await ref
-                                        //     .read(
-                                        //         fetchAdvertiserByUserIdControllerProvider
-                                        //             .notifier)
-                                        //     .getAdvertiserId(
-                                        //         userId: userId.toString());
                                       },
                                       label: "Create Ads",
                                     ),
@@ -258,16 +249,16 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                                   ],
                                 ),
                               ),
-                              const DrawerTileDropDown(
+                              DrawerTileDropDown(
                                 color: AppColors.w5Color,
                                 iconColor: AppColors.white,
-                                padding: EdgeInsets.all(16),
+                                padding: const EdgeInsets.all(16),
                                 labelColor: AppColors.white,
                                 icon: AppIcons.storefront,
                                 leftPadding: 0,
                                 rightPadding: 0,
                                 label: 'Storefront',
-                                subDrawer: Column(
+                                subDrawer: const Column(
                                   children: [],
                                 ),
                               ),

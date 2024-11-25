@@ -21,7 +21,7 @@ class CreateAdvertiserController
         );
   final CreateAdvertiserRepository createAdvertiserRepository;
 
-  Future<bool> getAdvertiserId({
+  Future<bool> createAdvertiser({
     required String name,
     required String businessName,
     required num userId,

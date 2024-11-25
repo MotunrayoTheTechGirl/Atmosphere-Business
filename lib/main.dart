@@ -29,6 +29,7 @@ class DealerPortal extends StatelessWidget {
         builder: (BuildContext context, Widget? child) => MaterialApp(
           theme: theme,
           debugShowCheckedModeBanner: false,
+          // home: const RoutePath(),
           home: const WelcomeScreen(),
         ),
       ),

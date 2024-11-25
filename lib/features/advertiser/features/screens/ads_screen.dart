@@ -2,6 +2,7 @@ import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/widgets/ads_card.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/widgets/ads_summation_box.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -11,12 +12,15 @@ import '../../../../core/common_widgets/app_text_field.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_icons.dart';
 import '../../../../core/utils/themes/app_themes.dart';
+import '../../data/repository/get_adverts_repository.dart';
 
-class AdsScreen extends StatelessWidget {
+class AdsScreen extends ConsumerWidget {
   const AdsScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final advertsController =
+        ref.watch(getAdvertsByAdvertiserRepositoryFutureProvider(''));
     final searchController = TextEditingController();
     return Scaffold(
       appBar: const MenuAppBar(
@@ -36,6 +40,9 @@ class AdsScreen extends StatelessWidget {
                 horizontal: 8,
               ),
               radius: 16.r,
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14.0.r),
+                  borderSide: BorderSide.none),
               fillColor: AppColors.tabBarColor,
               controller: searchController,
               hintText: 'Search Ads',

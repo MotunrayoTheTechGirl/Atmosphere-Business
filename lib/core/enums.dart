@@ -7,5 +7,6 @@ enum ResponseStatus {
   initial,
   error,
   loading,
+  notFound,
   success,
 }

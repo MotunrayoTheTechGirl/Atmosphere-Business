@@ -26,4 +26,5 @@ class ApiEndpoints {
   static const String createAdvert = "/ads/createAdvert";
   static const String getAdvertiserId = "/ads/getAdvertiserByUserId/";
   static const String createAdvertiser = '/ads/createAdvertiser';
+  static const String getAdsByAdvertiserId = "/ads/getAdvertsByAdvertiserId/";
 }
