@@ -53,226 +53,17 @@ class _DrawerTileDropDownState extends ConsumerState<DrawerTileDropDown> {
   Widget build(BuildContext context) {
     final userDetailsController =
         ref.watch(userDetailsControllerProvider).data?.data?.user;
-    Widget childContent() {
-      if (widget.isAdvertise == true) {
-        log('---it is advertiser--');
-        log('fetching AdvertiserId: ${ref.watch(fetchAdvertiserByUserIdControllerProvider).status == ResponseStatus.loading}');
-
-        ref.watch(fetchAdvertiserByUserIdControllerProvider).status ==
-                    ResponseStatus.loading ||
-                ref.watch(createAdvertiserControllerProvider).status ==
-                    ResponseStatus.loading
-            ? const Text('I am loading...')
-            // SizedBox(
-            //     height: 30.h,
-            //     width: 30.w,
-            //     child: const CircularProgressIndicator(
-            //       color: Colors.red,
-            //     ),
-            //   )
-            : Row(
-                children: [
-                  SvgPicture.asset(
-                    widget.icon,
-                    color: widget.iconColor,
-                  ),
-                  16.wi,
-                  SizedBox(
-                    width: 149.w,
-                    child: Text(
-                      widget.label,
-                      style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                        color:
-                            widget.labelColor ?? AppColors.blackSupplementary,
-                        fontSize: 14.sp,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ),
-                  const Spacer(),
-                  SvgPicture.asset(
-                    isOpen ? AppIcons.arrowDown : AppIcons.curveArrowUp,
-                    color: widget.iconColor,
-                  ).padRight(20)
-                ],
-              );
-      } else {
-        log('---it is NOT advertiser--');
-        Row(
-          children: [
-            SvgPicture.asset(
-              widget.icon,
-              color: widget.iconColor,
-            ),
-            16.wi,
-            SizedBox(
-              width: 149.w,
-              child: Text(
-                widget.label,
-                style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                  color: widget.labelColor ?? AppColors.blackSupplementary,
-                  fontSize: 14.sp,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-            ),
-            const Spacer(),
-            SvgPicture.asset(
-              isOpen ? AppIcons.arrowDown : AppIcons.curveArrowUp,
-              color: widget.iconColor,
-            ).padRight(20)
-          ],
-        );
-      }
-      return Row(
-        children: [
-          SvgPicture.asset(
-            widget.icon,
-            color: widget.iconColor,
-          ),
-          16.wi,
-          SizedBox(
-            width: 149.w,
-            child: Text(
-              widget.label,
-              style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                color: widget.labelColor ?? AppColors.blackSupplementary,
-                fontSize: 14.sp,
-              ),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-          ),
-          const Spacer(),
-          SvgPicture.asset(
-            isOpen ? AppIcons.arrowDown : AppIcons.curveArrowUp,
-            color: widget.iconColor,
-          ).padRight(20)
-        ],
-      );
-    }
 
     return Column(
       children: [
         GestureDetector(
           onTap: widget.isAdvertise
-              ? () async {
-                  // if (!mounted) return;
-
-                  // try {
-                  //   ref.read(advertiseLoadingStateProvider.notifier).state =
-                  //       true;
-                  //   //! check if user is an advertiser
-                  //   final isAdvertiser = await ref
-                  //       .read(
-                  //           fetchAdvertiserByUserIdControllerProvider.notifier)
-                  //       .getAdvertiserId(
-                  //           userId: userDetailsController?.id.toString() ?? '');
-                  //   //! checking the state of the fetchadvertiserId endpoint
-                  //   final currentState =
-                  //       ref.read(fetchAdvertiserByUserIdControllerProvider);
-                  //   //! if advertiser doesn't exist,
-                  //   if (currentState.status == ResponseStatus.notFound) {
-                  //     final hasCreatedAdvertiser = await ref
-                  //         .read(createAdvertiserControllerProvider.notifier)
-                  //         .createAdvertiser(
-                  //             name: userDetailsController?.name ??
-                  //                 '${userDetailsController?.firstName} ${userDetailsController?.lastName}',
-                  //             businessName:
-                  //                 userDetailsController?.businessName ?? '',
-                  //             userId: userDetailsController?.id ?? 0,
-                  //             email: userDetailsController?.email ?? '');
-                  //     if (!mounted) return;
-                  //     if (hasCreatedAdvertiser) {
-                  //       final isAdvertiser = await ref
-                  //           .read(fetchAdvertiserByUserIdControllerProvider
-                  //               .notifier)
-                  //           .getAdvertiserId(
-                  //               userId:
-                  //                   userDetailsController?.id.toString() ?? '');
-
-                  //       if (mounted) {
-                  //         setState(() {
-                  //           isOpen = !isOpen;
-                  //         });
-                  //       }
-                  //       if (isAdvertiser && mounted) {
-                  //         ref
-                  //             .read(advertiseLoadingStateProvider.notifier)
-                  //             .state = false;
-                  //         final advertiserId = ref
-                  //             .read(fetchAdvertiserByUserIdControllerProvider
-                  //                 .notifier)
-                  //             .state
-                  //             .data
-                  //             ?.id;
-                  //         if (mounted) {
-                  //           ref.read(advertiserIdStateProvider.notifier).state =
-                  //               advertiserId ?? '';
-                  //         }
-                  //       }
-                  //     } else {
-                  //       ref.read(advertiseLoadingStateProvider.notifier).state =
-                  //           false;
-                  //     }
-                  //   }
-                  //   if (!mounted) return;
-                  //   if (isAdvertiser) {
-                  //     log('--user is an advertiser----');
-                  //     final advertiserId = ref
-                  //         .read(fetchAdvertiserByUserIdControllerProvider
-                  //             .notifier)
-                  //         .state
-                  //         .data
-                  //         ?.id;
-
-                  //     if (mounted) {
-                  //       ref.read(advertiserIdStateProvider.notifier).state =
-                  //           advertiserId ?? '';
-                  //       setState(() {
-                  //         isOpen = !isOpen;
-                  //       });
-                  //     }
-                  //     ref.read(advertiseLoadingStateProvider.notifier).state =
-                  //         false;
-                  //   } else {
-                  //     //! create Advertiser
-                  //   }
-                  // } catch (e) {
-                  //   ref.read(advertiseLoadingStateProvider.notifier).state =
-                  //       false;
-                  //   log('check if user is an Advertiser error: $e');
-                  // }
-                  if (!mounted) return;
-                  try {
-                    ref.read(advertiseLoadingStateProvider.notifier).state =
-                        true;
-                    final isAdvertiser = await ref
-                        .read(
-                            fetchAdvertiserByUserIdControllerProvider.notifier)
-                        .getAdvertiserId(
-                            userId: userDetailsController?.id.toString() ?? '');
-
-                    if (!mounted) return;
-                    final currentState =
-                        ref.read(fetchAdvertiserByUserIdControllerProvider);
-                    if (currentState.status == ResponseStatus.notFound) {
-                      //! Create new advertiser
-                      final hasCreatedAdvertiser = await ref
-                          .read(createAdvertiserControllerProvider.notifier)
-                          .createAdvertiser(
-                              name: userDetailsController?.name ??
-                                  '${userDetailsController?.firstName} ${userDetailsController?.lastName}',
-                              businessName:
-                                  userDetailsController?.businessName ?? '',
-                              userId: userDetailsController?.id ?? 0,
-                              email: userDetailsController?.email ?? '');
-
+              ? ref.watch(advertiserIdStateProvider) == ''
+                  ? () async {
                       if (!mounted) return;
-                      if (hasCreatedAdvertiser) {
-                        //! Retry getting advertiser ID after creation
+                      try {
+                        ref.read(advertiseLoadingStateProvider.notifier).state =
+                            true;
                         final isAdvertiser = await ref
                             .read(fetchAdvertiserByUserIdControllerProvider
                                 .notifier)
@@ -280,58 +71,93 @@ class _DrawerTileDropDownState extends ConsumerState<DrawerTileDropDown> {
                                 userId:
                                     userDetailsController?.id.toString() ?? '');
 
-                        if (mounted) {
-                          setState(() {
-                            isOpen = !isOpen;
-                          });
-                        }
-                        if (isAdvertiser && mounted) {
-                          ref
-                              .read(advertiseLoadingStateProvider.notifier)
-                              .state = false;
+                        if (!mounted) return;
+                        final currentState =
+                            ref.read(fetchAdvertiserByUserIdControllerProvider);
+                        if (currentState.status == ResponseStatus.notFound) {
+                          //! Create new advertiser
+                          final hasCreatedAdvertiser = await ref
+                              .read(createAdvertiserControllerProvider.notifier)
+                              .createAdvertiser(
+                                  name: userDetailsController?.name ??
+                                      '${userDetailsController?.firstName} ${userDetailsController?.lastName}',
+                                  businessName:
+                                      userDetailsController?.businessName ?? '',
+                                  userId: userDetailsController?.id ?? 0,
+                                  email: userDetailsController?.email ?? '');
+
+                          if (!mounted) return;
+                          if (hasCreatedAdvertiser) {
+                            //! Retry getting advertiser ID after creation
+                            final isAdvertiser = await ref
+                                .read(fetchAdvertiserByUserIdControllerProvider
+                                    .notifier)
+                                .getAdvertiserId(
+                                    userId:
+                                        userDetailsController?.id.toString() ??
+                                            '');
+
+                            if (mounted) {
+                              setState(() {
+                                isOpen = !isOpen;
+                              });
+                            }
+                            if (isAdvertiser && mounted) {
+                              ref
+                                  .read(advertiseLoadingStateProvider.notifier)
+                                  .state = false;
+                              final advertiserId = ref
+                                  .read(
+                                      fetchAdvertiserByUserIdControllerProvider
+                                          .notifier)
+                                  .state
+                                  .data
+                                  ?.id;
+                              if (mounted) {
+                                ref
+                                    .read(advertiserIdStateProvider.notifier)
+                                    .state = advertiserId ?? '';
+                              }
+                            }
+                          }
+                        } else if (isAdvertiser) {
+                          //! Handle successful case
+                          log('--user is an advertiser----');
                           final advertiserId = ref
                               .read(fetchAdvertiserByUserIdControllerProvider
                                   .notifier)
                               .state
                               .data
                               ?.id;
+
                           if (mounted) {
                             ref.read(advertiserIdStateProvider.notifier).state =
                                 advertiserId ?? '';
+                            setState(() {
+                              isOpen = !isOpen;
+                            });
                           }
                         }
-                      }
-                    } else if (isAdvertiser) {
-                      //! Handle successful case
-                      log('--user is an advertiser----');
-                      final advertiserId = ref
-                          .read(fetchAdvertiserByUserIdControllerProvider
-                              .notifier)
-                          .state
-                          .data
-                          ?.id;
 
-                      if (mounted) {
-                        ref.read(advertiserIdStateProvider.notifier).state =
-                            advertiserId ?? '';
-                        setState(() {
-                          isOpen = !isOpen;
-                        });
+                        if (mounted) {
+                          ref
+                              .read(advertiseLoadingStateProvider.notifier)
+                              .state = false;
+                        }
+                      } catch (e) {
+                        if (mounted) {
+                          ref
+                              .read(advertiseLoadingStateProvider.notifier)
+                              .state = false;
+                        }
+                        log('check if user is an Advertiser error: $e');
                       }
                     }
-
-                    if (mounted) {
-                      ref.read(advertiseLoadingStateProvider.notifier).state =
-                          false;
+                  : () {
+                      setState(() {
+                        isOpen = !isOpen;
+                      });
                     }
-                  } catch (e) {
-                    if (mounted) {
-                      ref.read(advertiseLoadingStateProvider.notifier).state =
-                          false;
-                    }
-                    log('check if user is an Advertiser error: $e');
-                  }
-                }
               : () {
                   setState(() {
                     isOpen = !isOpen;

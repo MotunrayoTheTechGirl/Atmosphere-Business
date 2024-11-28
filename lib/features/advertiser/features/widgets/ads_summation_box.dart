@@ -5,10 +5,17 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/themes/app_themes.dart';
 
 class AdsSummationBox extends StatelessWidget {
-  const AdsSummationBox({
+  AdsSummationBox({
+    required this.totalAds,
+    required this.imageAds,
+    required this.videoAds,
+    required this.survey,
     super.key,
   });
-
+  String totalAds;
+  String imageAds;
+  String videoAds;
+  String survey;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,7 +39,7 @@ class AdsSummationBox extends StatelessWidget {
                     fontSize: 13.sp),
               ),
               Text(
-                '13',
+                totalAds,
                 style: AppTheme.lightTextTheme.displaySmall?.copyWith(
                     color: AppColors.brown900,
                     fontWeight: FontWeight.w700,
@@ -57,7 +64,7 @@ class AdsSummationBox extends StatelessWidget {
                     fontSize: 13.sp),
               ),
               Text(
-                '73',
+                videoAds,
                 style: AppTheme.lightTextTheme.displaySmall?.copyWith(
                     color: AppColors.brown900,
                     fontWeight: FontWeight.w700,
@@ -82,7 +89,7 @@ class AdsSummationBox extends StatelessWidget {
                     fontSize: 13.sp),
               ),
               Text(
-                '10',
+                imageAds,
                 style: AppTheme.lightTextTheme.displaySmall?.copyWith(
                     color: AppColors.brown900,
                     fontWeight: FontWeight.w700,
@@ -107,7 +114,7 @@ class AdsSummationBox extends StatelessWidget {
                     fontSize: 13.sp),
               ),
               Text(
-                '10',
+                survey,
                 style: AppTheme.lightTextTheme.displaySmall?.copyWith(
                     color: AppColors.brown900,
                     fontWeight: FontWeight.w700,

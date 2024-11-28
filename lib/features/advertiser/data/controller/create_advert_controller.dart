@@ -22,29 +22,34 @@ class CreateAdvertController
   final CreateAdvertRepository createAdvertRepository;
 
   Future<bool> createAds({
-    required num advertiserId,
-    required String title,
-    required String description,
-    required String adType,
-    required String adSize,
-    required String deviceType,
-    required String mediaUrl,
-    required String targetUrl,
-    required num budget,
-    required String businessCategory,
-    required String callToActionText,
-    required num duration,
-    required String startDate,
-    required String desiredScreen,
+    num? advertiserId,
+    String? title,
+    String? description,
+    String? adType,
+    String? status,
+    String? adSize,
+    String? deviceType,
+    String? mediaUrl,
+    String? targetUrl,
+    num? budget,
+    String? businessCategory,
+    String? callToActionText,
+    num? duration,
+    String? startDate,
+    String? desiredScreen,
     List? regionIds,
   }) async {
     state = ResponseState(status: ResponseStatus.loading, message: '');
+    log('start date: $startDate');
+    log('duration: $duration');
+    log('region: $regionIds');
     try {
       final response = await createAdvertRepository.createAdvert(
           advertiserId: advertiserId,
           title: title,
           description: description,
           adType: adType,
+          status: status,
           adSize: adSize,
           mediaUrl: mediaUrl,
           targetUrl: targetUrl,
@@ -55,7 +60,7 @@ class CreateAdvertController
           deviceType: deviceType,
           callToActionText: callToActionText,
           desiredScreen: desiredScreen,
-          regionIds: regionIds ?? []);
+          regionIds: regionIds);
       state = ResponseState(
         status: ResponseStatus.success,
         message: '',

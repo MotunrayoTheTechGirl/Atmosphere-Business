@@ -16,30 +16,42 @@ class CreateAdvertRepository {
   late Ref ref;
 
   Future<CreateAdsResModel> createAdvert({
-    required num advertiserId,
-    required String title,
-    required String description,
-    required String adType,
-    required String adSize,
-    required String deviceType,
-    required String mediaUrl,
-    required String targetUrl,
-    required num budget,
-    required String businessCategory,
-    required String callToActionText,
-    required num duration,
-    required String startDate,
-    required String desiredScreen,
+    num? advertiserId,
+    String? title,
+    String? description,
+    String? adType,
+    String? status,
+    String? adSize,
+    String? deviceType,
+    String? mediaUrl,
+    String? targetUrl,
+    num? budget,
+    String? businessCategory,
+    String? callToActionText,
+    num? duration,
+    String? startDate,
+    String? desiredScreen,
     List? regionIds,
   }) async {
+    log('start dat repo : $startDate');
     const isoDate = 'T00:00:00.000Z';
-    final formattedIsoStartDate = startDate + isoDate;
-    final formatStartDate = DateTime.parse(startDate);
-    final endDateDuration = formatStartDate
-            .add(Duration(days: duration.toInt()))
-            .toString()
-            .split(' ')[0] +
-        isoDate;
+    // final formattedIsoStartDate = startDate ?? isoDate;
+    final formattedIsoStartDate = startDate;
+    // final formatStartDate = DateTime.tryParse(startDate ?? '');
+    final formatStartDate = DateTime.tryParse(startDate ?? '');
+    final String splitFormatStartDate =
+        formatStartDate.toString().split(' ')[0];
+    log('splitFormatStartDate: $splitFormatStartDate');
+    final finalFormatedStartDate = splitFormatStartDate + isoDate;
+
+//! formatting end date using start date plus duration
+    final endDateDuration = duration == null
+        ? null
+        : formatStartDate!
+                .add(Duration(days: duration.toInt()))
+                .toString()
+                .split(' ')[0] +
+            isoDate;
     log('end date duration: $endDateDuration');
 
     try {
@@ -48,6 +60,7 @@ class CreateAdvertRepository {
         "title": title,
         "description": description,
         "type": adType,
+        "status": status,
         "size": adSize,
         "device_type": deviceType,
         "displayContentUrl": mediaUrl,
@@ -56,7 +69,7 @@ class CreateAdvertRepository {
         "category": businessCategory,
         "callToActionText": callToActionText,
         "duration": duration,
-        "startDate": formattedIsoStartDate,
+        "startDate": finalFormatedStartDate,
         "endDate": endDateDuration,
         "screens": desiredScreen,
         "region_ids": regionIds ?? []

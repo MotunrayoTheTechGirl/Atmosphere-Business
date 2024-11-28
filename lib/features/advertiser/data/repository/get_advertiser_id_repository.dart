@@ -40,36 +40,3 @@ class AdvertiserNotFoundException implements Exception {
   AdvertiserNotFoundException(this.message);
   final String message;
 }
-
-// class GetAdvertiserByUserIdRepository {
-//   final api = DealerPoratlApi();
-//   var logger = Logger(
-//     printer: PrettyPrinter(),
-//   );
-
-//   Future<GetAdvertiserIdResModel> getadvertiserByUserId({
-//     required String userId,
-//   }) async {
-//     try {
-//       final response = await api.get('${ApiEndpoints.getAdvertiserId}$userId');
-//       log('AdvertiserByUserId Response: $response');
-
-//       if (response?.data is String) {
-//         return GetAdvertiserIdResModel.fromJson(jsonDecode(response?.data));
-//       } else {
-//         return GetAdvertiserIdResModel.fromJson(response?.data);
-//       }
-//     } catch (e) {
-//       log('AdvertiserByUserId error: $e');
-//       rethrow;
-//     }
-//   }
-// }
-
-// final getAdvertiserByUserIdRepositoryFutureProvider =
-//     FutureProvider.family<GetAdvertiserIdResModel, String>((ref, userId) async {
-//   final getAdvertiserId = GetAdvertiserByUserIdRepository();
-//   final getAdvertiserIdProvider =
-//       await getAdvertiserId.getadvertiserByUserId(userId: userId);
-//   return getAdvertiserIdProvider;
-// });

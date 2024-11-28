@@ -1,22 +1,36 @@
-import 'package:dealer_portal_mobile/core/common_widgets/app_elevated_button.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/widgets/date_column.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
+import '../../../../../core/common_widgets/app_elevated_button.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_icons.dart';
 import '../../../../../core/utils/themes/app_themes.dart';
 import '../../../../../core/utils/ui_helper.dart';
+import '../advertiser_overview_screen.dart';
 
-class OverviewTabView extends StatelessWidget {
+class OverviewTabView extends ConsumerWidget {
   const OverviewTabView({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    String createdDate = ref.watch(dateCreatedStateProvider) ?? '';
+    DateTime parsedDate =
+        createdDate.isEmpty ? DateTime.now() : DateTime.parse(createdDate);
+    String dateCreated = DateFormat("HH:mm, dd/MM/yy").format(parsedDate);
+
+    String adDateOverviewFormat(String? date) {
+      DateTime? parsedEndDate = date == null ? null : DateTime.tryParse(date);
+      parsedEndDate == null ? '' : DateFormat("dd/MM/yy").format(parsedEndDate);
+      return '';
+    }
+
     return SizedBox(
       height: 9.sh,
       child: ListView(
@@ -40,7 +54,7 @@ class OverviewTabView extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                 ),
                 child: Text(
-                  'Completed',
+                  ref.watch(statusStateProvider) ?? '',
                   style: AppTheme.lightTextTheme.displaySmall?.copyWith(
                       color: AppColors.primaryColor,
                       fontWeight: FontWeight.w400,
@@ -54,7 +68,7 @@ class OverviewTabView extends StatelessWidget {
             padding: EdgeInsets.only(right: 200.h),
             width: 200,
             child: Text(
-              'Taste the Joy: Coca-Cola - The Ad Campaign',
+              ref.watch(titleStateProvider) ?? '',
               style: AppTheme.lightTextTheme.displaySmall?.copyWith(
                 color: AppColors.blackSupplementary,
                 fontWeight: FontWeight.w600,
@@ -71,33 +85,43 @@ class OverviewTabView extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const DateColumn(
-                    dateType: 'Start Date',
-                    date: '12/03/24',
-                  ),
+                  DateColumn(
+                      dateType: 'Start Date',
+                      date: adDateOverviewFormat(
+                          ref.watch(startDateStateProvider))),
                   26.wi,
-                  const DateColumn(
+                  DateColumn(
                     dateType: 'End Date',
-                    date: '12/03/24',
+                    date: adDateOverviewFormat(ref.watch(endStateProvider)),
                   ),
                 ],
               ),
               AppElevatedButton(
                 onTap: () {},
-                label: 'Re-Run',
+                label: () {
+                  switch (ref.watch(statusStateProvider)) {
+                    case "pending":
+                      return 'Modify Ad';
+                    case "completed":
+                      return "Re-Run";
+                    default:
+                      return '';
+                  }
+                }(),
+                // 'Re-Run',
                 width: 100.w,
                 labelStyle: AppTheme.lightTextTheme.displaySmall?.copyWith(
                   color: AppColors.white,
                   fontWeight: FontWeight.w600,
-                  fontSize: 12.sp,
+                  fontSize: 10.sp,
                 ),
               )
             ],
           ),
           10.hi,
-          const DateColumn(
+          DateColumn(
             dateType: 'Duration',
-            date: '20 Days',
+            date: '${ref.watch(durationStateProvider)} Days',
           ),
           32.hi,
           Text(
@@ -110,7 +134,7 @@ class OverviewTabView extends StatelessWidget {
           ),
           10.hi,
           Text(
-            'Get your business noticed where customers are already spending their time. Atmosphere provides a single platform for managing your marketing campaigns across it’s Wi-Fi network.',
+            ref.watch(descriptionStateProvider) ?? '',
             style: AppTheme.lightTextTheme.displaySmall?.copyWith(
               color: AppColors.blackSupplementary,
               fontWeight: FontWeight.w400,
@@ -132,7 +156,7 @@ class OverviewTabView extends StatelessWidget {
           Row(
             children: [
               Text(
-                'www.atmosphere.com',
+                ref.watch(targetStateProvider) ?? '',
                 style: AppTheme.lightTextTheme.displaySmall?.copyWith(
                   color: AppColors.blackSupplementary,
                   fontWeight: FontWeight.w400,
@@ -156,7 +180,7 @@ class OverviewTabView extends StatelessWidget {
           ),
           9.hi,
           Text(
-            formatNaira('3000'),
+            formatNaira(ref.watch(budgetStateProvider) ?? '0'),
             style: AppTheme.lightTextTheme.displaySmall?.copyWith(
               color: AppColors.blackSupplementary,
               fontWeight: FontWeight.w600,
@@ -175,7 +199,7 @@ class OverviewTabView extends StatelessWidget {
           ),
           9.hi,
           Text(
-            'Learn more',
+            ref.watch(calltoActionStateProvider) ?? '',
             style: AppTheme.lightTextTheme.displaySmall?.copyWith(
               color: AppColors.blackSupplementary,
               fontWeight: FontWeight.w900,
@@ -188,19 +212,21 @@ class OverviewTabView extends StatelessWidget {
             children: [
               DateColumn(
                 dateType: 'Spent',
-                date: formatNaira('20000'),
+                date: ref.watch(amountSpentStateProvider) == null
+                    ? formatNaira('0')
+                    : formatNaira(ref.watch(amountSpentStateProvider) ?? ''),
               ),
               24.wi,
               DateColumn(
                 dateType: 'Balance',
-                date: formatNaira('30000'),
+                date: formatNaira('0'),
               ),
             ],
           ),
           24.hi,
-          const DateColumn(
+          DateColumn(
             dateType: 'Date Created',
-            date: '16:30, 10/03/24',
+            date: dateCreated,
           ),
         ],
       ),

@@ -6,7 +6,9 @@ import 'dart:io';
 import 'package:dealer_portal_mobile/core/common_widgets/app_elevated_button.dart';
 import 'package:dealer_portal_mobile/core/enums.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
+import 'package:dealer_portal_mobile/features/advertiser/features/screens/ads_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/create_ads_screen.dart';
+import 'package:dealer_portal_mobile/features/advertiser/features/screens/draft_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/widgets/upload_box_text.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
@@ -23,12 +25,13 @@ import '../../../../../core/utils/themes/app_themes.dart';
 import '../../../../onboarding/data/controller/user_details_controller.dart';
 import '../../../../subscriptions/data/controller/file_upload_controller.dart';
 import '../../../data/controller/create_advert_controller.dart';
+import '../../../data/repository/get_adverts_repository.dart';
+import '../../../data/repository/region_repository.dart';
 import '../../widgets/size_guide_text_button.dart';
 import '../../widgets/textfield_with_inline_label.dart';
 
-final adSizeStateProvider = StateProvider<String>((ref) => '');
-// final imageStateProvider = StateProvider<String>((ref) => '');
-
+final adSizeStateProvider = StateProvider<String?>((ref) => null);
+final imageAdRegionIdStateProvider = StateProvider<String?>((ref) => null);
 final imagePickedStateProvider = StateProvider<File>((ref) => File(''));
 
 class ImageAdTabBiew extends ConsumerStatefulWidget {
@@ -56,6 +59,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
   final callToActionController = TextEditingController();
   final businessCategoryController = TextEditingController();
   //? optional
+  final lgaController = TextEditingController();
   final regionController = TextEditingController();
 
   @override
@@ -107,16 +111,16 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
     return TextEditingController();
   }
 
+  bool isDraftClicked = false;
   @override
   Widget build(BuildContext context) {
     final userDetailsController =
         ref.watch(userDetailsControllerProvider).data?.data?.user;
-
+    final regionFutureController = ref.watch(adsRegionRepositoryFutureProvider);
     return SizedBox(
       height: .9.sh,
       child: ListView(
         shrinkWrap: true,
-        // physics: const BouncingScrollPhysics(),
         children: [
           Text(
             'Ad Information',
@@ -129,6 +133,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
           TextfieldWithInlineLabel(
             controller: adTitleController,
             label: 'Ad Title',
+            maxLines: 1,
           ),
           15.hi,
           TextfieldWithInlineLabel(
@@ -152,6 +157,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
               width: 14.w,
               height: 14.h,
             ),
+            maxLines: 1,
           ),
           15.hi,
           TextfieldWithInlineLabel(
@@ -166,6 +172,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
               height: 14.h,
             ),
             keyboardType: TextInputType.number,
+            maxLines: 1,
           ),
           15.hi,
           Row(
@@ -204,6 +211,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                   hintText: 'e.g 10 Days',
                   label: 'Duration (Days)',
                   keyboardType: TextInputType.number,
+                  maxLines: 1,
                 ),
               ),
             ],
@@ -264,8 +272,10 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                 position: RelativeRect.fromLTRB(30, 450.h, 0, 460.w),
                 color: AppColors.white,
                 items: [
-                  'Welcome page',
-                  'Home page',
+                  'Welcome Screen',
+                  'SignUp/ Login Screen',
+                  'Dashboard Screen',
+                  'All Screen'
                 ].map((option) {
                   return PopupMenuItem<String>(
                     value: option,
@@ -298,8 +308,10 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                 position: RelativeRect.fromLTRB(30, 450.h, 0, 460.w),
                 color: AppColors.white,
                 items: [
+                  'Sign up',
                   'Learn more',
-                  'click me',
+                  'Buy',
+                  'Get Started',
                 ].map((option) {
                   return PopupMenuItem<String>(
                     value: option,
@@ -332,7 +344,19 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                 position: RelativeRect.fromLTRB(30, 450.h, 0, 760.w),
                 color: AppColors.white,
                 items: [
-                  'Manufacturing',
+                  'Legal',
+                  'Local Service',
+                  'Media/News Company',
+                  'Medical and Health',
+                  'Non-Government Organization',
+                  'Non profit organization',
+                  'Public and government service',
+                  'Real Estate',
+                  'Science,Technology and Engineering',
+                  'Shopping and retail',
+                  'Sports and Retail',
+                  'Travel and Transportation',
+                  'other',
                 ].map((option) {
                   return PopupMenuItem<String>(
                     value: option,
@@ -370,25 +394,44 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
             ),
             readOnly: true,
             onTap: () async {
-              final selected = await showMenu<String>(
+              final selected = await showMenu<Map<String, dynamic>>(
                 context: context,
                 position: RelativeRect.fromLTRB(30, 750.h, 0, 60.w),
                 color: AppColors.white,
-                items: [
-                  'Lagos',
-                ].map((option) {
-                  return PopupMenuItem<String>(
-                    value: option,
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Text(option),
-                    ),
-                  );
-                }).toList(),
+                items: regionFutureController.when(
+                  data: (data) {
+                    final uniqueRegions = data.data
+                        .map((region) => {
+                              'area': region.area,
+                              'id': region.id,
+                            })
+                        .toSet()
+                        .map((lgaInfo) => PopupMenuItem<Map<String, dynamic>>(
+                              value: lgaInfo,
+                              child: SizedBox(
+                                child: Text(
+                                  lgaInfo['area'] as String,
+                                ),
+                              ),
+                            ))
+                        .toList();
+                    return uniqueRegions;
+                  },
+                  error: (error, stackTrace) => [],
+                  loading: () => [],
+                ),
               );
+
               if (selected != null) {
-                regionController.text = selected;
-                setState(() {});
+                log('selected region: ${selected['area']}');
+                log('selected region id: ${selected['id']}');
+                ref.read(imageAdRegionIdStateProvider.notifier).state =
+                    selected['id'].toString();
+                log('region Id state Provider: ${ref.watch(imageAdRegionIdStateProvider)}');
+                setState(() {
+                  regionController.text = selected['area'];
+                });
+                log('region ctrl : ${regionController.text}');
               }
             },
           ),
@@ -480,9 +523,217 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
             children: [
               Expanded(
                 child: AppElevatedButton(
-                  onTap: () {},
-                  bgColor: AppColors.lightPurple,
                   label: 'Save Progress',
+                  isLoading: isDraftClicked == true
+                      ? ref.watch(createAdvertControllerProvider).status ==
+                              ResponseStatus.loading ||
+                          ref
+                                  .watch(receiptFileUploadControllerProvider)
+                                  .status ==
+                              ResponseStatus.loading
+                      : false,
+                  onTap: () async {
+                    setState(() {
+                      isDraftClicked = true;
+                    });
+                    //! integration for drafts
+                    log('start date: ${startDateController.text.isEmpty ? null : startDateController.text}');
+                    log('duration: ${durationController.text.isEmpty ? null : int.parse(durationController.text)}');
+
+                    if (result == null) {
+                      //! user did not upload image
+                      log('image state provider runtimeType: ${ref.watch(imagePickedStateProvider).runtimeType}');
+                      log('image state provider: ${ref.watch(imagePickedStateProvider)}');
+                      log('user did not upload image');
+                      final hasCreatedImageAds = await ref
+                          .read(createAdvertControllerProvider.notifier)
+                          .createAds(
+                              advertiserId: int.parse(
+                                  ref.watch(advertiserIdStateProvider)),
+                              title: adTitleController.text.isEmpty
+                                  ? null
+                                  : adTitleController.text,
+                              description: adDescriptionController.text.isEmpty
+                                  ? null
+                                  : adDescriptionController.text,
+                              adType: 'image',
+                              status: "drafts",
+                              adSize: ref.watch(adSizeStateProvider),
+                              mediaUrl: null,
+                              // 'https://api-dev.wave5wireless.ng/content$trimmedData}',
+                              targetUrl: targetUrlController.text.isEmpty
+                                  ? null
+                                  : targetUrlController.text,
+                              budget: bugetController.text.isEmpty
+                                  ? null
+                                  : int.parse(bugetController.text),
+                              duration: durationController.text.isEmpty
+                                  ? null
+                                  : int.parse(durationController.text),
+                              startDate: startDateController.text.isEmpty
+                                  ? null
+                                  : startDateController.text,
+                              businessCategory:
+                                  businessCategoryController.text.isEmpty
+                                      ? null
+                                      : businessCategoryController.text,
+                              deviceType: deviceTypeController.text.isEmpty
+                                  ? null
+                                  : deviceTypeController.text,
+                              callToActionText:
+                                  callToActionController.text.isEmpty
+                                      ? null
+                                      : callToActionController.text,
+                              desiredScreen:
+                                  desiredScreenController.text.isEmpty
+                                      ? null
+                                      : desiredScreenController.text,
+                              regionIds: ref.watch(
+                                          imageAdRegionIdStateProvider) ==
+                                      null
+                                  ? null
+                                  : [ref.watch(imageAdRegionIdStateProvider)]);
+                      if (hasCreatedImageAds) {
+                        CustomSnackBar.showSnackBar(
+                            context: context,
+                            message:
+                                'Image Advert saved to draft SuccessFully');
+                        ref.invalidate(
+                            getAdvertsByAdvertiserRepositoryFutureProvider(
+                                ref.watch(advertiserIdStateProvider)));
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const DraftScreen();
+                        }));
+                        adTitleController.clear();
+                        adDescriptionController.clear();
+                        targetUrlController.clear();
+                        bugetController.clear();
+                        startDateController.clear();
+                        durationController.clear();
+                        deviceTypeController.clear();
+                        desiredScreenController.clear();
+                        callToActionController.clear();
+                        businessCategoryController.clear();
+                        result = null;
+                      } else {
+                        CustomSnackBar.showSnackBar(
+                          context: context,
+                          isError: true,
+                          message: ref
+                                  .read(createAdvertControllerProvider.notifier)
+                                  .state
+                                  .message ??
+                              '',
+                        );
+                      }
+                    } else {
+                      //! user wants to  upload  image
+                      log('image state provider runtimeType: ${ref.watch(imagePickedStateProvider).runtimeType}');
+                      log('image state provider: ${ref.watch(imagePickedStateProvider)}');
+                      log(' user wants to  upload  image');
+                      final hasUploadedImage = await ref
+                          .read(receiptFileUploadControllerProvider.notifier)
+                          .uploadFile(
+                            file: ref.watch(imagePickedStateProvider),
+                          );
+                      if (hasUploadedImage) {
+                        final data =
+                            ref.read(receiptFileUploadControllerProvider).data;
+                        final trimmedData =
+                            data?.substring(data.indexOf('/dealer'));
+                        log('trimmed Data: $trimmedData');
+
+                        //! create  image adverts
+                        final hasCreatedImageAds = await ref
+                            .read(createAdvertControllerProvider.notifier)
+                            .createAds(
+                                advertiserId: int.parse(
+                                    ref.watch(advertiserIdStateProvider)),
+                                title: adTitleController.text.isEmpty
+                                    ? null
+                                    : adTitleController.text,
+                                description:
+                                    adDescriptionController.text.isEmpty
+                                        ? null
+                                        : adDescriptionController.text,
+                                adType: 'image',
+                                status: "drafts",
+                                adSize: ref.watch(adSizeStateProvider),
+                                mediaUrl:
+                                    'https://api-dev.wave5wireless.ng/content$trimmedData}',
+                                targetUrl: targetUrlController.text.isEmpty
+                                    ? null
+                                    : targetUrlController.text,
+                                budget: bugetController.text.isEmpty
+                                    ? null
+                                    : int.parse(bugetController.text),
+                                duration: durationController.text.isEmpty
+                                    ? null
+                                    : int.parse(durationController.text),
+                                startDate: startDateController.text.isEmpty
+                                    ? null
+                                    : startDateController.text,
+                                businessCategory:
+                                    businessCategoryController.text.isEmpty
+                                        ? null
+                                        : businessCategoryController.text,
+                                deviceType: deviceTypeController.text.isEmpty
+                                    ? null
+                                    : deviceTypeController.text,
+                                callToActionText:
+                                    callToActionController.text.isEmpty
+                                        ? null
+                                        : callToActionController.text,
+                                desiredScreen: desiredScreenController.text.isEmpty
+                                    ? null
+                                    : desiredScreenController.text,
+                                regionIds: ref.watch(
+                                            imageAdRegionIdStateProvider) ==
+                                        null
+                                    ? null
+                                    : [ref.watch(imageAdRegionIdStateProvider)]);
+                        if (hasCreatedImageAds) {
+                          CustomSnackBar.showSnackBar(
+                              context: context,
+                              message:
+                                  'Image Advert saved to draft SuccessFully');
+                          adTitleController.clear();
+                          adDescriptionController.clear();
+                          targetUrlController.clear();
+                          bugetController.clear();
+                          startDateController.clear();
+                          durationController.clear();
+                          deviceTypeController.clear();
+                          desiredScreenController.clear();
+                          callToActionController.clear();
+                          businessCategoryController.clear();
+                          result = null;
+                        } else {
+                          CustomSnackBar.showSnackBar(
+                            context: context,
+                            isError: true,
+                            message: ref
+                                    .read(
+                                        createAdvertControllerProvider.notifier)
+                                    .state
+                                    .message ??
+                                '',
+                          );
+                        }
+                      } else {
+                        CustomSnackBar.showSnackBar(
+                          context: context,
+                          isError: true,
+                          message:
+                              'Oops! Image size must be between 1 KB and 5 MB '
+                              '',
+                        );
+                        log('Error during upload process');
+                      }
+                    }
+                  },
+                  bgColor: AppColors.lightPurple,
                   labelStyle: AppTheme.lightTextTheme.bodyLarge
                       ?.copyWith(color: AppColors.w5Color, fontSize: 16.sp),
                 ),
@@ -490,14 +741,19 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
               60.wi,
               Expanded(
                 child: AppElevatedButton(
+                  label: 'Submit',
                   isActive: valiadteForm(),
-                  isLoading:
-                      ref.watch(receiptFileUploadControllerProvider).status ==
+                  isLoading: isDraftClicked == false
+                      ? ref.watch(receiptFileUploadControllerProvider).status ==
                               ResponseStatus.loading ||
                           ref.watch(createAdvertControllerProvider).status ==
-                              ResponseStatus.loading,
+                              ResponseStatus.loading
+                      : false,
                   onTap: valiadteForm()
                       ? () async {
+                          setState(() {
+                            isDraftClicked = false;
+                          });
                           //! upload image endpoint
                           final hasUploadedImage = await ref
                               .read(
@@ -522,6 +778,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                     title: adTitleController.text,
                                     description: adDescriptionController.text,
                                     adType: 'image',
+                                    status: "pending",
                                     adSize: ref.watch(adSizeStateProvider),
                                     mediaUrl:
                                         'https://api-dev.wave5wireless.ng/content$trimmedData}',
@@ -536,11 +793,21 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                     callToActionText:
                                         callToActionController.text,
                                     desiredScreen: desiredScreenController.text,
-                                    regionIds: []);
+                                    regionIds: [
+                                  ref.watch(imageAdRegionIdStateProvider),
+                                ]);
                             if (hasCreatedImageAds) {
                               CustomSnackBar.showSnackBar(
                                   context: context,
                                   message: 'Image Advert created SuccessFully');
+                              ref.invalidate(
+                                  getAdvertsByAdvertiserRepositoryFutureProvider(
+                                      ref.watch(advertiserIdStateProvider)));
+
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return const AdsScreen();
+                              }));
                               adTitleController.clear();
                               adDescriptionController.clear();
                               targetUrlController.clear();
@@ -576,7 +843,6 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                           }
                         }
                       : () {},
-                  label: 'Submit',
                 ),
               ),
             ],

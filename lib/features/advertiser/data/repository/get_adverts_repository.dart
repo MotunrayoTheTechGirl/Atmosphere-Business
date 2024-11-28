@@ -22,19 +22,20 @@ class GetAdvertsByAdvertiserRepository {
           await api.get('${ApiEndpoints.getAdsByAdvertiserId}$advertiserId');
       log('Get Adverts Response: $response');
 
-      if (response?.data is String) {
-        // return GetAdsByAdvertiserIdResModel.fromJson(jsonDecode(response?.data));
-        List<GetAdsByAdvertiserIdResModel> adverts = response?.data
-            .map((item) =>
-                GetAdsByAdvertiserIdResModel.fromJson(jsonDecode(item)))
-            .toList();
-        return adverts;
-      } else {
-        // return GetAdsByAdvertiserIdResModel.fromJson(response?.data);
-        List<GetAdsByAdvertiserIdResModel> adverts = response?.data
+      if (response?.data is List) {
+        final List<dynamic> dataList = response?.data as List<dynamic>;
+        return dataList
             .map((item) => GetAdsByAdvertiserIdResModel.fromJson(item))
             .toList();
-        return adverts;
+      } else if (response?.data is String) {
+        final List<dynamic> dataList =
+            jsonDecode(response?.data) as List<dynamic>;
+        return dataList
+            .map((item) => GetAdsByAdvertiserIdResModel.fromJson(item))
+            .toList();
+      } else {
+        throw Exception(
+            'Unexpected data format: ${response?.data.runtimeType}');
       }
     } catch (e) {
       log('get Adverts error: $e');
@@ -47,7 +48,5 @@ final getAdvertsByAdvertiserRepositoryFutureProvider =
     FutureProvider.family<List<GetAdsByAdvertiserIdResModel>, String>(
         (ref, userId) async {
   final getAdverts = GetAdvertsByAdvertiserRepository();
-  final getAdvertiserIdProvider =
-      await getAdverts.getAdvertsByAdvertiserId(advertiserId: userId);
-  return getAdvertiserIdProvider;
+  return await getAdverts.getAdvertsByAdvertiserId(advertiserId: userId);
 });
