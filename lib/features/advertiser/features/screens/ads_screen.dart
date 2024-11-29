@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/ads_details_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/advertiser_overview_screen.dart';
@@ -182,7 +184,13 @@ class AdsScreen extends ConsumerWidget {
                                 advert.size ?? '';
                             ref.read(screenStateProvider.notifier).state =
                                 advert.screens ?? '';
+                            ref.read(deviceStateProvider.notifier).state =
+                                advert.deviceType ?? '';
+                            ref
+                                .read(businessCategoryStateProvider.notifier)
+                                .state = advert.category ?? '';
                           });
+                          log('durationn: ${advert.duration.toString()}');
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) {

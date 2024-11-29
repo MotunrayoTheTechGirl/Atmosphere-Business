@@ -13,6 +13,7 @@ class AppImage extends StatelessWidget {
   final bool hasGradient;
   final String tag;
   final double margin;
+  final Decoration? errorDecoration;
 
   const AppImage({
     super.key,
@@ -23,6 +24,7 @@ class AppImage extends StatelessWidget {
     this.hasGradient = false,
     this.tag = '',
     this.margin = 6,
+    this.errorDecoration,
   });
 
   @override
@@ -36,7 +38,6 @@ class AppImage extends StatelessWidget {
               width: width,
               height: height,
               decoration: BoxDecoration(
-                // shape: BoxShape.circle,
                 color: AppColors.primaryColor.withOpacity(0.2),
                 borderRadius: borderRadius,
                 image: DecorationImage(
@@ -57,8 +58,8 @@ class AppImage extends StatelessWidget {
             margin: EdgeInsets.all(margin),
             width: width,
             height: height,
-            child: const SpinKitDoubleBounce(
-              color: AppColors.primaryColor,
+            child: SpinKitDoubleBounce(
+              color: AppColors.w5Color.withOpacity(0.3),
               size: 20,
             ),
           ),
@@ -66,10 +67,11 @@ class AppImage extends StatelessWidget {
             margin: EdgeInsets.all(margin),
             width: width,
             height: height,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.primaryColor.withOpacity(0.2),
-            ),
+            decoration: errorDecoration ??
+                BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.primaryColor.withOpacity(0.2),
+                ),
             // BoxDecoration(
             //   borderRadius: borderRadius,
             //   color: AppColors.primaryColor.withOpacity(0.5),

@@ -339,6 +339,15 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                 position: RelativeRect.fromLTRB(30, 750.h, 0, 60.w),
                 color: AppColors.white,
                 items: [
+                  'Agriculture',
+                  'Art and Entertainment',
+                  'Automative, Aircraft & boat',
+                  'Beauty,Cosmetics & personal care',
+                  'Commercial & Industrial'
+                      'Education',
+                  'Finance',
+                  'Food & Beverage',
+                  'Hotel & Lodging',
                   'Legal',
                   'Local Service',
                   'Media/News Company',
@@ -633,13 +642,13 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                       final hasUploadedVideo = await ref
                           .read(receiptFileUploadControllerProvider.notifier)
                           .uploadFile(
-                            file: ref.watch(videoPickedStateProvider),
-                          );
+                              file: ref.watch(videoPickedStateProvider),
+                              path: 'adverts');
                       if (hasUploadedVideo) {
                         final data =
                             ref.read(receiptFileUploadControllerProvider).data;
                         final trimmedData =
-                            data?.substring(data.indexOf('/dealer'));
+                            data?.substring(data.indexOf('/adverts'));
                         log('trimmed Data: $trimmedData');
                         //! create  video adverts
                         final hasCreatedVideoAds = await ref
@@ -657,7 +666,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                               status: "drafts",
                               adSize: ref.watch(videoAdSizeStateProvider),
                               mediaUrl:
-                                  'https://api-dev.wave5wireless.ng/content$trimmedData}',
+                                  'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
                               targetUrl: targetUrlController.text.isEmpty
                                   ? null
                                   : targetUrlController.text,
@@ -763,14 +772,14 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                               .read(
                                   receiptFileUploadControllerProvider.notifier)
                               .uploadFile(
-                                file: ref.watch(videoPickedStateProvider),
-                              );
+                                  file: ref.watch(videoPickedStateProvider),
+                                  path: 'adverts');
                           if (hasUploadedVideo) {
                             final data = ref
                                 .read(receiptFileUploadControllerProvider)
                                 .data;
                             final trimmedData =
-                                data?.substring(data.indexOf('/dealer'));
+                                data?.substring(data.indexOf('/adverts'));
                             log('trimmed Data: $trimmedData');
                             //! create  video adverts
                             final hasCreatedVideoAds = await ref
@@ -784,7 +793,8 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                               status: "pending",
                               adSize: ref.watch(videoAdSizeStateProvider),
                               mediaUrl:
-                                  'https://api-dev.wave5wireless.ng/content$trimmedData}',
+                                  // 'https://api-dev.wave5wireless.ng/content$trimmedData',
+                                  'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
                               targetUrl: targetUrlController.text,
                               budget: int.parse(bugetController.text),
                               duration: int.parse(durationController.text),

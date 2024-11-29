@@ -27,14 +27,11 @@ class FileUploadController extends StateNotifier<ResponseState<String>> {
         );
   final FileUploadRepository fileUploadRepository;
 
-  Future<bool> uploadFile({
-    required File file,
-  }) async {
+  Future<bool> uploadFile({required File file, required String path}) async {
     state = ResponseState(status: ResponseStatus.loading, message: '');
     try {
-      final response = await fileUploadRepository.fileUpload(
-        file: file,
-      );
+      final response =
+          await fileUploadRepository.fileUpload(file: file, path: path);
       log('file upload response: $response');
       state = ResponseState(
         status: ResponseStatus.success,

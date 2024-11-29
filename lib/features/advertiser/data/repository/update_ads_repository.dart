@@ -5,17 +5,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/api/api_endpoints.dart';
 import '../../../../core/api/dealer_portal_api.dart';
-import '../models/create_ads_res_model.dart';
+import '../models/update_ads_res_model.dart';
 
-final createAdvertRepositoryProvider = Provider(
-  (ref) => CreateAdvertRepository(),
+final updateAdsRepositoryProvider = Provider(
+  (ref) => UpdateAdsRepository(),
 );
 
-class CreateAdvertRepository {
+class UpdateAdsRepository {
   final api = DealerPoratlApi();
-  late Ref ref;
 
-  Future<CreateAdsResModel> createAdvert({
+  Future<UpdateAdsResModel> updateAds({
+    required String advertId,
     num? advertiserId,
     String? title,
     String? description,
@@ -50,9 +50,9 @@ class CreateAdvertRepository {
                 .split(' ')[0] +
             isoDate;
     log('end date duration: $endDateDuration');
-
     try {
-      final response = await api.post(ApiEndpoints.createAdvert, body: {
+      final response =
+          await api.post('${ApiEndpoints.updateAds}$advertId', body: {
         "advertiserId": advertiserId,
         "title": title,
         "description": description,
@@ -71,11 +71,11 @@ class CreateAdvertRepository {
         "screens": desiredScreen,
         "region_ids": regionIds ?? []
       });
-
+      log('update ads response: $response');
       if (response?.data is String) {
-        return CreateAdsResModel.fromJson(jsonDecode(response?.data));
+        return UpdateAdsResModel.fromJson(jsonDecode(response?.data));
       } else {
-        return CreateAdsResModel.fromJson(response?.data);
+        return UpdateAdsResModel.fromJson(response?.data);
       }
     } catch (e) {
       rethrow;

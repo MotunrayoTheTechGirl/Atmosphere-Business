@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
+import 'package:dealer_portal_mobile/features/advertiser/features/screens/create_ads_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/widgets/date_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,13 +16,63 @@ import '../../../../../core/utils/themes/app_themes.dart';
 import '../../../../../core/utils/ui_helper.dart';
 import '../advertiser_overview_screen.dart';
 
-class OverviewTabView extends ConsumerWidget {
-  const OverviewTabView({
-    super.key,
-  });
+final modifyTitleStateProvider = StateProvider<String>((ref) => '');
+final modifyDescriptionStateProvider = StateProvider((ref) => '');
+final modifyTargetStateProvider = StateProvider((ref) => '');
+final modifyBudgetStateProvider = StateProvider((ref) => '');
+final modifyStartDateStateProvider = StateProvider((ref) => '');
+final modifyDurationStateProvider = StateProvider((ref) => '');
+final modifyDeviceStateProvider = StateProvider((ref) => '');
+final modifySizeStateProvider = StateProvider((ref) => '');
+final modifydesiredScreenStateProvider = StateProvider((ref) => '');
+final modifyCallToActionStateProvider = StateProvider((ref) => '');
+final modifyBusinessCategoryStateProvider = StateProvider((ref) => '');
+final modifyDisplayContentStateProvider = StateProvider((ref) => '');
+
+class OverviewTabview extends ConsumerStatefulWidget {
+  const OverviewTabview({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _OverviewTabviewState createState() => _OverviewTabviewState();
+}
+
+class _OverviewTabviewState extends ConsumerState<OverviewTabview> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(modifyTitleStateProvider.notifier).state =
+          ref.watch(titleStateProvider) ?? '';
+      ref.read(modifyDurationStateProvider.notifier).state =
+          ref.watch(durationStateProvider) ?? '';
+      ref.read(modifyDescriptionStateProvider.notifier).state =
+          ref.watch(descriptionStateProvider) ?? '';
+      ref.read(modifyTargetStateProvider.notifier).state =
+          ref.watch(targetStateProvider) ?? '';
+      ref.read(modifyBudgetStateProvider.notifier).state =
+          ref.watch(budgetStateProvider) ?? '';
+      ref.read(modifyCallToActionStateProvider.notifier).state =
+          ref.watch(calltoActionStateProvider) ?? '';
+      ref.read(modifyStartDateStateProvider.notifier).state =
+          ref.watch(startDateStateProvider) ?? '';
+      ref.read(modifyCallToActionStateProvider.notifier).state =
+          ref.watch(calltoActionStateProvider) ?? '';
+      ref.read(modifyDeviceStateProvider.notifier).state =
+          ref.watch(deviceStateProvider) ?? '';
+      ref.read(modifydesiredScreenStateProvider.notifier).state =
+          ref.watch(screenStateProvider);
+      ref.read(modifyBusinessCategoryStateProvider.notifier).state =
+          ref.watch(businessCategoryStateProvider);
+
+      log('---Durett state : ${ref.watch(durationStateProvider)}');
+      log('budg: ${ref.watch(budgetStateProvider)}');
+      log('amount spent: ${ref.watch(amountSpentStateProvider)}');
+    });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     String createdDate = ref.watch(dateCreatedStateProvider) ?? '';
     DateTime parsedDate =
         createdDate.isEmpty ? DateTime.now() : DateTime.parse(createdDate);
@@ -27,8 +80,10 @@ class OverviewTabView extends ConsumerWidget {
 
     String adDateOverviewFormat(String? date) {
       DateTime? parsedEndDate = date == null ? null : DateTime.tryParse(date);
-      parsedEndDate == null ? '' : DateFormat("dd/MM/yy").format(parsedEndDate);
-      return '';
+      String formattedAdDate = parsedEndDate == null
+          ? ''
+          : DateFormat("dd/MM/yy").format(parsedEndDate);
+      return formattedAdDate;
     }
 
     return SizedBox(
@@ -49,14 +104,40 @@ class OverviewTabView extends ConsumerWidget {
               ),
               Container(
                 padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 19.w),
-                decoration: const BoxDecoration(
-                  color: AppColors.babyShade100,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                decoration: BoxDecoration(
+                  color: () {
+                    switch (ref.watch(statusStateProvider)) {
+                      case "pending":
+                        return AppColors.lightOrange;
+                      case "active":
+                        return AppColors.greenShade150;
+                      case "completed":
+                        return AppColors.primaryColor;
+                      case "paused":
+                        return AppColors.lightOrange;
+                      default:
+                        return AppColors.primaryColor;
+                    }
+                  }(),
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
                 ),
                 child: Text(
                   ref.watch(statusStateProvider) ?? '',
                   style: AppTheme.lightTextTheme.displaySmall?.copyWith(
-                      color: AppColors.primaryColor,
+                      color: () {
+                        switch (ref.watch(statusStateProvider)) {
+                          case "pending":
+                            return AppColors.goldenYellow;
+                          case "active":
+                            return AppColors.deepGreen;
+                          case "completed":
+                            return AppColors.babyShade100;
+                          case "paused":
+                            return AppColors.goldenYellow;
+                          default:
+                            return AppColors.babyShade100;
+                        }
+                      }(),
                       fontWeight: FontWeight.w400,
                       fontSize: 14.sp),
                 ),
@@ -97,7 +178,25 @@ class OverviewTabView extends ConsumerWidget {
                 ],
               ),
               AppElevatedButton(
-                onTap: () {},
+                onTap: ref.watch(statusStateProvider) == 'pending'
+                    ? () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) {
+                            return const CreateAdsScreen();
+                          }),
+                        );
+                      }
+                    : () {},
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
+                bgColor: () {
+                  switch (ref.watch(statusStateProvider)) {
+                    case "pending":
+                      return AppColors.lightPurple;
+                    default:
+                      return AppColors.w5Color;
+                  }
+                }(),
                 label: () {
                   switch (ref.watch(statusStateProvider)) {
                     case "pending":
@@ -108,10 +207,26 @@ class OverviewTabView extends ConsumerWidget {
                       return '';
                   }
                 }(),
-                // 'Re-Run',
+                isFilled: () {
+                  switch (ref.watch(statusStateProvider)) {
+                    case "pending":
+                      return true;
+                    default:
+                      return false;
+                  }
+                }(),
+                borderWidth: 0.2,
+                borderRadius: 5.r,
                 width: 100.w,
                 labelStyle: AppTheme.lightTextTheme.displaySmall?.copyWith(
-                  color: AppColors.white,
+                  color: () {
+                    switch (ref.watch(statusStateProvider)) {
+                      case "pending":
+                        return AppColors.w5Color;
+                      default:
+                        return AppColors.white;
+                    }
+                  }(),
                   fontWeight: FontWeight.w600,
                   fontSize: 10.sp,
                 ),

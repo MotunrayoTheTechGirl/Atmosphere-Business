@@ -1,5 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api, prefer_const_constructors
 
+import 'dart:developer';
+
 import 'package:dealer_portal_mobile/core/common_widgets/app_divider.dart';
 import 'package:dealer_portal_mobile/core/common_widgets/app_elevated_button.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
@@ -42,7 +44,8 @@ final typeStateProvider = StateProvider<String>((ref) => '');
 final deviceStateProvider = StateProvider<String>((ref) => '');
 final sizeStateProvider = StateProvider<String>((ref) => '');
 final screenStateProvider = StateProvider((ref) => '');
-final adPlacementStateProvider = StateProvider<String>((ref) => '');
+// final adPlacementStateProvider = StateProvider<String>((ref) => '');
+final businessCategoryStateProvider = StateProvider<String>((ref) => '');
 
 class AdvertiserOverviewScreen extends ConsumerStatefulWidget {
   const AdvertiserOverviewScreen({Key? key}) : super(key: key);
@@ -358,7 +361,7 @@ class _AdvertiserOverviewScreenState
                                   ref.read(targetStateProvider.notifier).state =
                                       advert.targetUrl ?? '';
                                   ref.read(budgetStateProvider.notifier).state =
-                                      advert.budget.toString() ?? '';
+                                      advert.budget.toString();
                                   ref
                                       .read(calltoActionStateProvider.notifier)
                                       .state = advert.callToActionText ?? '';
@@ -377,7 +380,17 @@ class _AdvertiserOverviewScreenState
                                       advert.size ?? '';
                                   ref.read(screenStateProvider.notifier).state =
                                       advert.screens ?? '';
+                                  ref.read(deviceStateProvider.notifier).state =
+                                      advert.deviceType ?? '';
+                                  ref
+                                      .read(businessCategoryStateProvider
+                                          .notifier)
+                                      .state = advert.category ?? '';
                                 });
+                                log('---Dure: ${advert.duration}');
+                                log('budge: ${advert.budget.runtimeType}');
+                                log('budget state: ${ref.watch(budgetStateProvider)}');
+                                log('---Dure state : ${ref.watch(durationStateProvider)}');
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (context) {

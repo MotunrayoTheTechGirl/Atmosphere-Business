@@ -29,6 +29,7 @@ class AppElevatedButton extends StatelessWidget {
     this.bgColor,
     this.labelColor,
     this.border,
+    this.borderWidth,
     super.key,
   });
 
@@ -48,6 +49,7 @@ class AppElevatedButton extends StatelessWidget {
   final bool isFilled;
   final Color? bgColor, labelColor;
   final BoxBorder? border;
+  final double? borderWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +67,7 @@ class AppElevatedButton extends StatelessWidget {
             borderRadius:
                 BorderRadius.all(Radius.circular(borderRadius ?? 16.5.r)),
             border: isFilled
-                ? Border.all(width: 1, color: AppColors.w5Color)
+                ? Border.all(width: borderWidth ?? 1, color: AppColors.w5Color)
                 : border),
         child: isLoading
             ? const SpinKitChasingDots(

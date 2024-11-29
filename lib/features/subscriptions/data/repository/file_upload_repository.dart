@@ -15,13 +15,13 @@ final fileUploadRepositoryProvider = Provider(
 class FileUploadRepository {
   final api = DealerPoratlApi();
 
-  Future<String> fileUpload({required File file}) async {
+  Future<String> fileUpload({required File file, required String path}) async {
     var formData = FormData.fromMap({
       "file": await MultipartFile.fromFile(file.path),
     });
     try {
       log('formData: $formData');
-      final response = await api.post('${ApiEndpoints.fileUpload}/dealer',
+      final response = await api.post('${ApiEndpoints.fileUpload}/$path',
           formData: formData, isFormData: true);
       log('my file response: $response');
       log('my file response type: ${response.runtimeType}');

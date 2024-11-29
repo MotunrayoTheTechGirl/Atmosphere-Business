@@ -9,6 +9,7 @@ import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/ads_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/create_ads_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/draft_screen.dart';
+import 'package:dealer_portal_mobile/features/advertiser/features/screens/tab_pages/overview_tabview.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/widgets/upload_box_text.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
@@ -48,16 +49,17 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
   FilePickerResult? result;
   bool isFormValid = false;
 
-  final adTitleController = TextEditingController();
-  final adDescriptionController = TextEditingController();
-  final targetUrlController = TextEditingController();
-  final bugetController = TextEditingController();
-  final durationController = TextEditingController();
-  final startDateController = TextEditingController();
-  final deviceTypeController = TextEditingController();
-  final desiredScreenController = TextEditingController();
-  final callToActionController = TextEditingController();
-  final businessCategoryController = TextEditingController();
+  late final TextEditingController adTitleController;
+  late final TextEditingController adDescriptionController;
+  late final TextEditingController targetUrlController;
+  late final TextEditingController bugetController;
+  late final TextEditingController durationController;
+  late final TextEditingController startDateController;
+  late final TextEditingController deviceTypeController;
+  late final TextEditingController desiredScreenController;
+  late final TextEditingController callToActionController;
+  late final TextEditingController businessCategoryController;
+
   //? optional
   final lgaController = TextEditingController();
   final regionController = TextEditingController();
@@ -65,6 +67,47 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
   @override
   void initState() {
     super.initState();
+
+    adTitleController = TextEditingController();
+    adDescriptionController = TextEditingController();
+    targetUrlController = TextEditingController();
+    bugetController = TextEditingController();
+    durationController = TextEditingController();
+    startDateController = TextEditingController();
+    deviceTypeController = TextEditingController();
+    desiredScreenController = TextEditingController();
+    callToActionController = TextEditingController();
+    businessCategoryController = TextEditingController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      log('modify title state : ${ref.watch(modifyTitleStateProvider)}');
+      log('modify desription state : ${ref.watch(modifyDescriptionStateProvider)}');
+      log('modify target state : ${ref.watch(modifyTargetStateProvider)}');
+      log('modify budget state : ${ref.watch(modifyBudgetStateProvider)}');
+      log('modify duration state : ${ref.watch(modifyDurationStateProvider)}');
+      log('modify start state : ${ref.watch(modifyStartDateStateProvider)}');
+      log('modify deviceType state : ${ref.watch(modifyDeviceStateProvider)}');
+      log('modify desiredScreen state : ${ref.watch(modifydesiredScreenStateProvider)}');
+      log('modify call to action state : ${ref.watch(modifyCallToActionStateProvider)}');
+      log('modify businessCategory state : ${ref.watch(modifyBusinessCategoryStateProvider)}');
+
+      adTitleController.text = ref.watch(modifyTitleStateProvider) ?? '';
+      adDescriptionController.text =
+          ref.watch(modifyDescriptionStateProvider) ?? '';
+      targetUrlController.text = ref.watch(modifyTargetStateProvider) ?? '';
+      bugetController.text = ref.watch(modifyBudgetStateProvider) ?? '';
+      durationController.text = ref.watch(modifyDurationStateProvider) ?? '';
+      startDateController.text = ref.watch(modifyStartDateStateProvider) ?? '';
+      deviceTypeController.text = ref.watch(modifyDeviceStateProvider) ?? '';
+      desiredScreenController.text =
+          ref.watch(modifydesiredScreenStateProvider) ?? '';
+      callToActionController.text = ref.watch(modifyCallToActionStateProvider);
+      businessCategoryController.text =
+          ref.watch(modifyBusinessCategoryStateProvider);
+
+      if (mounted) setState(() {});
+    });
+
     startDateController.addListener(() {
       setState(() {});
     });
@@ -208,7 +251,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
               Expanded(
                 child: TextfieldWithInlineLabel(
                   controller: durationController,
-                  hintText: 'e.g 10 Days',
+                  hintText: 'e.g 20 Days',
                   label: 'Duration (Days)',
                   keyboardType: TextInputType.number,
                   maxLines: 1,
@@ -344,6 +387,15 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                 position: RelativeRect.fromLTRB(30, 450.h, 0, 760.w),
                 color: AppColors.white,
                 items: [
+                  'Agriculture',
+                  'Art and Entertainment',
+                  'Automative, Aircraft & boat',
+                  'Beauty,Cosmetics & personal care',
+                  'Commercial & Industrial'
+                      'Education',
+                  'Finance',
+                  'Food & Beverage',
+                  'Hotel & Lodging',
                   'Legal',
                   'Local Service',
                   'Media/News Company',
@@ -635,13 +687,13 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                       final hasUploadedImage = await ref
                           .read(receiptFileUploadControllerProvider.notifier)
                           .uploadFile(
-                            file: ref.watch(imagePickedStateProvider),
-                          );
+                              file: ref.watch(imagePickedStateProvider),
+                              path: 'adverts');
                       if (hasUploadedImage) {
                         final data =
                             ref.read(receiptFileUploadControllerProvider).data;
                         final trimmedData =
-                            data?.substring(data.indexOf('/dealer'));
+                            data?.substring(data.indexOf('/adverts'));
                         log('trimmed Data: $trimmedData');
 
                         //! create  image adverts
@@ -661,7 +713,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                 status: "drafts",
                                 adSize: ref.watch(adSizeStateProvider),
                                 mediaUrl:
-                                    'https://api-dev.wave5wireless.ng/content$trimmedData}',
+                                    'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
                                 targetUrl: targetUrlController.text.isEmpty
                                     ? null
                                     : targetUrlController.text,
@@ -759,14 +811,14 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                               .read(
                                   receiptFileUploadControllerProvider.notifier)
                               .uploadFile(
-                                file: ref.watch(imagePickedStateProvider),
-                              );
+                                  file: ref.watch(imagePickedStateProvider),
+                                  path: 'adverts');
                           if (hasUploadedImage) {
                             final data = ref
                                 .read(receiptFileUploadControllerProvider)
                                 .data;
                             final trimmedData =
-                                data?.substring(data.indexOf('/dealer'));
+                                data?.substring(data.indexOf('/adverts'));
                             log('trimmed Data: $trimmedData');
 
                             //! create  image adverts
@@ -781,7 +833,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                     status: "pending",
                                     adSize: ref.watch(adSizeStateProvider),
                                     mediaUrl:
-                                        'https://api-dev.wave5wireless.ng/content$trimmedData}',
+                                        'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
                                     targetUrl: targetUrlController.text,
                                     budget: int.parse(bugetController.text),
                                     duration:

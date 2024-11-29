@@ -88,10 +88,9 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
         pdfFile.writeAsBytesSync(pdfBtyes);
         String temporaryUrl = await _generateTemporaryUrl(pdfFile.path);
         log('pdf path: $pdfPath');
-        final isPdfUploaded =
-            await ref.read(fileUploadControllerProvider.notifier).uploadFile(
-                  file: File(pdfPath),
-                );
+        final isPdfUploaded = await ref
+            .read(fileUploadControllerProvider.notifier)
+            .uploadFile(file: File(pdfPath), path: 'dealer');
         if (isPdfUploaded) {
           final response = ref.read(fileUploadControllerProvider).data;
           log('--pdf invoice upload---$response');

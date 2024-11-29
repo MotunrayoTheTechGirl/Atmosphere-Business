@@ -407,7 +407,7 @@ Future<void> customAlertDialog({
                           final hasUploadedFile = await ref
                               .read(
                                   receiptFileUploadControllerProvider.notifier)
-                              .uploadFile(file: file);
+                              .uploadFile(file: file, path: 'dealer');
 
                           if (hasUploadedFile) {
                             log('file upload successful');

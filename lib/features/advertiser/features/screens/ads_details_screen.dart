@@ -83,7 +83,7 @@ class _AdsDetailsScreenState extends State<AdsDetailsScreen>
             child: TabBarView(
               controller: _tabController,
               children: const [
-                OverviewTabView(),
+                OverviewTabview(),
                 PreviewTabView(),
                 ReportTabView(),
               ],
