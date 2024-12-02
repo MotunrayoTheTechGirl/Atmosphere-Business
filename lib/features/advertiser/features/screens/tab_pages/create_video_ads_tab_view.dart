@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/ads_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/draft_screen.dart';
+import 'package:dealer_portal_mobile/features/advertiser/features/screens/tab_pages/overview_tabview.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +23,13 @@ import '../../../../../core/utils/app_icons.dart';
 import '../../../../../core/utils/themes/app_themes.dart';
 import '../../../../subscriptions/data/controller/file_upload_controller.dart';
 import '../../../data/controller/create_advert_controller.dart';
+import '../../../data/controller/update_ads_controller.dart';
 import '../../../data/repository/get_adverts_repository.dart';
 import '../../../data/repository/region_repository.dart';
 import '../../widgets/size_guide_text_button.dart';
 import '../../widgets/textfield_with_inline_label.dart';
 import '../../widgets/upload_box_text.dart';
+import '../advertiser_overview_screen.dart';
 import '../create_ads_screen.dart';
 
 final videoAdSizeStateProvider = StateProvider<String?>((ref) => null);
@@ -46,22 +49,70 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
   FilePickerResult? result;
   bool isFormValid = false;
 
-  final adTitleController = TextEditingController();
-  final adDescriptionController = TextEditingController();
-  final targetUrlController = TextEditingController();
-  final bugetController = TextEditingController();
-  final durationController = TextEditingController();
-  final startDateController = TextEditingController();
-  final deviceTypeController = TextEditingController();
-  final desiredScreenController = TextEditingController();
-  final callToActionController = TextEditingController();
-  final businessCategoryController = TextEditingController();
+  late final TextEditingController adTitleController;
+  late final TextEditingController adDescriptionController;
+  late final TextEditingController targetUrlController;
+  late final TextEditingController bugetController;
+  late final TextEditingController durationController;
+  late final TextEditingController startDateController;
+  late final TextEditingController deviceTypeController;
+  late final TextEditingController desiredScreenController;
+  late final TextEditingController callToActionController;
+  late final TextEditingController businessCategoryController;
   //? optional
   final regionController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    adTitleController = TextEditingController();
+    adDescriptionController = TextEditingController();
+    targetUrlController = TextEditingController();
+    bugetController = TextEditingController();
+    durationController = TextEditingController();
+    startDateController = TextEditingController();
+    deviceTypeController = TextEditingController();
+    desiredScreenController = TextEditingController();
+    callToActionController = TextEditingController();
+    businessCategoryController = TextEditingController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      adTitleController.text = ref.watch(typeStateProvider) == 'video'
+          ? ref.watch(modifyTitleStateProvider)
+          : '';
+      adDescriptionController.text = ref.watch(typeStateProvider) == 'video'
+          ? ref.watch(modifyDescriptionStateProvider)
+          : '';
+      targetUrlController.text = ref.watch(typeStateProvider) == 'video'
+          ? ref.watch(modifyTargetStateProvider)
+          : '';
+      bugetController.text = ref.watch(typeStateProvider) == 'video'
+          ? ref.watch(modifyBudgetStateProvider)
+          : '';
+      durationController.text = ref.watch(typeStateProvider) == 'video'
+          ? ref.watch(modifyDurationStateProvider)
+          : '';
+      startDateController.text = ref.watch(typeStateProvider) == 'video'
+          ? ref.watch(modifyStartDateStateProvider).split(' ')[0]
+          : '';
+      deviceTypeController.text = ref.watch(typeStateProvider) == 'video'
+          ? ref.watch(modifyDeviceStateProvider)
+          : '';
+      desiredScreenController.text = ref.watch(typeStateProvider) == 'video'
+          ? ref.watch(modifydesiredScreenStateProvider)
+          : '';
+      callToActionController.text = ref.watch(typeStateProvider) == 'video'
+          ? ref.watch(modifyCallToActionStateProvider)
+          : '';
+      businessCategoryController.text = ref.watch(typeStateProvider) == 'video'
+          ? ref.watch(modifyBusinessCategoryStateProvider)
+          : '';
+
+      log('media state: ${ref.watch(modifyDisplayContentStateProvider)}');
+
+      if (mounted) setState(() {});
+    });
+
     startDateController.addListener(() {
       setState(() {});
     });
@@ -495,6 +546,9 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
 
                         log('final result = $result');
                       });
+                      ref
+                          .read(modifyDisplayContentStateProvider.notifier)
+                          .state = result?.files.first.name ?? '';
                       log('Selected video: ${file.name}');
                     }
                     // try {
@@ -531,12 +585,23 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                 child: Container(
                   padding: const EdgeInsets.all(36),
                   child: Center(
-                    child: result != null
-                        ? Text(' ${(result?.files.first.name)}')
-                        : const UploadBoxText(
-                            isVideo: true,
-                          ),
-                  ),
+                      child: ref.watch(isModifyStateProvider) == true &&
+                              ref.watch(typeStateProvider) == 'video'
+                          ? Text(ref
+                              .watch(modifyDisplayContentStateProvider)
+                              .substring(ref
+                                      .watch(modifyDisplayContentStateProvider)
+                                      .lastIndexOf('/') +
+                                  1))
+                          : result != null
+                              ? Text(' ${result?.files.first.name}')
+                              : const UploadBoxText()
+                      // result != null
+                      //     ? Text(' ${(result?.files.first.name)}')
+                      //     : const UploadBoxText(
+                      //         isVideo: true,
+                      //       ),
+                      ),
                 ),
               )),
           21.hi,
@@ -754,96 +819,267 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
               60.wi,
               Expanded(
                 child: AppElevatedButton(
-                  label: 'Submit',
-                  isActive: valiadteForm(),
-                  isLoading: isDraftClicked == false
-                      ? ref.watch(receiptFileUploadControllerProvider).status ==
-                              ResponseStatus.loading ||
-                          ref.watch(createAdvertControllerProvider).status ==
-                              ResponseStatus.loading
-                      : false,
-                  onTap: valiadteForm()
-                      ? () async {
-                          setState(() {
-                            isDraftClicked = false;
-                          });
-                          //! upload video endpoint
-                          final hasUploadedVideo = await ref
-                              .read(
-                                  receiptFileUploadControllerProvider.notifier)
-                              .uploadFile(
-                                  file: ref.watch(videoPickedStateProvider),
-                                  path: 'adverts');
-                          if (hasUploadedVideo) {
-                            final data = ref
-                                .read(receiptFileUploadControllerProvider)
-                                .data;
-                            final trimmedData =
-                                data?.substring(data.indexOf('/adverts'));
-                            log('trimmed Data: $trimmedData');
-                            //! create  video adverts
-                            final hasCreatedVideoAds = await ref
-                                .read(createAdvertControllerProvider.notifier)
-                                .createAds(
-                              advertiserId: int.parse(
-                                  ref.watch(advertiserIdStateProvider)),
-                              title: adTitleController.text,
-                              description: adDescriptionController.text,
-                              adType: 'video',
-                              status: "pending",
-                              adSize: ref.watch(videoAdSizeStateProvider),
-                              mediaUrl:
-                                  // 'https://api-dev.wave5wireless.ng/content$trimmedData',
-                                  'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
-                              targetUrl: targetUrlController.text,
-                              budget: int.parse(bugetController.text),
-                              duration: int.parse(durationController.text),
-                              startDate: startDateController.text,
-                              businessCategory: businessCategoryController.text,
-                              deviceType: deviceTypeController.text,
-                              callToActionText: callToActionController.text,
-                              desiredScreen: desiredScreenController.text,
-                              regionIds: [
-                                ref.watch(videoAdRegionIdStateProvider)
-                              ],
-                            );
-                            if (hasCreatedVideoAds) {
-                              CustomSnackBar.showSnackBar(
+                    label: 'Submit',
+                    isActive: ref.watch(isModifyStateProvider) == true &&
+                            ref.watch(typeStateProvider) == 'video'
+                        ? true
+                        : valiadteForm(),
+                    isLoading: isDraftClicked == false
+                        ? ref.watch(isModifyStateProvider) == true
+                            ? ref
+                                        .watch(
+                                            receiptFileUploadControllerProvider)
+                                        .status ==
+                                    ResponseStatus.loading ||
+                                ref.watch(updateAdsControllerProvider).status ==
+                                    ResponseStatus.loading
+                            : ref
+                                        .watch(
+                                            receiptFileUploadControllerProvider)
+                                        .status ==
+                                    ResponseStatus.loading ||
+                                ref
+                                        .watch(createAdvertControllerProvider)
+                                        .status ==
+                                    ResponseStatus.loading
+                        : false,
+                    // isDraftClicked == false
+                    //     ? ref.watch(receiptFileUploadControllerProvider).status ==
+                    //             ResponseStatus.loading ||
+                    //         ref.watch(createAdvertControllerProvider).status ==
+                    //             ResponseStatus.loading
+                    //     : false,
+                    onTap: ref.watch(isModifyStateProvider) == false
+                        ? valiadteForm()
+                            ? () async {
+                                setState(() {
+                                  isDraftClicked = false;
+                                });
+                                //! upload video endpoint
+                                final hasUploadedVideo = await ref
+                                    .read(receiptFileUploadControllerProvider
+                                        .notifier)
+                                    .uploadFile(
+                                        file:
+                                            ref.watch(videoPickedStateProvider),
+                                        path: 'adverts');
+                                if (hasUploadedVideo) {
+                                  final data = ref
+                                      .read(receiptFileUploadControllerProvider)
+                                      .data;
+                                  final trimmedData =
+                                      data?.substring(data.indexOf('/adverts'));
+                                  log('trimmed Data: $trimmedData');
+                                  //! create  video adverts
+                                  final hasCreatedVideoAds = await ref
+                                      .read(createAdvertControllerProvider
+                                          .notifier)
+                                      .createAds(
+                                    advertiserId: int.parse(
+                                        ref.watch(advertiserIdStateProvider)),
+                                    title: adTitleController.text,
+                                    description: adDescriptionController.text,
+                                    adType: 'video',
+                                    status: "pending",
+                                    adSize: ref.watch(videoAdSizeStateProvider),
+                                    mediaUrl:
+                                        // 'https://api-dev.wave5wireless.ng/content$trimmedData',
+                                        'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                    targetUrl: targetUrlController.text,
+                                    budget: int.parse(bugetController.text),
+                                    duration:
+                                        int.parse(durationController.text),
+                                    startDate: startDateController.text,
+                                    businessCategory:
+                                        businessCategoryController.text,
+                                    deviceType: deviceTypeController.text,
+                                    callToActionText:
+                                        callToActionController.text,
+                                    desiredScreen: desiredScreenController.text,
+                                    regionIds: [
+                                      ref.watch(videoAdRegionIdStateProvider)
+                                    ],
+                                  );
+                                  if (hasCreatedVideoAds) {
+                                    CustomSnackBar.showSnackBar(
+                                        context: context,
+                                        message:
+                                            'Video Advert saved to draft SuccessFully');
+                                    ref.invalidate(
+                                        getAdvertsByAdvertiserRepositoryFutureProvider(
+                                            ref.watch(
+                                                advertiserIdStateProvider)));
+                                    Navigator.pushReplacement(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return const AdsScreen();
+                                    }));
+                                    adTitleController.clear();
+                                    adDescriptionController.clear();
+                                    targetUrlController.clear();
+                                    bugetController.clear();
+                                    startDateController.clear();
+                                    durationController.clear();
+                                    deviceTypeController.clear();
+                                    desiredScreenController.clear();
+                                    callToActionController.clear();
+                                    businessCategoryController.clear();
+                                    result = null;
+                                  }
+                                } else {
+                                  CustomSnackBar.showSnackBar(
+                                    context: context,
+                                    isError: true,
+                                    message:
+                                        'Oops! Video size must be between 1 KB and 5 MB '
+                                        '',
+                                  );
+                                  log('Error during upload process');
+                                }
+                              }
+                            : () {}
+                        : () async {
+                            log('User wants to update video ads');
+                            //!check if user wants to upload new video
+                            if (result == null) {
+                              log('--User is not updating the advert video');
+                              final hasUpdatedAdvert = await ref
+                                  .read(updateAdsControllerProvider.notifier)
+                                  .updateAdvert(
+                                    advertId: ref.watch(advertIdStateProvider),
+                                    advertiserId: int.parse(
+                                        ref.watch(advertiserIdStateProvider)),
+                                    adType: 'video',
+                                    title: adTitleController.text,
+                                    description: adDescriptionController.text,
+                                    targetUrl: targetUrlController.text,
+                                    budget: int.parse(bugetController.text),
+                                    startDate: startDateController.text,
+                                    duration:
+                                        int.parse(durationController.text),
+                                    deviceType: deviceTypeController.text,
+                                    adSize: ref.watch(videoAdSizeStateProvider),
+                                    desiredScreen: desiredScreenController.text,
+                                    callToActionText:
+                                        callToActionController.text,
+                                    businessCategory:
+                                        businessCategoryController.text,
+                                    mediaUrl: ref.watch(
+                                        modifyDisplayContentStateProvider),
+                                    regionIds: ref.watch(AdRegionStateProvider),
+                                  );
+                              if (hasUpdatedAdvert) {
+                                log('advert(without updating new video) Updated succesfully!');
+                                CustomSnackBar.showSnackBar(
+                                    context: context,
+                                    message:
+                                        'Video Advert updated SuccessFully');
+                                ref.invalidate(
+                                    getAdvertsByAdvertiserRepositoryFutureProvider(
+                                        ref.watch(advertiserIdStateProvider)));
+
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return const AdsScreen();
+                                }));
+                              } else {
+                                log('advert(without updating new video) Not updated succesfully!');
+                                CustomSnackBar.showSnackBar(
                                   context: context,
+                                  isError: true,
+                                  message: ref
+                                          .read(updateAdsControllerProvider
+                                              .notifier)
+                                          .state
+                                          .message ??
+                                      '',
+                                );
+                              }
+                            } else {
+                              //! user wants to update the existing video advert
+                              log('--user is  updating the advert video');
+                              //! upload a new video to the  endpoint
+                              final hasUploadedNewImage = await ref
+                                  .read(receiptFileUploadControllerProvider
+                                      .notifier)
+                                  .uploadFile(
+                                      file: ref.watch(videoPickedStateProvider),
+                                      path: 'adverts');
+                              if (hasUploadedNewImage) {
+                                final data = ref
+                                    .read(receiptFileUploadControllerProvider)
+                                    .data;
+                                final trimmedData =
+                                    data?.substring(data.indexOf('/adverts'));
+                                log('trimmed Data for uploading new video: $trimmedData');
+                                //! update advert next
+                                final hasUpdatedAdvertWithNewImage = await ref
+                                    .read(updateAdsControllerProvider.notifier)
+                                    .updateAdvert(
+                                      advertId:
+                                          ref.watch(advertIdStateProvider),
+                                      advertiserId: int.parse(
+                                          ref.watch(advertiserIdStateProvider)),
+                                      adType: 'video',
+                                      title: adTitleController.text,
+                                      description: adDescriptionController.text,
+                                      targetUrl: targetUrlController.text,
+                                      budget: int.parse(bugetController.text),
+                                      startDate: startDateController.text,
+                                      duration:
+                                          int.parse(durationController.text),
+                                      deviceType: deviceTypeController.text,
+                                      adSize:
+                                          ref.watch(videoAdSizeStateProvider),
+                                      desiredScreen:
+                                          desiredScreenController.text,
+                                      callToActionText:
+                                          callToActionController.text,
+                                      businessCategory:
+                                          businessCategoryController.text,
+                                      mediaUrl:
+                                          'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                      regionIds:
+                                          ref.watch(AdRegionStateProvider),
+                                    );
+                                if (hasUpdatedAdvertWithNewImage) {
+                                  log('advert(with updating new video) Updated succesfully!');
+                                  CustomSnackBar.showSnackBar(
+                                      context: context,
+                                      message:
+                                          'Video Advert Updated SuccessFully');
+                                  ref.invalidate(
+                                      getAdvertsByAdvertiserRepositoryFutureProvider(
+                                          ref.watch(
+                                              advertiserIdStateProvider)));
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return const AdsScreen();
+                                  }));
+                                } else {
+                                  log('advert(with updating new video)Not  Updated succesfully!');
+                                  CustomSnackBar.showSnackBar(
+                                    context: context,
+                                    isError: true,
+                                    message: ref
+                                            .read(updateAdsControllerProvider
+                                                .notifier)
+                                            .state
+                                            .message ??
+                                        '',
+                                  );
+                                }
+                              } else {
+                                CustomSnackBar.showSnackBar(
+                                  context: context,
+                                  isError: true,
                                   message:
-                                      'Video Advert saved to draft SuccessFully');
-                              ref.invalidate(
-                                  getAdvertsByAdvertiserRepositoryFutureProvider(
-                                      ref.watch(advertiserIdStateProvider)));
-                              Navigator.pushReplacement(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return const AdsScreen();
-                              }));
-                              adTitleController.clear();
-                              adDescriptionController.clear();
-                              targetUrlController.clear();
-                              bugetController.clear();
-                              startDateController.clear();
-                              durationController.clear();
-                              deviceTypeController.clear();
-                              desiredScreenController.clear();
-                              callToActionController.clear();
-                              businessCategoryController.clear();
-                              result = null;
+                                      'Oops! Image size must be between 1 KB and 5 MB '
+                                      '',
+                                );
+                                log('Error during upload  new video process(for update advert)');
+                              }
                             }
-                          } else {
-                            CustomSnackBar.showSnackBar(
-                              context: context,
-                              isError: true,
-                              message:
-                                  'Oops! Video size must be between 1 KB and 5 MB '
-                                  '',
-                            );
-                            log('Error during upload process');
-                          }
-                        }
-                      : () {},
-                ),
+                          }),
               ),
             ],
           ),

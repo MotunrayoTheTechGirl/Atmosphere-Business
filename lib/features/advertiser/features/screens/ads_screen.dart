@@ -144,14 +144,36 @@ class AdsScreen extends ConsumerWidget {
                         }(),
                         adsTitile: advert.title ?? '',
                         date: formattedDate,
-                        status:
-                            advert.status == "pending" ? 'InActive' : 'Active',
-                        statusBgColor: advert.status == "pending"
-                            ? AppColors.lightOrange
-                            : AppColors.greenShade150,
-                        statusTextColor: advert.status == "pending"
-                            ? AppColors.goldenYellow
-                            : AppColors.deepGreen,
+                        status: () {
+                          switch (advert.status) {
+                            case "pending":
+                              return 'InActive';
+                            case "active":
+                              return 'Active';
+                            default:
+                              return 'InActive';
+                          }
+                        }(),
+                        statusBgColor: () {
+                          switch (advert.status) {
+                            case "pending":
+                              return AppColors.lightOrange;
+                            case "active":
+                              return AppColors.greenShade50.withOpacity(0.5);
+                            default:
+                              return AppColors.lightOrange;
+                          }
+                        }(),
+                        statusTextColor: () {
+                          switch (advert.status) {
+                            case "pending":
+                              return AppColors.goldenYellow;
+                            case "active":
+                              return AppColors.deepGreen;
+                            default:
+                              return AppColors.goldenYellow;
+                          }
+                        }(),
                         onTap: () {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             ref.read(titleStateProvider.notifier).state =
@@ -189,6 +211,10 @@ class AdsScreen extends ConsumerWidget {
                             ref
                                 .read(businessCategoryStateProvider.notifier)
                                 .state = advert.category ?? '';
+                            ref.read(advertIdStateProvider.notifier).state =
+                                advert.id.toString();
+                            ref.read(AdRegionStateProvider.notifier).state =
+                                advert.regionIds;
                           });
                           log('durationn: ${advert.duration.toString()}');
                           Navigator.push(

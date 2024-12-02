@@ -9,6 +9,7 @@ import 'package:dealer_portal_mobile/core/utils/app_icons.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/ads_screen.dart';
+import 'package:dealer_portal_mobile/features/advertiser/features/screens/tab_pages/overview_tabview.dart';
 import 'package:dealer_portal_mobile/features/onboarding/presentation/screens/welcome_screen.dart';
 import 'package:dealer_portal_mobile/features/wallet/presentation/screens/transaction_history_screen.dart';
 import 'package:flutter/material.dart';
@@ -227,6 +228,54 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                                     8.hi,
                                     SubDrawerTile(
                                       onTap: () async {
+                                        ref
+                                            .read(modifyTitleStateProvider
+                                                .notifier)
+                                            .state = '';
+                                        ref
+                                            .read(modifyDescriptionStateProvider
+                                                .notifier)
+                                            .state = '';
+                                        ref
+                                            .read(modifyDurationStateProvider
+                                                .notifier)
+                                            .state = '';
+                                        ref
+                                            .read(modifyTargetStateProvider
+                                                .notifier)
+                                            .state = '';
+                                        ref
+                                            .read(modifyBudgetStateProvider
+                                                .notifier)
+                                            .state = '';
+                                        ref
+                                            .read(
+                                                modifyCallToActionStateProvider
+                                                    .notifier)
+                                            .state = '';
+                                        ref
+                                            .read(modifyStartDateStateProvider
+                                                .notifier)
+                                            .state = '';
+                                        ref
+                                            .read(modifyDeviceStateProvider
+                                                .notifier)
+                                            .state = '';
+                                        ref
+                                            .read(
+                                                modifydesiredScreenStateProvider
+                                                    .notifier)
+                                            .state = '';
+                                        ref
+                                            .read(
+                                                modifyBusinessCategoryStateProvider
+                                                    .notifier)
+                                            .state = '';
+                                        ref
+                                            .read(
+                                                modifyDisplayContentStateProvider
+                                                    .notifier)
+                                            .state = '';
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                                 builder: (context) {

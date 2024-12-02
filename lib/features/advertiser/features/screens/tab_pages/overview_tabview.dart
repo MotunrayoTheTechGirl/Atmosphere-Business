@@ -28,6 +28,7 @@ final modifydesiredScreenStateProvider = StateProvider((ref) => '');
 final modifyCallToActionStateProvider = StateProvider((ref) => '');
 final modifyBusinessCategoryStateProvider = StateProvider((ref) => '');
 final modifyDisplayContentStateProvider = StateProvider((ref) => '');
+final isModifyStateProvider = StateProvider<bool>((ref) => false);
 
 class OverviewTabview extends ConsumerStatefulWidget {
   const OverviewTabview({Key? key}) : super(key: key);
@@ -54,14 +55,16 @@ class _OverviewTabviewState extends ConsumerState<OverviewTabview> {
           ref.watch(calltoActionStateProvider) ?? '';
       ref.read(modifyStartDateStateProvider.notifier).state =
           ref.watch(startDateStateProvider) ?? '';
-      ref.read(modifyCallToActionStateProvider.notifier).state =
-          ref.watch(calltoActionStateProvider) ?? '';
+      // ref.read(modifyCallToActionStateProvider.notifier).state =
+      //     ref.watch(calltoActionStateProvider) ?? '';
       ref.read(modifyDeviceStateProvider.notifier).state =
           ref.watch(deviceStateProvider) ?? '';
       ref.read(modifydesiredScreenStateProvider.notifier).state =
           ref.watch(screenStateProvider);
       ref.read(modifyBusinessCategoryStateProvider.notifier).state =
           ref.watch(businessCategoryStateProvider);
+      ref.read(modifyDisplayContentStateProvider.notifier).state =
+          ref.watch(contentUrlStateProvider);
 
       log('---Durett state : ${ref.watch(durationStateProvider)}');
       log('budg: ${ref.watch(budgetStateProvider)}');
@@ -116,13 +119,27 @@ class _OverviewTabviewState extends ConsumerState<OverviewTabview> {
                       case "paused":
                         return AppColors.lightOrange;
                       default:
-                        return AppColors.primaryColor;
+                        return AppColors.lightOrange;
                     }
                   }(),
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                 ),
                 child: Text(
-                  ref.watch(statusStateProvider) ?? '',
+                  // ref.watch(statusStateProvider) == null
+                  //     ? 'Pending'
+                  //     : ref.watch(statusStateProvider) ?? '',
+                  () {
+                    switch (ref.watch(statusStateProvider)) {
+                      case "pending":
+                        return 'Pending';
+                      case "active":
+                        return "Active";
+                      case "paused":
+                        return "Paused";
+                      default:
+                        return 'Modify Ad';
+                    }
+                  }(),
                   style: AppTheme.lightTextTheme.displaySmall?.copyWith(
                       color: () {
                         switch (ref.watch(statusStateProvider)) {
@@ -135,7 +152,7 @@ class _OverviewTabviewState extends ConsumerState<OverviewTabview> {
                           case "paused":
                             return AppColors.goldenYellow;
                           default:
-                            return AppColors.babyShade100;
+                            return AppColors.goldenYellow;
                         }
                       }(),
                       fontWeight: FontWeight.w400,
@@ -180,12 +197,24 @@ class _OverviewTabviewState extends ConsumerState<OverviewTabview> {
               AppElevatedButton(
                 onTap: ref.watch(statusStateProvider) == 'pending'
                     ? () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) {
-                            return const CreateAdsScreen();
-                          }),
-                        );
+                        ref.read(isModifyStateProvider.notifier).state = true;
+                        if (ref.watch(typeStateProvider) == 'image') {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return const CreateAdsScreen();
+                            }),
+                          );
+                        } else if (ref.watch(typeStateProvider) == 'video') {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return const CreateAdsScreen(
+                                initialTabIndex: 1,
+                              );
+                            }),
+                          );
+                        }
                       }
                     : () {},
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
@@ -193,8 +222,10 @@ class _OverviewTabviewState extends ConsumerState<OverviewTabview> {
                   switch (ref.watch(statusStateProvider)) {
                     case "pending":
                       return AppColors.lightPurple;
-                    default:
+                    case 'active':
                       return AppColors.w5Color;
+                    default:
+                      return AppColors.lightPurple;
                   }
                 }(),
                 label: () {
@@ -203,16 +234,20 @@ class _OverviewTabviewState extends ConsumerState<OverviewTabview> {
                       return 'Modify Ad';
                     case "completed":
                       return "Re-Run";
+                    case "active":
+                      return "Pause Ad";
                     default:
-                      return '';
+                      return 'Modify Ad';
                   }
                 }(),
                 isFilled: () {
                   switch (ref.watch(statusStateProvider)) {
                     case "pending":
                       return true;
-                    default:
+                    case "active":
                       return false;
+                    default:
+                      return true;
                   }
                 }(),
                 borderWidth: 0.2,
@@ -223,8 +258,10 @@ class _OverviewTabviewState extends ConsumerState<OverviewTabview> {
                     switch (ref.watch(statusStateProvider)) {
                       case "pending":
                         return AppColors.w5Color;
-                      default:
+                      case "active":
                         return AppColors.white;
+                      default:
+                        return AppColors.w5Color;
                     }
                   }(),
                   fontWeight: FontWeight.w600,

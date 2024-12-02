@@ -46,6 +46,8 @@ final sizeStateProvider = StateProvider<String>((ref) => '');
 final screenStateProvider = StateProvider((ref) => '');
 // final adPlacementStateProvider = StateProvider<String>((ref) => '');
 final businessCategoryStateProvider = StateProvider<String>((ref) => '');
+final advertIdStateProvider = StateProvider<String>((ref) => '');
+final AdRegionStateProvider = StateProvider<List>((ref) => []);
 
 class AdvertiserOverviewScreen extends ConsumerStatefulWidget {
   const AdvertiserOverviewScreen({Key? key}) : super(key: key);
@@ -318,26 +320,35 @@ class _AdvertiserOverviewScreenState
                                   advert.startDate ?? DateTime.now()),
                               endDate:
                                   formatDate(advert.endDate ?? DateTime.now()),
-                              status: advert.status == "pending"
-                                  ? 'InActive'
-                                  : 'Active',
+                              status: () {
+                                switch (advert.status) {
+                                  case "pending":
+                                    return 'InActive';
+                                  case "active":
+                                    return 'Active';
+                                  default:
+                                    return 'InActive';
+                                }
+                              }(),
                               statusTextColor: () {
                                 switch (advert.status) {
                                   case "pending":
                                     return AppColors.goldenYellow;
-
-                                  default:
+                                  case "active":
                                     return AppColors.deepGreen;
+                                  default:
+                                    return AppColors.goldenYellow;
                                 }
                               }(),
                               statusBgColor: () {
                                 switch (advert.status) {
                                   case "pending":
                                     return AppColors.lightOrange;
-
-                                  default:
+                                  case "active":
                                     return AppColors.greenShade50
                                         .withOpacity(0.5);
+                                  default:
+                                    return AppColors.lightOrange;
                                 }
                               }(),
                               onTap: () {
@@ -386,6 +397,12 @@ class _AdvertiserOverviewScreenState
                                       .read(businessCategoryStateProvider
                                           .notifier)
                                       .state = advert.category ?? '';
+                                  ref
+                                      .read(advertIdStateProvider.notifier)
+                                      .state = advert.id.toString();
+                                  ref
+                                      .read(AdRegionStateProvider.notifier)
+                                      .state = advert.regionIds;
                                 });
                                 log('---Dure: ${advert.duration}');
                                 log('budge: ${advert.budget.runtimeType}');

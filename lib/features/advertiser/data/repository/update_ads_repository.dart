@@ -52,7 +52,7 @@ class UpdateAdsRepository {
     log('end date duration: $endDateDuration');
     try {
       final response =
-          await api.post('${ApiEndpoints.updateAds}$advertId', body: {
+          await api.put('${ApiEndpoints.updateAds}$advertId', body: {
         "advertiserId": advertiserId,
         "title": title,
         "description": description,

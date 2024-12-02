@@ -15,7 +15,9 @@ import '../../../onboarding/data/controller/user_details_controller.dart';
 final advertiserIdStateProvider = StateProvider<String>((ref) => '');
 
 class CreateAdsScreen extends ConsumerStatefulWidget {
-  const CreateAdsScreen({Key? key}) : super(key: key);
+  const CreateAdsScreen({this.initialTabIndex, Key? key}) : super(key: key);
+
+  final int? initialTabIndex;
 
   @override
   _CreateAdsScreenState createState() => _CreateAdsScreenState();
@@ -29,6 +31,7 @@ class _CreateAdsScreenState extends ConsumerState<CreateAdsScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _tabController.animateTo(widget.initialTabIndex ?? 0);
   }
 
   @override

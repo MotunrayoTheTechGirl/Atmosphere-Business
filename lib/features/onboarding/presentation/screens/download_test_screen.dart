@@ -1,37 +1,36 @@
+import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_media_downloader/flutter_media_downloader.dart';
 
-class DownloadPdf extends StatefulWidget {
-  const DownloadPdf({super.key});
+import '../../../../core/common_widgets/app_video_player.dart';
 
-  @override
-  State<DownloadPdf> createState() => _DownloadPdfState();
-}
-
-class _DownloadPdfState extends State<DownloadPdf> {
-  final _flutterMediaDownloaderPlugin = MediaDownload();
-
-  @override
-  void initState() {
-    super.initState();
-  }
+class DownloadTestScreen extends StatelessWidget {
+  const DownloadTestScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: ElevatedButton(
-              onPressed: () async {
-                _flutterMediaDownloaderPlugin.downloadMedia(
-                    context,
-                    // 'https://www.kasandbox.org/programming-images/avatars/spunky-sam-green.png'
-                    'https://pdfobject.com/pdf/sample.pdf');
-              },
-              child: const Text('Media Download')),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Video Player')),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Video Player '),
+            20.hi,
+            const AppVideoPlayer(
+              videoUrl:
+                  'https://api-dev.wave5wireless.ng/content/getImage/adverts/b6b13ae8-f17e-428e-b2e0-892e5b9a3513.mp4',
+              // 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
+            ),
+            // TextButton(
+            //   child: const Text('Test Video player'),
+            //   onPressed: () {
+            //     Navigator.push(context, MaterialPageRoute(builder: (context) {
+            //       return const VideoApp();
+            //     }));
+            //   },
+            // )
+          ],
         ),
       ),
     );

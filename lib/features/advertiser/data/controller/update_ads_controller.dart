@@ -7,6 +7,12 @@ import '../../../../core/response_state.dart';
 import '../models/update_ads_res_model.dart';
 import '../repository/update_ads_repository.dart';
 
+final updateAdsControllerProvider = StateNotifierProvider<UpdateAdsController,
+    ResponseState<UpdateAdsResModel>>((ref) {
+  final updateAdsProvider = ref.read(updateAdsRepositoryProvider);
+  return UpdateAdsController(updateAdsProvider);
+});
+
 class UpdateAdsController
     extends StateNotifier<ResponseState<UpdateAdsResModel>> {
   UpdateAdsController(this.updateAdsRepository)
@@ -15,7 +21,7 @@ class UpdateAdsController
         );
   final UpdateAdsRepository updateAdsRepository;
 
-  Future<bool> createAds({
+  Future<bool> updateAdvert({
     required String advertId,
     num? advertiserId,
     String? title,
@@ -45,7 +51,7 @@ class UpdateAdsController
           title: title,
           description: description,
           adType: adType,
-          status: status,
+          status: 'pending',
           adSize: adSize,
           mediaUrl: mediaUrl,
           targetUrl: targetUrl,

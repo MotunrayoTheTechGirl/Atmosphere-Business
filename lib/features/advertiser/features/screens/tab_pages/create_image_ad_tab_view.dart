@@ -7,6 +7,7 @@ import 'package:dealer_portal_mobile/core/common_widgets/app_elevated_button.dar
 import 'package:dealer_portal_mobile/core/enums.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/ads_screen.dart';
+import 'package:dealer_portal_mobile/features/advertiser/features/screens/advertiser_overview_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/create_ads_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/draft_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/tab_pages/overview_tabview.dart';
@@ -26,6 +27,7 @@ import '../../../../../core/utils/themes/app_themes.dart';
 import '../../../../onboarding/data/controller/user_details_controller.dart';
 import '../../../../subscriptions/data/controller/file_upload_controller.dart';
 import '../../../data/controller/create_advert_controller.dart';
+import '../../../data/controller/update_ads_controller.dart';
 import '../../../data/repository/get_adverts_repository.dart';
 import '../../../data/repository/region_repository.dart';
 import '../../widgets/size_guide_text_button.dart';
@@ -80,30 +82,38 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
     businessCategoryController = TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      log('modify title state : ${ref.watch(modifyTitleStateProvider)}');
-      log('modify desription state : ${ref.watch(modifyDescriptionStateProvider)}');
-      log('modify target state : ${ref.watch(modifyTargetStateProvider)}');
-      log('modify budget state : ${ref.watch(modifyBudgetStateProvider)}');
-      log('modify duration state : ${ref.watch(modifyDurationStateProvider)}');
-      log('modify start state : ${ref.watch(modifyStartDateStateProvider)}');
-      log('modify deviceType state : ${ref.watch(modifyDeviceStateProvider)}');
-      log('modify desiredScreen state : ${ref.watch(modifydesiredScreenStateProvider)}');
-      log('modify call to action state : ${ref.watch(modifyCallToActionStateProvider)}');
-      log('modify businessCategory state : ${ref.watch(modifyBusinessCategoryStateProvider)}');
+      adTitleController.text = ref.watch(typeStateProvider) == 'image'
+          ? ref.watch(modifyTitleStateProvider)
+          : '';
+      adDescriptionController.text = ref.watch(typeStateProvider) == 'image'
+          ? ref.watch(modifyDescriptionStateProvider)
+          : '';
+      targetUrlController.text = ref.watch(typeStateProvider) == 'image'
+          ? ref.watch(modifyTargetStateProvider)
+          : '';
+      bugetController.text = ref.watch(typeStateProvider) == 'image'
+          ? ref.watch(modifyBudgetStateProvider)
+          : '';
+      durationController.text = ref.watch(typeStateProvider) == 'image'
+          ? ref.watch(modifyDurationStateProvider)
+          : '';
+      startDateController.text = ref.watch(typeStateProvider) == 'image'
+          ? ref.watch(modifyStartDateStateProvider).split(' ')[0]
+          : '';
+      deviceTypeController.text = ref.watch(typeStateProvider) == 'image'
+          ? ref.watch(modifyDeviceStateProvider)
+          : '';
+      desiredScreenController.text = ref.watch(typeStateProvider) == 'image'
+          ? ref.watch(modifydesiredScreenStateProvider)
+          : '';
+      callToActionController.text = ref.watch(typeStateProvider) == 'image'
+          ? ref.watch(modifyCallToActionStateProvider)
+          : '';
+      businessCategoryController.text = ref.watch(typeStateProvider) == 'image'
+          ? ref.watch(modifyBusinessCategoryStateProvider)
+          : '';
 
-      adTitleController.text = ref.watch(modifyTitleStateProvider) ?? '';
-      adDescriptionController.text =
-          ref.watch(modifyDescriptionStateProvider) ?? '';
-      targetUrlController.text = ref.watch(modifyTargetStateProvider) ?? '';
-      bugetController.text = ref.watch(modifyBudgetStateProvider) ?? '';
-      durationController.text = ref.watch(modifyDurationStateProvider) ?? '';
-      startDateController.text = ref.watch(modifyStartDateStateProvider) ?? '';
-      deviceTypeController.text = ref.watch(modifyDeviceStateProvider) ?? '';
-      desiredScreenController.text =
-          ref.watch(modifydesiredScreenStateProvider) ?? '';
-      callToActionController.text = ref.watch(modifyCallToActionStateProvider);
-      businessCategoryController.text =
-          ref.watch(modifyBusinessCategoryStateProvider);
+      log('media state: ${ref.watch(modifyDisplayContentStateProvider)}');
 
       if (mounted) setState(() {});
     });
@@ -545,6 +555,9 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
 
                         log('final result = $result');
                       });
+                      ref
+                          .read(modifyDisplayContentStateProvider.notifier)
+                          .state = result?.files.first.name ?? '';
                       log('Selected File: ${file.name}');
                     }
                   }
@@ -559,10 +572,21 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                 child: Container(
                   padding: const EdgeInsets.all(36),
                   child: Center(
-                    child: result != null
-                        ? Text(' ${(result?.files.first.name)}')
-                        : const UploadBoxText(),
-                  ),
+                      child: ref.watch(isModifyStateProvider) == true &&
+                              ref.watch(typeStateProvider) == 'image'
+                          ? Text(ref
+                              .watch(modifyDisplayContentStateProvider)
+                              .substring(ref
+                                      .watch(modifyDisplayContentStateProvider)
+                                      .lastIndexOf('/') +
+                                  1))
+                          : result != null
+                              ? Text(' ${result?.files.first.name}')
+                              : const UploadBoxText()
+                      //  result != null
+                      //     ? Text(' ${(result?.files.first.name)}')
+                      //     : const UploadBoxText(),
+                      ),
                 ),
               )),
           21.hi,
@@ -793,109 +817,276 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
               60.wi,
               Expanded(
                 child: AppElevatedButton(
-                  label: 'Submit',
-                  isActive: valiadteForm(),
-                  isLoading: isDraftClicked == false
-                      ? ref.watch(receiptFileUploadControllerProvider).status ==
-                              ResponseStatus.loading ||
-                          ref.watch(createAdvertControllerProvider).status ==
-                              ResponseStatus.loading
-                      : false,
-                  onTap: valiadteForm()
-                      ? () async {
-                          setState(() {
-                            isDraftClicked = false;
-                          });
-                          //! upload image endpoint
-                          final hasUploadedImage = await ref
-                              .read(
-                                  receiptFileUploadControllerProvider.notifier)
-                              .uploadFile(
-                                  file: ref.watch(imagePickedStateProvider),
-                                  path: 'adverts');
-                          if (hasUploadedImage) {
-                            final data = ref
-                                .read(receiptFileUploadControllerProvider)
-                                .data;
-                            final trimmedData =
-                                data?.substring(data.indexOf('/adverts'));
-                            log('trimmed Data: $trimmedData');
+                    label: 'Submit',
+                    isActive: ref.watch(isModifyStateProvider) == true &&
+                            ref.watch(typeStateProvider) == 'image'
+                        ? true
+                        : valiadteForm(),
+                    isLoading: isDraftClicked == false
+                        ? ref.watch(isModifyStateProvider) == true
+                            ? ref
+                                        .watch(
+                                            receiptFileUploadControllerProvider)
+                                        .status ==
+                                    ResponseStatus.loading ||
+                                ref.watch(updateAdsControllerProvider).status ==
+                                    ResponseStatus.loading
+                            : ref
+                                        .watch(
+                                            receiptFileUploadControllerProvider)
+                                        .status ==
+                                    ResponseStatus.loading ||
+                                ref
+                                        .watch(createAdvertControllerProvider)
+                                        .status ==
+                                    ResponseStatus.loading
+                        : false,
+                    onTap: ref.watch(isModifyStateProvider) == false
+                        ? valiadteForm()
+                            ? () async {
+                                setState(() {
+                                  isDraftClicked = false;
+                                });
+                                //! upload image endpoint
+                                final hasUploadedImage = await ref
+                                    .read(receiptFileUploadControllerProvider
+                                        .notifier)
+                                    .uploadFile(
+                                        file:
+                                            ref.watch(imagePickedStateProvider),
+                                        path: 'adverts');
+                                if (hasUploadedImage) {
+                                  final data = ref
+                                      .read(receiptFileUploadControllerProvider)
+                                      .data;
+                                  final trimmedData =
+                                      data?.substring(data.indexOf('/adverts'));
+                                  log('trimmed Data: $trimmedData');
 
-                            //! create  image adverts
-                            final hasCreatedImageAds = await ref
-                                .read(createAdvertControllerProvider.notifier)
-                                .createAds(
+                                  //! create  image adverts
+                                  final hasCreatedImageAds = await ref
+                                      .read(createAdvertControllerProvider
+                                          .notifier)
+                                      .createAds(
+                                          advertiserId: int.parse(ref.watch(
+                                              advertiserIdStateProvider)),
+                                          title: adTitleController.text,
+                                          description:
+                                              adDescriptionController.text,
+                                          adType: 'image',
+                                          status: "pending",
+                                          adSize:
+                                              ref.watch(adSizeStateProvider),
+                                          mediaUrl:
+                                              'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                          targetUrl: targetUrlController.text,
+                                          budget:
+                                              int.parse(bugetController.text),
+                                          duration: int.parse(
+                                              durationController.text),
+                                          startDate: startDateController.text,
+                                          businessCategory:
+                                              businessCategoryController.text,
+                                          deviceType: deviceTypeController.text,
+                                          callToActionText:
+                                              callToActionController.text,
+                                          desiredScreen:
+                                              desiredScreenController.text,
+                                          regionIds: [
+                                        ref.watch(imageAdRegionIdStateProvider),
+                                      ]);
+                                  if (hasCreatedImageAds) {
+                                    CustomSnackBar.showSnackBar(
+                                        context: context,
+                                        message:
+                                            'Image Advert created SuccessFully');
+                                    ref.invalidate(
+                                        getAdvertsByAdvertiserRepositoryFutureProvider(
+                                            ref.watch(
+                                                advertiserIdStateProvider)));
+
+                                    Navigator.pushReplacement(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return const AdsScreen();
+                                    }));
+                                    adTitleController.clear();
+                                    adDescriptionController.clear();
+                                    targetUrlController.clear();
+                                    bugetController.clear();
+                                    startDateController.clear();
+                                    durationController.clear();
+                                    deviceTypeController.clear();
+                                    desiredScreenController.clear();
+                                    callToActionController.clear();
+                                    businessCategoryController.clear();
+                                    result = null;
+                                  } else {
+                                    CustomSnackBar.showSnackBar(
+                                      context: context,
+                                      isError: true,
+                                      message: ref
+                                              .read(
+                                                  createAdvertControllerProvider
+                                                      .notifier)
+                                              .state
+                                              .message ??
+                                          '',
+                                    );
+                                  }
+                                } else {
+                                  CustomSnackBar.showSnackBar(
+                                    context: context,
+                                    isError: true,
+                                    message:
+                                        'Oops! Image size must be between 1 KB and 5 MB '
+                                        '',
+                                  );
+                                  log('Error during upload process');
+                                }
+                              }
+                            : () {}
+                        : () async {
+                            log('User wants to update ads');
+                            //!check if user wants to upload new image
+                            if (result == null) {
+                              log('--User is not updating the advert image');
+                              final hasUpdatedAdvert = await ref
+                                  .read(updateAdsControllerProvider.notifier)
+                                  .updateAdvert(
+                                    advertId: ref.watch(advertIdStateProvider),
                                     advertiserId: int.parse(
                                         ref.watch(advertiserIdStateProvider)),
+                                    adType: 'image',
                                     title: adTitleController.text,
                                     description: adDescriptionController.text,
-                                    adType: 'image',
-                                    status: "pending",
-                                    adSize: ref.watch(adSizeStateProvider),
-                                    mediaUrl:
-                                        'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
                                     targetUrl: targetUrlController.text,
                                     budget: int.parse(bugetController.text),
+                                    startDate: startDateController.text,
                                     duration:
                                         int.parse(durationController.text),
-                                    startDate: startDateController.text,
-                                    businessCategory:
-                                        businessCategoryController.text,
                                     deviceType: deviceTypeController.text,
+                                    adSize: ref.watch(adSizeStateProvider),
+                                    desiredScreen: desiredScreenController.text,
                                     callToActionText:
                                         callToActionController.text,
-                                    desiredScreen: desiredScreenController.text,
-                                    regionIds: [
-                                  ref.watch(imageAdRegionIdStateProvider),
-                                ]);
-                            if (hasCreatedImageAds) {
-                              CustomSnackBar.showSnackBar(
-                                  context: context,
-                                  message: 'Image Advert created SuccessFully');
-                              ref.invalidate(
-                                  getAdvertsByAdvertiserRepositoryFutureProvider(
-                                      ref.watch(advertiserIdStateProvider)));
+                                    businessCategory:
+                                        businessCategoryController.text,
+                                    mediaUrl: ref.watch(
+                                        modifyDisplayContentStateProvider),
+                                    regionIds: ref.watch(AdRegionStateProvider),
+                                  );
+                              if (hasUpdatedAdvert) {
+                                log('advert(without updating new image) Updated succesfully!');
+                                CustomSnackBar.showSnackBar(
+                                    context: context,
+                                    message:
+                                        'Image Advert updated SuccessFully');
+                                ref.invalidate(
+                                    getAdvertsByAdvertiserRepositoryFutureProvider(
+                                        ref.watch(advertiserIdStateProvider)));
 
-                              Navigator.pushReplacement(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return const AdsScreen();
-                              }));
-                              adTitleController.clear();
-                              adDescriptionController.clear();
-                              targetUrlController.clear();
-                              bugetController.clear();
-                              startDateController.clear();
-                              durationController.clear();
-                              deviceTypeController.clear();
-                              desiredScreenController.clear();
-                              callToActionController.clear();
-                              businessCategoryController.clear();
-                              result = null;
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return const AdsScreen();
+                                }));
+                              } else {
+                                log('advert(without updating new image) Not updated succesfully!');
+                                CustomSnackBar.showSnackBar(
+                                  context: context,
+                                  isError: true,
+                                  message: ref
+                                          .read(updateAdsControllerProvider
+                                              .notifier)
+                                          .state
+                                          .message ??
+                                      '',
+                                );
+                              }
                             } else {
-                              CustomSnackBar.showSnackBar(
-                                context: context,
-                                isError: true,
-                                message: ref
-                                        .read(createAdvertControllerProvider
-                                            .notifier)
-                                        .state
-                                        .message ??
-                                    '',
-                              );
+                              //! user wants to update the existing image advert
+                              log('--user is  updating the advert image');
+                              //! upload a new image to the  endpoint
+                              final hasUploadedNewImage = await ref
+                                  .read(receiptFileUploadControllerProvider
+                                      .notifier)
+                                  .uploadFile(
+                                      file: ref.watch(imagePickedStateProvider),
+                                      path: 'adverts');
+                              if (hasUploadedNewImage) {
+                                final data = ref
+                                    .read(receiptFileUploadControllerProvider)
+                                    .data;
+                                final trimmedData =
+                                    data?.substring(data.indexOf('/adverts'));
+                                log('trimmed Data for uploading new image: $trimmedData');
+                                //! update advert next
+                                final hasUpdatedAdvertWithNewImage = await ref
+                                    .read(updateAdsControllerProvider.notifier)
+                                    .updateAdvert(
+                                      advertId:
+                                          ref.watch(advertIdStateProvider),
+                                      advertiserId: int.parse(
+                                          ref.watch(advertiserIdStateProvider)),
+                                      adType: 'image',
+                                      title: adTitleController.text,
+                                      description: adDescriptionController.text,
+                                      targetUrl: targetUrlController.text,
+                                      budget: int.parse(bugetController.text),
+                                      startDate: startDateController.text,
+                                      duration:
+                                          int.parse(durationController.text),
+                                      deviceType: deviceTypeController.text,
+                                      adSize: ref.watch(adSizeStateProvider),
+                                      desiredScreen:
+                                          desiredScreenController.text,
+                                      callToActionText:
+                                          callToActionController.text,
+                                      businessCategory:
+                                          businessCategoryController.text,
+                                      mediaUrl:
+                                          'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                      regionIds:
+                                          ref.watch(AdRegionStateProvider),
+                                    );
+                                if (hasUpdatedAdvertWithNewImage) {
+                                  log('advert(with updating new image) Updated succesfully!');
+                                  CustomSnackBar.showSnackBar(
+                                      context: context,
+                                      message:
+                                          'Image Advert Updated SuccessFully');
+                                  ref.invalidate(
+                                      getAdvertsByAdvertiserRepositoryFutureProvider(
+                                          ref.watch(
+                                              advertiserIdStateProvider)));
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return const AdsScreen();
+                                  }));
+                                } else {
+                                  log('advert(with updating new image)Not  Updated succesfully!');
+                                  CustomSnackBar.showSnackBar(
+                                    context: context,
+                                    isError: true,
+                                    message: ref
+                                            .read(updateAdsControllerProvider
+                                                .notifier)
+                                            .state
+                                            .message ??
+                                        '',
+                                  );
+                                }
+                              } else {
+                                CustomSnackBar.showSnackBar(
+                                  context: context,
+                                  isError: true,
+                                  message:
+                                      'Oops! Image size must be between 1 KB and 5 MB '
+                                      '',
+                                );
+                                log('Error during upload  new image process(for update advert)');
+                              }
                             }
-                          } else {
-                            CustomSnackBar.showSnackBar(
-                              context: context,
-                              isError: true,
-                              message:
-                                  'Oops! Image size must be between 1 KB and 5 MB '
-                                  '',
-                            );
-                            log('Error during upload process');
-                          }
-                        }
-                      : () {},
-                ),
+                          }),
               ),
             ],
           ),
