@@ -4,12 +4,14 @@ import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/create_ads_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/widgets/date_column.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../core/common_widgets/app_elevated_button.dart';
+import '../../../../../core/common_widgets/custom_snackbar.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_icons.dart';
 import '../../../../../core/utils/themes/app_themes.dart';
@@ -318,7 +320,16 @@ class _OverviewTabviewState extends ConsumerState<OverviewTabview> {
                 maxLines: 2,
               ),
               10.wi,
-              SvgPicture.asset(AppIcons.link),
+              InkWell(
+                onTap: () async => await Clipboard.setData(
+                  ClipboardData(text: ref.watch(targetStateProvider) ?? ''),
+                ).then(
+                  (value) => CustomSnackBar.showSnackBar(
+                      context: context,
+                      message: 'Target Url copied to clipboard'),
+                ),
+                child: SvgPicture.asset(AppIcons.link),
+              ),
             ],
           ),
           24.hi,

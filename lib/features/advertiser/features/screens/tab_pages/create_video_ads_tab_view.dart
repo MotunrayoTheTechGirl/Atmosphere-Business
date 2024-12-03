@@ -679,6 +679,13 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                             context: context,
                             message:
                                 'Video Advert saved to draft SuccessFully');
+                        ref.invalidate(
+                            getAdvertsByAdvertiserRepositoryFutureProvider(
+                                ref.watch(advertiserIdStateProvider)));
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const DraftScreen();
+                        }));
                         adTitleController.clear();
                         adDescriptionController.clear();
                         targetUrlController.clear();

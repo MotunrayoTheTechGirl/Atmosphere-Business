@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils/app_colors.dart';
+
 class CustomSnackBar {
   static void showSnackBar({
     required BuildContext context,
@@ -15,7 +17,9 @@ class CustomSnackBar {
             bottom: MediaQuery.of(context).size.height - 190,
             right: 20.0,
             left: 20.0),
-        backgroundColor: isError ? Colors.red : Colors.green,
+        backgroundColor: isError
+            ? AppColors.red.withOpacity(0.5)
+            : AppColors.w5Color.withOpacity(0.3),
         duration: const Duration(seconds: 1),
         content: Text(message),
       ),

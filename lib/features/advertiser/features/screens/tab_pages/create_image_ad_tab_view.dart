@@ -774,6 +774,13 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                               context: context,
                               message:
                                   'Image Advert saved to draft SuccessFully');
+                          ref.invalidate(
+                              getAdvertsByAdvertiserRepositoryFutureProvider(
+                                  ref.watch(advertiserIdStateProvider)));
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) {
+                            return const DraftScreen();
+                          }));
                           adTitleController.clear();
                           adDescriptionController.clear();
                           targetUrlController.clear();

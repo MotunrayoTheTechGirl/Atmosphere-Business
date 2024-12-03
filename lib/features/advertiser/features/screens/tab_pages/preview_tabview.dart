@@ -30,10 +30,9 @@ class _PreviewTabviewState extends ConsumerState<PreviewTabView> {
         ),
       );
     } else if (ref.watch(typeStateProvider) == 'video') {
-      return const AppVideoPlayer(
-        videoUrl:
-            'https://static.videezy.com/system/resources/previews/000/055/284/original/20201011_savings_78.mp4',
-      );
+      return AppVideoPlayer(videoUrl: ref.watch(contentUrlStateProvider)
+          // 'https://static.videezy.com/system/resources/previews/000/055/284/original/20201011_savings_78.mp4',
+          );
     }
     return const SizedBox();
   }
