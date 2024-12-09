@@ -40,9 +40,9 @@ class CreateAdvertController
     List? regionIds,
   }) async {
     state = ResponseState(status: ResponseStatus.loading, message: '');
-    log('start date: $startDate');
-    log('duration: $duration');
-    log('region: $regionIds');
+    log('start date cc: $startDate');
+    log('duration cc: $duration');
+    log('region cc: $regionIds');
     try {
       final response = await createAdvertRepository.createAdvert(
           advertiserId: advertiserId,

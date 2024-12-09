@@ -26,6 +26,8 @@ import '../../../data/controller/create_advert_controller.dart';
 import '../../../data/controller/update_ads_controller.dart';
 import '../../../data/repository/get_adverts_repository.dart';
 import '../../../data/repository/region_repository.dart';
+import '../../../logic/multiple_region_selection_notifier.dart';
+import '../../../logic/selected_region_id_state_notifier.dart';
 import '../../widgets/size_guide_text_button.dart';
 import '../../widgets/textfield_with_inline_label.dart';
 import '../../widgets/upload_box_text.dart';
@@ -163,6 +165,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
   @override
   Widget build(BuildContext context) {
     final regionFutureController = ref.watch(adsRegionRepositoryFutureProvider);
+    final selectedRegion = ref.watch(selectedRegionProvider);
     return SizedBox(
       height: .9.sh,
       child: ListView(
@@ -485,9 +488,28 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                 setState(() {
                   regionController.text = selected['area'];
                 });
+                ref
+                    .read(selectedRegionProvider.notifier)
+                    .toggle(selected['area']);
+                ref
+                    .read(selectedRegionIdProvider.notifier)
+                    .addSelectedIdRegion(selected['id']);
               }
             },
           ),
+          Wrap(
+              spacing: 8,
+              children: selectedRegion
+                  .map((region) => Chip(
+                        label: Text(region),
+                        onDeleted: () {
+                          ref
+                              .read(selectedRegionProvider.notifier)
+                              .toggle(region);
+                          // ref.read(selectedRegionIdProvider.notifier).removeSelectedIdRegion()
+                        },
+                      ))
+                  .toList()),
           12.hi,
           RichText(
             text: TextSpan(
@@ -631,49 +653,50 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                       final hasCreatedVideoAds = await ref
                           .read(createAdvertControllerProvider.notifier)
                           .createAds(
-                            advertiserId:
-                                int.parse(ref.watch(advertiserIdStateProvider)),
-                            title: adTitleController.text.isEmpty
-                                ? null
-                                : adTitleController.text,
-                            description: adDescriptionController.text.isEmpty
-                                ? null
-                                : adDescriptionController.text,
-                            adType: 'video',
-                            status: "drafts",
-                            adSize: ref.watch(videoAdSizeStateProvider),
-                            mediaUrl: '',
-                            targetUrl: targetUrlController.text.isEmpty
-                                ? null
-                                : targetUrlController.text,
-                            budget: bugetController.text.isEmpty
-                                ? null
-                                : int.parse(bugetController.text),
-                            duration: durationController.text.isEmpty
-                                ? null
-                                : int.parse(durationController.text),
-                            startDate: startDateController.text.isEmpty
-                                ? null
-                                : startDateController.text,
-                            businessCategory:
-                                businessCategoryController.text.isEmpty
-                                    ? null
-                                    : businessCategoryController.text,
-                            deviceType: deviceTypeController.text.isEmpty
-                                ? null
-                                : deviceTypeController.text,
-                            callToActionText:
-                                callToActionController.text.isEmpty
-                                    ? null
-                                    : callToActionController.text,
-                            desiredScreen: desiredScreenController.text.isEmpty
-                                ? null
-                                : desiredScreenController.text,
-                            regionIds:
-                                ref.watch(videoAdRegionIdStateProvider) == null
-                                    ? null
-                                    : [ref.watch(videoAdRegionIdStateProvider)],
-                          );
+                              advertiserId: int.parse(
+                                  ref.watch(advertiserIdStateProvider)),
+                              title: adTitleController.text.isEmpty
+                                  ? null
+                                  : adTitleController.text,
+                              description: adDescriptionController.text.isEmpty
+                                  ? null
+                                  : adDescriptionController.text,
+                              adType: 'video',
+                              status: "drafts",
+                              adSize: ref.watch(videoAdSizeStateProvider),
+                              mediaUrl: '',
+                              targetUrl: targetUrlController.text.isEmpty
+                                  ? null
+                                  : targetUrlController.text,
+                              budget: bugetController.text.isEmpty
+                                  ? null
+                                  : int.parse(bugetController.text),
+                              duration: durationController.text.isEmpty
+                                  ? null
+                                  : int.parse(durationController.text),
+                              startDate: startDateController.text.isEmpty
+                                  ? null
+                                  : startDateController.text,
+                              businessCategory:
+                                  businessCategoryController.text.isEmpty
+                                      ? null
+                                      : businessCategoryController.text,
+                              deviceType: deviceTypeController.text.isEmpty
+                                  ? null
+                                  : deviceTypeController.text,
+                              callToActionText:
+                                  callToActionController.text.isEmpty
+                                      ? null
+                                      : callToActionController.text,
+                              desiredScreen:
+                                  desiredScreenController.text.isEmpty
+                                      ? null
+                                      : desiredScreenController.text,
+                              regionIds: ref.watch(selectedRegionIdProvider)
+                              // ref.watch(videoAdRegionIdStateProvider) == null
+                              //     ? null
+                              //     : [ref.watch(videoAdRegionIdStateProvider)],
+                              );
                       if (hasCreatedVideoAds) {
                         CustomSnackBar.showSnackBar(
                             context: context,
@@ -697,6 +720,8 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                         callToActionController.clear();
                         businessCategoryController.clear();
                         result = null;
+                        ref.read(selectedRegionProvider.notifier).clear();
+                        ref.read(selectedRegionIdProvider.notifier).clear();
                       } else {
                         CustomSnackBar.showSnackBar(
                           context: context,
@@ -726,56 +751,59 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                         final hasCreatedVideoAds = await ref
                             .read(createAdvertControllerProvider.notifier)
                             .createAds(
-                              advertiserId: int.parse(
-                                  ref.watch(advertiserIdStateProvider)),
-                              title: adTitleController.text.isEmpty
-                                  ? null
-                                  : adTitleController.text,
-                              description: adDescriptionController.text.isEmpty
-                                  ? null
-                                  : adDescriptionController.text,
-                              adType: 'video',
-                              status: "drafts",
-                              adSize: ref.watch(videoAdSizeStateProvider),
-                              mediaUrl:
-                                  'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
-                              targetUrl: targetUrlController.text.isEmpty
-                                  ? null
-                                  : targetUrlController.text,
-                              budget: bugetController.text.isEmpty
-                                  ? null
-                                  : int.parse(bugetController.text),
-                              duration: durationController.text.isEmpty
-                                  ? null
-                                  : int.parse(durationController.text),
-                              startDate: startDateController.text.isEmpty
-                                  ? null
-                                  : startDateController.text,
-                              businessCategory:
-                                  businessCategoryController.text.isEmpty
-                                      ? null
-                                      : businessCategoryController.text,
-                              deviceType: deviceTypeController.text.isEmpty
-                                  ? null
-                                  : deviceTypeController.text,
-                              callToActionText:
-                                  callToActionController.text.isEmpty
-                                      ? null
-                                      : callToActionController.text,
-                              desiredScreen:
-                                  desiredScreenController.text.isEmpty
-                                      ? null
-                                      : desiredScreenController.text,
-                              regionIds: ref.watch(
-                                          videoAdRegionIdStateProvider) ==
-                                      null
-                                  ? null
-                                  : [ref.watch(videoAdRegionIdStateProvider)],
-                            );
+                                advertiserId: int.parse(
+                                    ref.watch(advertiserIdStateProvider)),
+                                title: adTitleController.text.isEmpty
+                                    ? null
+                                    : adTitleController.text,
+                                description:
+                                    adDescriptionController.text.isEmpty
+                                        ? null
+                                        : adDescriptionController.text,
+                                adType: 'video',
+                                status: "drafts",
+                                adSize: ref.watch(videoAdSizeStateProvider),
+                                mediaUrl:
+                                    'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                targetUrl: targetUrlController.text.isEmpty
+                                    ? null
+                                    : targetUrlController.text,
+                                budget: bugetController.text.isEmpty
+                                    ? null
+                                    : int.parse(bugetController.text),
+                                duration: durationController.text.isEmpty
+                                    ? null
+                                    : int.parse(durationController.text),
+                                startDate: startDateController.text.isEmpty
+                                    ? null
+                                    : startDateController.text,
+                                businessCategory:
+                                    businessCategoryController.text.isEmpty
+                                        ? null
+                                        : businessCategoryController.text,
+                                deviceType: deviceTypeController.text.isEmpty
+                                    ? null
+                                    : deviceTypeController.text,
+                                callToActionText:
+                                    callToActionController.text.isEmpty
+                                        ? null
+                                        : callToActionController.text,
+                                desiredScreen:
+                                    desiredScreenController.text.isEmpty
+                                        ? null
+                                        : desiredScreenController.text,
+                                regionIds: ref.watch(selectedRegionIdProvider)
+                                // ref.watch(
+                                //             videoAdRegionIdStateProvider) ==
+                                //         null
+                                //     ? null
+                                //     : [ref.watch(videoAdRegionIdStateProvider)],
+                                );
                         if (hasCreatedVideoAds) {
                           CustomSnackBar.showSnackBar(
                               context: context,
-                              message: 'Video Advert created SuccessFully');
+                              message:
+                                  'Video Advert saved to draft SuccessFully');
                           ref.invalidate(
                               getAdvertsByAdvertiserRepositoryFutureProvider(
                                   ref.watch(advertiserIdStateProvider)));
@@ -794,6 +822,8 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                           callToActionController.clear();
                           businessCategoryController.clear();
                           result = null;
+                          ref.read(selectedRegionProvider.notifier).clear();
+                          ref.read(selectedRegionIdProvider.notifier).clear();
                         } else {
                           CustomSnackBar.showSnackBar(
                             context: context,
@@ -882,36 +912,41 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                                       .read(createAdvertControllerProvider
                                           .notifier)
                                       .createAds(
-                                    advertiserId: int.parse(
-                                        ref.watch(advertiserIdStateProvider)),
-                                    title: adTitleController.text,
-                                    description: adDescriptionController.text,
-                                    adType: 'video',
-                                    status: "pending",
-                                    adSize: ref.watch(videoAdSizeStateProvider),
-                                    mediaUrl:
-                                        // 'https://api-dev.wave5wireless.ng/content$trimmedData',
-                                        'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
-                                    targetUrl: targetUrlController.text,
-                                    budget: int.parse(bugetController.text),
-                                    duration:
-                                        int.parse(durationController.text),
-                                    startDate: startDateController.text,
-                                    businessCategory:
-                                        businessCategoryController.text,
-                                    deviceType: deviceTypeController.text,
-                                    callToActionText:
-                                        callToActionController.text,
-                                    desiredScreen: desiredScreenController.text,
-                                    regionIds: [
-                                      ref.watch(videoAdRegionIdStateProvider)
-                                    ],
-                                  );
+                                        advertiserId: int.parse(ref
+                                            .watch(advertiserIdStateProvider)),
+                                        title: adTitleController.text,
+                                        description:
+                                            adDescriptionController.text,
+                                        adType: 'video',
+                                        status: "pending",
+                                        adSize:
+                                            ref.watch(videoAdSizeStateProvider),
+                                        mediaUrl:
+                                            // 'https://api-dev.wave5wireless.ng/content$trimmedData',
+                                            'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                        targetUrl: targetUrlController.text,
+                                        budget: int.parse(bugetController.text),
+                                        duration:
+                                            int.parse(durationController.text),
+                                        startDate: startDateController.text,
+                                        businessCategory:
+                                            businessCategoryController.text,
+                                        deviceType: deviceTypeController.text,
+                                        callToActionText:
+                                            callToActionController.text,
+                                        desiredScreen:
+                                            desiredScreenController.text,
+                                        regionIds:
+                                            ref.watch(selectedRegionIdProvider),
+                                        // [
+                                        //   ref.watch(videoAdRegionIdStateProvider)
+                                        // ],
+                                      );
                                   if (hasCreatedVideoAds) {
                                     CustomSnackBar.showSnackBar(
                                         context: context,
                                         message:
-                                            'Video Advert saved to draft SuccessFully');
+                                            'Video Advert updated SuccessFully');
                                     ref.invalidate(
                                         getAdvertsByAdvertiserRepositoryFutureProvider(
                                             ref.watch(
@@ -931,6 +966,12 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                                     callToActionController.clear();
                                     businessCategoryController.clear();
                                     result = null;
+                                    ref
+                                        .read(selectedRegionProvider.notifier)
+                                        .clear();
+                                    ref
+                                        .read(selectedRegionIdProvider.notifier)
+                                        .clear();
                                   }
                                 } else {
                                   CustomSnackBar.showSnackBar(
@@ -1019,7 +1060,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                                     data?.substring(data.indexOf('/adverts'));
                                 log('trimmed Data for uploading new video: $trimmedData');
                                 //! update advert next
-                                final hasUpdatedAdvertWithNewImage = await ref
+                                final hasUpdatedAdvertWithNewVideo = await ref
                                     .read(updateAdsControllerProvider.notifier)
                                     .updateAdvert(
                                       advertId:
@@ -1048,7 +1089,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                                       regionIds:
                                           ref.watch(AdRegionStateProvider),
                                     );
-                                if (hasUpdatedAdvertWithNewImage) {
+                                if (hasUpdatedAdvertWithNewVideo) {
                                   log('advert(with updating new video) Updated succesfully!');
                                   CustomSnackBar.showSnackBar(
                                       context: context,

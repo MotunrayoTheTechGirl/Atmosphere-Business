@@ -20,6 +20,10 @@ class ReportTabView extends StatefulWidget {
 class _ReportTabViewState extends State<ReportTabView> {
   final List<String> _timeFrames = ['Daily', 'Weekly', 'Monthly'];
   String _selectedTimeFrame = 'Weekly';
+  bool isReachTapped = false;
+  bool isVisitTapped = false;
+  bool isClicksTapped = false;
+  bool isViewsTapped = false;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -92,14 +96,60 @@ class _ReportTabViewState extends State<ReportTabView> {
             metricType: 'Reach',
             metricValue: '7265',
             metricpercentage: '+11.02%',
-            onTap: () {},
+            isTapped: isReachTapped,
+            onTap: () {
+              setState(() {
+                isReachTapped = true;
+                isViewsTapped = false;
+                isClicksTapped = false;
+                isViewsTapped = false;
+              });
+            },
           ),
           16.hi,
           ReportMetricsCard(
             metricType: 'Visits',
             metricValue: '7265',
             metricpercentage: '+11.02%',
-            onTap: () {},
+            isTapped: isViewsTapped,
+            onTap: () {
+              setState(() {
+                isViewsTapped = true;
+                isReachTapped = false;
+                isClicksTapped = false;
+                isViewsTapped = false;
+              });
+            },
+          ),
+          16.hi,
+          ReportMetricsCard(
+            metricType: 'Clicks',
+            metricValue: '7265',
+            metricpercentage: '+11.02%',
+            isTapped: isClicksTapped,
+            onTap: () {
+              setState(() {
+                isClicksTapped = true;
+                isReachTapped = false;
+                isVisitTapped = false;
+                isViewsTapped = false;
+              });
+            },
+          ),
+          16.hi,
+          ReportMetricsCard(
+            metricType: 'Views',
+            metricValue: '7265',
+            metricpercentage: '+11.02%',
+            isTapped: isViewsTapped,
+            onTap: () {
+              setState(() {
+                isViewsTapped = true;
+                isReachTapped = false;
+                isVisitTapped = false;
+                isClicksTapped = false;
+              });
+            },
           ),
         ],
       ),

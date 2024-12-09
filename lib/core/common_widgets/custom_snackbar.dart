@@ -17,9 +17,8 @@ class CustomSnackBar {
             bottom: MediaQuery.of(context).size.height - 190,
             right: 20.0,
             left: 20.0),
-        backgroundColor: isError
-            ? AppColors.red.withOpacity(0.5)
-            : AppColors.w5Color.withOpacity(0.3),
+        backgroundColor:
+            isError ? AppColors.red.withOpacity(0.5) : AppColors.w5Color,
         duration: const Duration(seconds: 1),
         content: Text(message),
       ),

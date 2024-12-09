@@ -180,6 +180,7 @@ class AdsScreen extends ConsumerWidget {
                                 advert.title ?? '';
                             ref.read(descriptionStateProvider.notifier).state =
                                 advert.description ?? '';
+                            //! This is state provider i will watch to know if the ads is poending or not
                             ref.read(statusStateProvider.notifier).state =
                                 advert.status ?? '';
                             ref.read(startDateStateProvider.notifier).state =

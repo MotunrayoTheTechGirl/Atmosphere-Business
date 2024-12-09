@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/create_ads_screen.dart';
+import 'package:dealer_portal_mobile/features/advertiser/features/screens/tab_pages/overview_tabview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +18,7 @@ import '../../../../core/utils/themes/app_themes.dart';
 import '../../data/models/get_adverts_res_model.dart';
 import '../../data/repository/get_adverts_repository.dart';
 import '../widgets/ads_card.dart';
+import 'advertiser_overview_screen.dart';
 
 class DraftScreen extends ConsumerStatefulWidget {
   const DraftScreen({Key? key}) : super(key: key);
@@ -113,7 +115,55 @@ class _DraftScreenState extends ConsumerState<DraftScreen> {
                     log('draft date overview: ${draftDateOverviewFormat(draft.dateCreated.toString())}');
 
                     return AdsCard(
-                      onTap: () {},
+                      onTap: () {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          ref.read(modifyTitleStateProvider.notifier).state =
+                              draft.title ?? '';
+                          ref
+                              .read(modifyDescriptionStateProvider.notifier)
+                              .state = draft.description ?? '';
+                          ref.read(modifyTargetStateProvider.notifier).state =
+                              draft.targetUrl ?? '';
+                          ref.read(modifyBudgetStateProvider.notifier).state =
+                              draft.budget.toString();
+                          ref.read(modifyDurationStateProvider.notifier).state =
+                              draft.duration.toString();
+                          ref
+                              .read(modifyStartDateStateProvider.notifier)
+                              .state = draft.startDate.toString();
+                          ref.read(modifyDeviceStateProvider.notifier).state =
+                              draft.deviceType ?? '';
+                          ref
+                              .read(modifydesiredScreenStateProvider.notifier)
+                              .state = draft.screens ?? '';
+                          ref
+                              .read(
+                                  modifyBusinessCategoryStateProvider.notifier)
+                              .state = draft.businessCategory ?? "";
+                          ref
+                              .read(modifyDisplayContentStateProvider.notifier)
+                              .state = draft.displayContentUrl ?? '';
+                          ref.read(typeStateProvider.notifier).state =
+                              draft.type ?? '';
+                        });
+                        if (draft.type == 'image') {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return const CreateAdsScreen();
+                            }),
+                          );
+                        } else if (draft.type == 'video') {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return const CreateAdsScreen(
+                                initialTabIndex: 1,
+                              );
+                            }),
+                          );
+                        }
+                      },
                       adsType: draft.type ?? '',
                       adsTitile: draft.title ?? '',
                       date: draftDateOverviewFormat(

@@ -85,7 +85,7 @@ class CreateAdsResModel {
   final dynamic lastTotalClicks;
   final dynamic metricDate;
   final dynamic questions;
-  final List<String> regionIds;
+  final List<int> regionIds;
 
   factory CreateAdsResModel.fromJson(Map<String, dynamic> json) {
     return CreateAdsResModel(
@@ -132,7 +132,7 @@ class CreateAdsResModel {
       questions: json["questions"],
       regionIds: json["region_ids"] == null
           ? []
-          : List<String>.from(json["region_ids"]!.map((x) => x)),
+          : List<int>.from(json["region_ids"]!.map((x) => x)),
     );
   }
 }

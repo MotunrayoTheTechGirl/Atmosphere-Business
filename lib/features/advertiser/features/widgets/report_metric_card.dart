@@ -7,36 +7,43 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_icons.dart';
 import '../../../../core/utils/themes/app_themes.dart';
 
-class ReportMetricsCard extends StatelessWidget {
+class ReportMetricsCard extends StatefulWidget {
   ReportMetricsCard({
     required this.metricType,
     required this.metricValue,
     required this.metricpercentage,
     this.color = AppColors.w5Color,
     required this.onTap,
+    this.isTapped = false,
     super.key,
   });
 
   final String metricType, metricValue, metricpercentage;
   Color? color;
   final void Function()? onTap;
+  bool isTapped;
 
+  @override
+  State<ReportMetricsCard> createState() => _ReportMetricsCardState();
+}
+
+class _ReportMetricsCardState extends State<ReportMetricsCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 20.w),
         decoration: BoxDecoration(
           border: Border.all(width: 1, color: AppColors.lightPurple),
-          color: color,
+          color: widget.isTapped == true ? AppColors.white : AppColors.w5Color,
           borderRadius: BorderRadius.all(Radius.circular(14.37.r)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              metricType,
+              widget.metricType,
               style: AppTheme.lightTextTheme.bodySmall?.copyWith(
                   fontSize: 14.sp,
                   color: AppColors.white,
@@ -48,7 +55,7 @@ class ReportMetricsCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  metricValue,
+                  widget.metricValue,
                   style: AppTheme.lightTextTheme.bodySmall?.copyWith(
                       fontSize: 24.sp,
                       color: AppColors.white,
@@ -58,7 +65,7 @@ class ReportMetricsCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      metricpercentage,
+                      widget.metricpercentage,
                       style: AppTheme.lightTextTheme.bodySmall?.copyWith(
                         fontSize: 12.sp,
                         color: AppColors.white,

@@ -3,7 +3,11 @@ import 'package:dealer_portal_mobile/core/utils/app_icons.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/core/utils/themes/app_themes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+
+import '../../../features/advertiser/logic/multiple_region_selection_notifier.dart';
+import '../../../features/advertiser/logic/selected_region_id_state_notifier.dart';
 
 class MenuAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MenuAppBar({
@@ -18,16 +22,21 @@ class MenuAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       centerTitle: false,
       leading: Builder(builder: (context) {
-        return GestureDetector(
-          onTap: () {
-            // Navigator.pop(context);
-            Scaffold.of(context).openDrawer();
-          },
-          child: SvgPicture.asset(
-            AppIcons.menu,
-            fit: BoxFit.scaleDown,
-          ),
-        ).padOnly(left: 12);
+        return Consumer(builder: (context, ref, child) {
+          return GestureDetector(
+            onTap: () {
+              // Navigator.pop(context);
+              ref.read(selectedRegionProvider.notifier).clear();
+              ref.read(selectedRegionIdProvider.notifier).clear();
+
+              Scaffold.of(context).openDrawer();
+            },
+            child: SvgPicture.asset(
+              AppIcons.menu,
+              fit: BoxFit.scaleDown,
+            ),
+          ).padOnly(left: 12);
+        });
       }),
       title: Text(
         title,

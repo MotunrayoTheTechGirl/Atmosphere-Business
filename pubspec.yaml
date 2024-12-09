@@ -58,6 +58,7 @@ dependencies:
   dots_indicator: ^3.0.0
   video_player: ^2.8.5
   cached_video_player_plus: ^3.0.3
+  fl_chart: ^0.69.2
   
   
 

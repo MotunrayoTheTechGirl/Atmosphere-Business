@@ -30,11 +30,13 @@ import '../../../data/controller/create_advert_controller.dart';
 import '../../../data/controller/update_ads_controller.dart';
 import '../../../data/repository/get_adverts_repository.dart';
 import '../../../data/repository/region_repository.dart';
+import '../../../logic/multiple_region_selection_notifier.dart';
+import '../../../logic/selected_region_id_state_notifier.dart';
 import '../../widgets/size_guide_text_button.dart';
 import '../../widgets/textfield_with_inline_label.dart';
 
 final adSizeStateProvider = StateProvider<String?>((ref) => null);
-final imageAdRegionIdStateProvider = StateProvider<String?>((ref) => null);
+final imageAdRegionIdStateProvider = StateProvider<int?>((ref) => null);
 final imagePickedStateProvider = StateProvider<File>((ref) => File(''));
 
 class ImageAdTabBiew extends ConsumerStatefulWidget {
@@ -170,6 +172,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
     final userDetailsController =
         ref.watch(userDetailsControllerProvider).data?.data?.user;
     final regionFutureController = ref.watch(adsRegionRepositoryFutureProvider);
+    final selectedRegion = ref.watch(selectedRegionProvider);
     return SizedBox(
       height: .9.sh,
       child: ListView(
@@ -341,6 +344,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
               );
               if (selected != null) {
                 desiredScreenController.text = selected;
+                log('selected desired screen: ${desiredScreenController.text}');
                 setState(() {});
               }
             },
@@ -483,20 +487,42 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                   loading: () => [],
                 ),
               );
-
               if (selected != null) {
                 log('selected region: ${selected['area']}');
                 log('selected region id: ${selected['id']}');
                 ref.read(imageAdRegionIdStateProvider.notifier).state =
-                    selected['id'].toString();
+                    selected['id'];
                 log('region Id state Provider: ${ref.watch(imageAdRegionIdStateProvider)}');
                 setState(() {
-                  regionController.text = selected['area'];
+                  // regionController.text = selected['area'];
+                  regionController.text = '';
                 });
+                ref
+                    .read(selectedRegionProvider.notifier)
+                    .toggle(selected['area']);
+                ref
+                    .read(selectedRegionIdProvider.notifier)
+                    .addSelectedIdRegion(selected['id']);
+
+                log('mutiple selected region names: ${ref.watch(selectedRegionProvider)}');
+                log('mutiple selected region Id: ${ref.watch(selectedRegionIdProvider)}');
                 log('region ctrl : ${regionController.text}');
               }
             },
           ),
+          Wrap(
+              spacing: 8,
+              children: selectedRegion
+                  .map((region) => Chip(
+                        label: Text(region),
+                        onDeleted: () {
+                          ref
+                              .read(selectedRegionProvider.notifier)
+                              .toggle(region);
+                          // ref.read(selectedRegionIdProvider.notifier).removeSelectedIdRegion()
+                        },
+                      ))
+                  .toList()),
           12.hi,
           RichText(
             text: TextSpan(
@@ -583,6 +609,7 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                           : result != null
                               ? Text(' ${result?.files.first.name}')
                               : const UploadBoxText()
+
                       //  result != null
                       //     ? Text(' ${(result?.files.first.name)}')
                       //     : const UploadBoxText(),
@@ -664,11 +691,13 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                   desiredScreenController.text.isEmpty
                                       ? null
                                       : desiredScreenController.text,
-                              regionIds: ref.watch(
-                                          imageAdRegionIdStateProvider) ==
-                                      null
-                                  ? null
-                                  : [ref.watch(imageAdRegionIdStateProvider)]);
+                              regionIds: ref.watch(selectedRegionIdProvider)
+                              // ref.watch(
+                              //             imageAdRegionIdStateProvider) ==
+                              //         null
+                              //     ? null
+                              //     : [ref.watch(imageAdRegionIdStateProvider)]
+                              );
                       if (hasCreatedImageAds) {
                         CustomSnackBar.showSnackBar(
                             context: context,
@@ -761,14 +790,17 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                     callToActionController.text.isEmpty
                                         ? null
                                         : callToActionController.text,
-                                desiredScreen: desiredScreenController.text.isEmpty
-                                    ? null
-                                    : desiredScreenController.text,
-                                regionIds: ref.watch(
-                                            imageAdRegionIdStateProvider) ==
-                                        null
-                                    ? null
-                                    : [ref.watch(imageAdRegionIdStateProvider)]);
+                                desiredScreen:
+                                    desiredScreenController.text.isEmpty
+                                        ? null
+                                        : desiredScreenController.text,
+                                regionIds:
+                                    // ref.watch(
+                                    //             imageAdRegionIdStateProvider) ==
+                                    //         null
+                                    //     ? null
+                                    //     : [ref.watch(imageAdRegionIdStateProvider)]
+                                    ref.watch(selectedRegionIdProvider));
                         if (hasCreatedImageAds) {
                           CustomSnackBar.showSnackBar(
                               context: context,
@@ -792,6 +824,9 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                           callToActionController.clear();
                           businessCategoryController.clear();
                           result = null;
+
+                          ref.read(selectedRegionProvider.notifier).clear();
+                          ref.read(selectedRegionIdProvider.notifier).clear();
                         } else {
                           CustomSnackBar.showSnackBar(
                             context: context,
@@ -875,33 +910,34 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                       .read(createAdvertControllerProvider
                                           .notifier)
                                       .createAds(
-                                          advertiserId: int.parse(ref.watch(
-                                              advertiserIdStateProvider)),
-                                          title: adTitleController.text,
-                                          description:
-                                              adDescriptionController.text,
-                                          adType: 'image',
-                                          status: "pending",
-                                          adSize:
-                                              ref.watch(adSizeStateProvider),
-                                          mediaUrl:
-                                              'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
-                                          targetUrl: targetUrlController.text,
-                                          budget:
-                                              int.parse(bugetController.text),
-                                          duration: int.parse(
-                                              durationController.text),
-                                          startDate: startDateController.text,
-                                          businessCategory:
-                                              businessCategoryController.text,
-                                          deviceType: deviceTypeController.text,
-                                          callToActionText:
-                                              callToActionController.text,
-                                          desiredScreen:
-                                              desiredScreenController.text,
-                                          regionIds: [
-                                        ref.watch(imageAdRegionIdStateProvider),
-                                      ]);
+                                        advertiserId: int.parse(ref
+                                            .watch(advertiserIdStateProvider)),
+                                        title: adTitleController.text,
+                                        description:
+                                            adDescriptionController.text,
+                                        adType: 'image',
+                                        status: "pending",
+                                        adSize: ref.watch(adSizeStateProvider),
+                                        mediaUrl:
+                                            'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                        targetUrl: targetUrlController.text,
+                                        budget: int.parse(bugetController.text),
+                                        duration:
+                                            int.parse(durationController.text),
+                                        startDate: startDateController.text,
+                                        businessCategory:
+                                            businessCategoryController.text,
+                                        deviceType: deviceTypeController.text,
+                                        callToActionText:
+                                            callToActionController.text,
+                                        desiredScreen:
+                                            desiredScreenController.text,
+                                        regionIds:
+                                            ref.watch(selectedRegionIdProvider),
+                                        //     [
+                                        //   ref.watch(imageAdRegionIdStateProvider),
+                                        // ],
+                                      );
                                   if (hasCreatedImageAds) {
                                     CustomSnackBar.showSnackBar(
                                         context: context,
@@ -927,6 +963,12 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                     callToActionController.clear();
                                     businessCategoryController.clear();
                                     result = null;
+                                    ref
+                                        .read(selectedRegionProvider.notifier)
+                                        .clear();
+                                    ref
+                                        .read(selectedRegionIdProvider.notifier)
+                                        .clear();
                                   } else {
                                     CustomSnackBar.showSnackBar(
                                       context: context,

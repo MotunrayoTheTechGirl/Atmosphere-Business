@@ -34,12 +34,15 @@ class CreateAdvertRepository {
     List? regionIds,
   }) async {
     const isoDate = 'T00:00:00.000Z';
+    log('start date: $startDate');
     final formattedIsoStartDate = startDate;
+
     final formatStartDate = DateTime.tryParse(startDate ?? '');
     final String splitFormatStartDate =
         formatStartDate.toString().split(' ')[0];
     log('splitFormatStartDate: $splitFormatStartDate');
-    final finalFormatedStartDate = splitFormatStartDate + isoDate;
+    final finalFormatedStartDate =
+        startDate == null ? null : splitFormatStartDate + isoDate;
 
 //! formatting end date using start date plus duration
     final endDateDuration = duration == null
@@ -50,6 +53,25 @@ class CreateAdvertRepository {
                 .split(' ')[0] +
             isoDate;
     log('end date duration: $endDateDuration');
+    log('desitred screen: $desiredScreen');
+
+    //! formating desired screen
+    String? formatDesiredScreen(String? selectedScreen) {
+      if (selectedScreen == 'Welcome Screen') {
+        return 'welcome';
+      } else if (selectedScreen == 'SignUp/ Login Screen') {
+        return 'signup_login';
+      } else if (selectedScreen == 'Dashboard Screen') {
+        return 'dashboard';
+      } else if (selectedScreen == 'All Screen') {
+        return 'all';
+      } else if (selectedScreen == 'Login Screen') {
+        return 'login';
+      } else if (selectedScreen == 'Data and subscription Screen') {
+        return 'data_subscription';
+      }
+      return null;
+    }
 
     try {
       final response = await api.post(ApiEndpoints.createAdvert, body: {
@@ -68,7 +90,7 @@ class CreateAdvertRepository {
         "duration": duration,
         "startDate": finalFormatedStartDate,
         "endDate": endDateDuration,
-        "screens": desiredScreen,
+        "screens": formatDesiredScreen(desiredScreen),
         "region_ids": regionIds ?? []
       });
 
