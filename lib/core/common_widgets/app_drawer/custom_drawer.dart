@@ -21,9 +21,7 @@ import '../../../features/advertiser/features/screens/ads_report_screen.dart';
 import '../../../features/advertiser/features/screens/advertiser_overview_screen.dart';
 import '../../../features/advertiser/features/screens/create_ads_screen.dart';
 import '../../../features/home/presentation/screens/home_screen.dart';
-import '../../../features/my_plans/presentation/screens/my_plans_screen.dart';
 import '../../../features/onboarding/data/controller/user_details_controller.dart';
-import '../../../features/vending/vending_overview_screen.dart';
 import '../../../features/wallet/presentation/screens/invoice_history_screen.dart';
 import '../../../features/wallet/presentation/screens/wallet_screen.dart';
 import '../../constants/app_constants.dart';
@@ -137,12 +135,12 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                           icon: AppIcons.homeIcon,
                         ),
                         27.hi,
-                        DrawerTile(
-                          onTap: () {},
-                          label: 'Marketplace',
-                          icon: AppIcons.marketPlace,
-                        ),
-                        27.hi,
+                        // DrawerTile(
+                        //   onTap: () {},
+                        //   label: 'Marketplace',
+                        //   icon: AppIcons.marketPlace,
+                        // ),
+                        // 27.hi,
                         DrawerTileDropDown(
                           icon: AppIcons.walletNew,
                           label: 'Wallet',
@@ -181,12 +179,12 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                           ),
                         ),
                         27.hi,
-                        DrawerTile(
-                          onTap: () {},
-                          label: 'Wifi Services',
-                          icon: AppIcons.wifiService,
-                        ),
-                        27.hi,
+                        // DrawerTile(
+                        //   onTap: () {},
+                        //   label: 'Wifi Services',
+                        //   icon: AppIcons.wifiService,
+                        // ),
+                        // 27.hi,
                         DrawerTileDropDown(
                           icon: AppIcons.businessIcon,
                           label: 'Atmosphere for Business',
@@ -298,86 +296,86 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                                   ],
                                 ),
                               ),
-                              DrawerTileDropDown(
-                                color: AppColors.w5Color,
-                                iconColor: AppColors.white,
-                                padding: const EdgeInsets.all(16),
-                                labelColor: AppColors.white,
-                                icon: AppIcons.storefront,
-                                leftPadding: 0,
-                                rightPadding: 0,
-                                label: 'Storefront',
-                                subDrawer: const Column(
-                                  children: [],
-                                ),
-                              ),
+                              // DrawerTileDropDown(
+                              //   color: AppColors.w5Color,
+                              //   iconColor: AppColors.white,
+                              //   padding: const EdgeInsets.all(16),
+                              //   labelColor: AppColors.white,
+                              //   icon: AppIcons.storefront,
+                              //   leftPadding: 0,
+                              //   rightPadding: 0,
+                              //   label: 'Storefront',
+                              //   subDrawer: const Column(
+                              //     children: [],
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
                         27.hi,
-                        DrawerTile(
-                          onTap: () {},
-                          label: 'Subscriptions',
-                          icon: AppIcons.subscription,
-                        ),
-                        27.hi,
-                        DrawerTileDropDown(
-                          icon: AppIcons.vending,
-                          label: 'Vending',
-                          subDrawer: Column(
-                            children: [
-                              SubDrawerTile(
-                                onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return VendingOverviewScreen();
-                                  }));
-                                },
-                                label: "Overview",
-                              ),
-                              8.hi,
-                              SubDrawerTile(
-                                onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) {
-                                      return const MyPlansScreen();
-                                    },
-                                  ));
-                                },
-                                label: "Data Plan",
-                              ),
-                              8.hi,
-                              SubDrawerTile(
-                                onTap: () {},
-                                label: "Developer",
-                              ),
-                            ],
-                          ),
-                        ),
-                        27.hi,
-                        DrawerTile(
-                          onTap: () {},
-                          label: 'Reports',
-                          icon: AppIcons.report,
-                        ),
-                        27.hi,
-                        DrawerTile(
-                          onTap: () {},
-                          label: 'Service Management',
-                          icon: AppIcons.serviceMgt,
-                        ),
-                        27.hi,
-                        DrawerTile(
-                          onTap: () {},
-                          label: 'Promotions',
-                          icon: AppIcons.promotion,
-                        ),
-                        27.hi,
-                        DrawerTile(
-                          onTap: () {},
-                          label: 'Business Info',
-                          icon: AppIcons.businessInfo,
-                        ),
+                        // DrawerTile(
+                        //   onTap: () {},
+                        //   label: 'Subscriptions',
+                        //   icon: AppIcons.subscription,
+                        // ),
+                        // 27.hi,
+                        // DrawerTileDropDown(
+                        //   icon: AppIcons.vending,
+                        //   label: 'Vending',
+                        //   subDrawer: Column(
+                        //     children: [
+                        //       SubDrawerTile(
+                        //         onTap: () {
+                        //           Navigator.push(context,
+                        //               MaterialPageRoute(builder: (context) {
+                        //             return VendingOverviewScreen();
+                        //           }));
+                        //         },
+                        //         label: "Overview",
+                        //       ),
+                        //       8.hi,
+                        //       SubDrawerTile(
+                        //         onTap: () {
+                        //           Navigator.push(context, MaterialPageRoute(
+                        //             builder: (context) {
+                        //               return const MyPlansScreen();
+                        //             },
+                        //           ));
+                        //         },
+                        //         label: "Data Plan",
+                        //       ),
+                        //       8.hi,
+                        //       SubDrawerTile(
+                        //         onTap: () {},
+                        //         label: "Developer",
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // 27.hi,
+                        // DrawerTile(
+                        //   onTap: () {},
+                        //   label: 'Reports',
+                        //   icon: AppIcons.report,
+                        // ),
+                        // 27.hi,
+                        // DrawerTile(
+                        //   onTap: () {},
+                        //   label: 'Service Management',
+                        //   icon: AppIcons.serviceMgt,
+                        // ),
+                        // 27.hi,
+                        // DrawerTile(
+                        //   onTap: () {},
+                        //   label: 'Promotions',
+                        //   icon: AppIcons.promotion,
+                        // ),
+                        // 27.hi,
+                        // DrawerTile(
+                        //   onTap: () {},
+                        //   label: 'Business Info',
+                        //   icon: AppIcons.businessInfo,
+                        // ),
                       ],
                     ),
                   ),
@@ -417,12 +415,12 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                   //   icon: AppIcons.dealerMgt,
                   // ),
                   36.hi,
-                  DrawerTile(
-                    onTap: () {},
-                    label: 'Help & Support',
-                    icon: AppIcons.help,
-                  ),
-                  19.hi,
+                  // DrawerTile(
+                  //   onTap: () {},
+                  //   label: 'Help & Support',
+                  //   icon: AppIcons.help,
+                  // ),
+                  // 19.hi,
                   DrawerTile(
                     onTap: () {
                       logOut();

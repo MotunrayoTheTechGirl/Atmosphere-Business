@@ -103,7 +103,8 @@ class _VideoAppState extends State<VideoApp> {
   void initState() {
     super.initState();
     _controller = VideoPlayerController.networkUrl(Uri.parse(
-        'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'
+        // 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'
+        'https://api-dev.wave5wireless.ng/content/stream/b69c1a3b-a209-4516-8746-b5e6ec4e50de.mp4'
         // 'https://api-dev.wave5wireless.ng/content/getImage/adverts/b6b13ae8-f17e-428e-b2e0-892e5b9a3513.mp4'
         ))
       ..initialize().then((_) {

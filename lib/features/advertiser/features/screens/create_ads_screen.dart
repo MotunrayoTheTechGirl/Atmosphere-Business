@@ -1,6 +1,5 @@
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/tab_pages/create_image_ad_tab_view.dart';
-import 'package:dealer_portal_mobile/features/advertiser/features/screens/tab_pages/create_survey_tab_view.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/tab_pages/create_video_ads_tab_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,7 +29,8 @@ class _CreateAdsScreenState extends ConsumerState<CreateAdsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    // _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     _tabController.animateTo(widget.initialTabIndex ?? 0);
   }
 
@@ -72,13 +72,13 @@ class _CreateAdsScreenState extends ConsumerState<CreateAdsScreen>
                     ),
                   ),
                 ),
-                Tab(
-                  child: FittedBox(
-                    child: Text(
-                      'SURVEY',
-                    ),
-                  ),
-                ),
+                // Tab(
+                //   child: FittedBox(
+                //     child: Text(
+                //       'SURVEY',
+                //     ),
+                //   ),
+                // ),
               ],
             ),
             26.hi,
@@ -89,7 +89,7 @@ class _CreateAdsScreenState extends ConsumerState<CreateAdsScreen>
                 children: const [
                   ImageAdTabBiew(),
                   VideoAdsTabView(),
-                  SurveyTabView(),
+                  // SurveyTabView(),
                 ],
               ),
             )

@@ -10,15 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/common_widgets/app_bars/menu_appbar.dart';
 import '../../../../core/common_widgets/app_drawer/custom_drawer.dart';
-import '../../../../core/common_widgets/app_text_field.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_icons.dart';
-import '../../../../core/utils/themes/app_themes.dart';
 import '../../data/models/get_adverts_res_model.dart';
 import '../../data/repository/get_adverts_repository.dart';
 
@@ -69,36 +65,36 @@ class AdsScreen extends ConsumerWidget {
                 imageAds: imageAds.length.toString(),
                 survey: surveys.length.toString(),
               ),
-              25.hi,
-              AppTextField(
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 2,
-                  horizontal: 8,
-                ),
-                radius: 16.r,
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14.0.r),
-                    borderSide: BorderSide.none),
-                fillColor: AppColors.tabBarColor,
-                controller: searchController,
-                hintText: 'Search Ads',
-                hintStyle: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16.sp,
-                  color: AppColors.textColor,
-                ),
-                style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14.sp,
-                  color: AppColors.textColor,
-                ),
-                suffixIcon: SvgPicture.asset(
-                  AppIcons.search,
-                  fit: BoxFit.scaleDown,
-                  height: 20,
-                  width: 20,
-                ),
-              ),
+              // 25.hi,
+              // AppTextField(
+              //   contentPadding: const EdgeInsets.symmetric(
+              //     vertical: 2,
+              //     horizontal: 8,
+              //   ),
+              //   radius: 16.r,
+              //   enabledBorder: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(14.0.r),
+              //       borderSide: BorderSide.none),
+              //   fillColor: AppColors.tabBarColor,
+              //   controller: searchController,
+              //   hintText: 'Search Ads',
+              //   hintStyle: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+              //     fontWeight: FontWeight.w400,
+              //     fontSize: 16.sp,
+              //     color: AppColors.textColor,
+              //   ),
+              //   style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+              //     fontWeight: FontWeight.w400,
+              //     fontSize: 14.sp,
+              //     color: AppColors.textColor,
+              //   ),
+              //   suffixIcon: SvgPicture.asset(
+              //     AppIcons.search,
+              //     fit: BoxFit.scaleDown,
+              //     height: 20,
+              //     width: 20,
+              //   ),
+              // ),
               24.hi,
               SizedBox(
                 height: .7.sh,

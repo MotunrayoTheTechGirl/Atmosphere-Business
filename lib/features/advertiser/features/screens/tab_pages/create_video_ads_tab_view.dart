@@ -3,6 +3,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:dealer_portal_mobile/core/constants/app_constants.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/ads_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/draft_screen.dart';
@@ -744,8 +745,9 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                       if (hasUploadedVideo) {
                         final data =
                             ref.read(receiptFileUploadControllerProvider).data;
-                        final trimmedData =
-                            data?.substring(data.indexOf('/adverts'));
+                        // final trimmedData =
+                        //     data?.substring(data.indexOf('/adverts'));
+                        final trimmedData = data?.split(".net")[1];
                         log('trimmed Data: $trimmedData');
                         //! create  video adverts
                         final hasCreatedVideoAds = await ref
@@ -764,7 +766,9 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                                 status: "drafts",
                                 adSize: ref.watch(videoAdSizeStateProvider),
                                 mediaUrl:
-                                    'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                    '${AppConstants.devVideoStreamUrl}$trimmedData',
+                                // 'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+
                                 targetUrl: targetUrlController.text.isEmpty
                                     ? null
                                     : targetUrlController.text,
@@ -905,7 +909,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                                       .read(receiptFileUploadControllerProvider)
                                       .data;
                                   final trimmedData =
-                                      data?.substring(data.indexOf('/adverts'));
+                                      data?.split(".net")[1].substring(8);
                                   log('trimmed Data: $trimmedData');
                                   //! create  video adverts
                                   final hasCreatedVideoAds = await ref
@@ -922,8 +926,9 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                                         adSize:
                                             ref.watch(videoAdSizeStateProvider),
                                         mediaUrl:
-                                            // 'https://api-dev.wave5wireless.ng/content$trimmedData',
-                                            'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+
+                                            // 'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                            '${AppConstants.devVideoStreamUrl}$trimmedData',
                                         targetUrl: targetUrlController.text,
                                         budget: int.parse(bugetController.text),
                                         duration:
@@ -1056,8 +1061,9 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                                 final data = ref
                                     .read(receiptFileUploadControllerProvider)
                                     .data;
-                                final trimmedData =
-                                    data?.substring(data.indexOf('/adverts'));
+                                // final trimmedData =
+                                //     data?.substring(data.indexOf('/adverts'));
+                                final trimmedData = data?.split(".net")[1];
                                 log('trimmed Data for uploading new video: $trimmedData');
                                 //! update advert next
                                 final hasUpdatedAdvertWithNewVideo = await ref
@@ -1085,7 +1091,8 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                                       businessCategory:
                                           businessCategoryController.text,
                                       mediaUrl:
-                                          'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                          // 'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                          '${AppConstants.devVideoStreamUrl}$trimmedData',
                                       regionIds:
                                           ref.watch(AdRegionStateProvider),
                                     );

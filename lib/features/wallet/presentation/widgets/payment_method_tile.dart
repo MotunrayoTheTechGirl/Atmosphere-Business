@@ -35,6 +35,7 @@ class _PaymentMethodTileState extends ConsumerState<PaymentMethodTile> {
   Widget build(BuildContext context) {
     final userDetailsController = ref.watch(userDetailsControllerProvider);
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(
           Radius.circular(
@@ -76,17 +77,17 @@ class _PaymentMethodTileState extends ConsumerState<PaymentMethodTile> {
               });
             },
           ),
-          16.hi,
-          PaymentTypeButton(
-            label: 'Monify',
-            isClicked: isMonify,
-            onTap: () {
-              setState(() {
-                isMonify = !isMonify;
-                isPayStack = !isPayStack;
-              });
-            },
-          ),
+          // 16.hi,
+          // PaymentTypeButton(
+          //   label: 'Monify',
+          //   isClicked: isMonify,
+          //   onTap: () {
+          //     setState(() {
+          //       isMonify = !isMonify;
+          //       isPayStack = !isPayStack;
+          //     });
+          //   },
+          // ),
           80.hi,
           AppElevatedButton(
             label: 'Continue',

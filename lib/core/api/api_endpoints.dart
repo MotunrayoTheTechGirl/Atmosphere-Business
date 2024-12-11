@@ -29,4 +29,5 @@ class ApiEndpoints {
   static const String getAdsByAdvertiserId = "/ads/getAdvertsByAdvertiserId/";
   static const String advertsRegion = "/ads/getAllWifiRegions";
   static const String updateAds = "/ads/updateAdvert/";
+  // static const String videoUpload = "/content/stream";
 }

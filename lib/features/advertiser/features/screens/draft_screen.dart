@@ -11,10 +11,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/common_widgets/app_bars/custom_appbar.dart';
-import '../../../../core/common_widgets/app_text_field.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_icons.dart';
-import '../../../../core/utils/themes/app_themes.dart';
 import '../../data/models/get_adverts_res_model.dart';
 import '../../data/repository/get_adverts_repository.dart';
 import '../widgets/ads_card.dart';
@@ -55,32 +53,32 @@ class _DraftScreenState extends ConsumerState<DraftScreen> {
       body: SingleChildScrollView(
           child: Column(
         children: [
-          AppTextField(
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 2,
-              horizontal: 8,
-            ),
-            radius: 16.r,
-            fillColor: AppColors.tabBarColor,
-            controller: searchController,
-            hintText: 'Search Ads',
-            hintStyle: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.w400,
-              fontSize: 16.sp,
-              color: AppColors.textColor,
-            ),
-            style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.w400,
-              fontSize: 14.sp,
-              color: AppColors.textColor,
-            ),
-            suffixIcon: SvgPicture.asset(
-              AppIcons.search,
-              fit: BoxFit.scaleDown,
-              height: 20,
-              width: 20,
-            ),
-          ),
+          // AppTextField(
+          //   contentPadding: const EdgeInsets.symmetric(
+          //     vertical: 2,
+          //     horizontal: 8,
+          //   ),
+          //   radius: 16.r,
+          //   fillColor: AppColors.tabBarColor,
+          //   controller: searchController,
+          //   hintText: 'Search Ads',
+          //   hintStyle: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+          //     fontWeight: FontWeight.w400,
+          //     fontSize: 16.sp,
+          //     color: AppColors.textColor,
+          //   ),
+          //   style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+          //     fontWeight: FontWeight.w400,
+          //     fontSize: 14.sp,
+          //     color: AppColors.textColor,
+          //   ),
+          //   suffixIcon: SvgPicture.asset(
+          //     AppIcons.search,
+          //     fit: BoxFit.scaleDown,
+          //     height: 20,
+          //     width: 20,
+          //   ),
+          // ),
           24.hi,
           SizedBox(
             height: .8.sh,

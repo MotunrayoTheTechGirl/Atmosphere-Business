@@ -46,9 +46,9 @@ class MenuAppBar extends StatelessWidget implements PreferredSizeWidget {
           color: AppColors.blackText,
         ),
       ),
-      actions: [
-        SvgPicture.asset(AppIcons.notification).padOnly(right: 20),
-      ],
+      // actions: [
+      //   SvgPicture.asset(AppIcons.notification).padOnly(right: 20),
+      // ],
     );
   }
 

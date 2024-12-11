@@ -9,20 +9,15 @@ import 'package:dealer_portal_mobile/features/advertiser/features/screens/ads_de
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/ads_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/create_ads_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/draft_screen.dart';
-import 'package:dealer_portal_mobile/features/advertiser/features/screens/portfolio_account_screen.dart';
-import 'package:dealer_portal_mobile/features/advertiser/features/widgets/ads_metric_card.dart';
-import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/common_widgets/app_bars/menu_appbar.dart';
 import '../../../../core/common_widgets/app_drawer/custom_drawer.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_icons.dart';
 import '../../../../core/utils/themes/app_themes.dart';
 import '../../data/models/get_adverts_res_model.dart';
 import '../../data/repository/get_adverts_repository.dart';
@@ -60,7 +55,7 @@ class AdvertiserOverviewScreen extends ConsumerStatefulWidget {
 class _AdvertiserOverviewScreenState
     extends ConsumerState<AdvertiserOverviewScreen> {
   final List<String> _timeFrames = ['Daily', 'Weekly', 'Monthly'];
-  String _selectedTimeFrame = 'Weekly';
+  final String _selectedTimeFrame = 'Weekly';
   final ScrollController _scrollController = ScrollController();
   int _currentIndex = 0;
 
@@ -124,145 +119,145 @@ class _AdvertiserOverviewScreenState
                             color: AppColors.black.withOpacity(0.6),
                           ),
                         ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return PortfolioAccountScreen();
-                            }));
-                          },
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(AppIcons.roundProfile),
-                              6.wi,
-                              Text(
-                                'Login with a different\nportfolio account',
-                                style: AppTheme.lightTextTheme.bodyLarge
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12.sp,
-                                        color: AppColors.w5Color,
-                                        decoration: TextDecoration.underline),
-                              )
-                            ],
-                          ),
-                        ),
+                        // InkWell(
+                        //   onTap: () {
+                        //     Navigator.push(context,
+                        //         MaterialPageRoute(builder: (context) {
+                        //       return PortfolioAccountScreen();
+                        //     }));
+                        //   },
+                        //   child: Row(
+                        //     children: [
+                        //       SvgPicture.asset(AppIcons.roundProfile),
+                        //       6.wi,
+                        //       Text(
+                        //         'Login with a different\nportfolio account',
+                        //         style: AppTheme.lightTextTheme.bodyLarge
+                        //             ?.copyWith(
+                        //                 fontWeight: FontWeight.w400,
+                        //                 fontSize: 12.sp,
+                        //                 color: AppColors.w5Color,
+                        //                 decoration: TextDecoration.underline),
+                        //       )
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ).padHorizontal(16),
-                    20.hi,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Filter by:',
-                          style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.blackText,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 92.w,
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButtonFormField<String>(
-                              icon: SvgPicture.asset(
-                                AppIcons.arrowDown,
-                              ),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                fillColor: AppColors.white,
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: 0.h,
-                                  horizontal: 10.w,
-                                ),
-                              ),
-                              value: _selectedTimeFrame,
-                              items: _timeFrames.map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(
-                                    value,
-                                    style: AppTheme.lightTextTheme.bodySmall
-                                        ?.copyWith(
-                                            fontSize: 12.sp,
-                                            color: AppColors.blackText,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily:
-                                                AppTheme.montserratAlternate),
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                if (newValue != null) {
-                                  setState(() {
-                                    _selectedTimeFrame = newValue;
-                                  });
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ).padHorizontal(16),
+                    // 20.hi,
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text(
+                    //       'Filter by:',
+                    //       style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
+                    //         fontWeight: FontWeight.w400,
+                    //         color: AppColors.blackText,
+                    //       ),
+                    //     ),
+                    //     SizedBox(
+                    //       width: 92.w,
+                    //       child: DropdownButtonHideUnderline(
+                    //         child: DropdownButtonFormField<String>(
+                    //           icon: SvgPicture.asset(
+                    //             AppIcons.arrowDown,
+                    //           ),
+                    //           decoration: InputDecoration(
+                    //             border: InputBorder.none,
+                    //             fillColor: AppColors.white,
+                    //             contentPadding: EdgeInsets.symmetric(
+                    //               vertical: 0.h,
+                    //               horizontal: 10.w,
+                    //             ),
+                    //           ),
+                    //           value: _selectedTimeFrame,
+                    //           items: _timeFrames.map((String value) {
+                    //             return DropdownMenuItem<String>(
+                    //               value: value,
+                    //               child: Text(
+                    //                 value,
+                    //                 style: AppTheme.lightTextTheme.bodySmall
+                    //                     ?.copyWith(
+                    //                         fontSize: 12.sp,
+                    //                         color: AppColors.blackText,
+                    //                         fontWeight: FontWeight.w500,
+                    //                         fontFamily:
+                    //                             AppTheme.montserratAlternate),
+                    //               ),
+                    //             );
+                    //           }).toList(),
+                    //           onChanged: (String? newValue) {
+                    //             if (newValue != null) {
+                    //               setState(() {
+                    //                 _selectedTimeFrame = newValue;
+                    //               });
+                    //             }
+                    //           },
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ).padHorizontal(16),
                     25.hi,
-                    Column(
-                      children: [
-                        SizedBox(
-                          height: 100.h,
-                          child: ListView(
-                            padding: const EdgeInsets.only(left: 16.0),
-                            scrollDirection: Axis.horizontal,
-                            controller: _scrollController,
-                            children: [
-                              AdsMetricCard(
-                                label: 'Reach',
-                                points: '7265',
-                                percent: '+11.02%',
-                              ),
-                              16.wi,
-                              AdsMetricCard(
-                                label: 'Visits',
-                                points: '7265',
-                                percent: '-11.02%',
-                                isPositive: false,
-                                bgColor: AppColors.lightPurple,
-                              ),
-                              16.wi,
-                              AdsMetricCard(
-                                label: 'Impressions',
-                                points: '7265',
-                                percent: '-11.02%',
-                              ),
-                              16.wi,
-                              AdsMetricCard(
-                                label: 'Clicks',
-                                points: '7265',
-                                percent: '+11.02%',
-                                bgColor: AppColors.lightPurple,
-                              ),
-                              16.wi,
-                              AdsMetricCard(
-                                label: 'Views',
-                                points: '7265',
-                                percent: '+11.02%',
-                              ),
-                            ],
-                          ),
-                        ),
-                        10.hi,
-                        DotsIndicator(
-                          dotsCount: 5,
-                          position: _currentIndex,
-                          decorator: DotsDecorator(
-                            activeColor: AppColors.w5Color,
-                            size: const Size.square(8.0),
-                            activeSize: const Size.square(8.0),
-                            activeShape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Column(
+                    //   children: [
+                    //     SizedBox(
+                    //       height: 100.h,
+                    //       child: ListView(
+                    //         padding: const EdgeInsets.only(left: 16.0),
+                    //         scrollDirection: Axis.horizontal,
+                    //         controller: _scrollController,
+                    //         children: [
+                    //           AdsMetricCard(
+                    //             label: 'Reach',
+                    //             points: '7265',
+                    //             percent: '+11.02%',
+                    //           ),
+                    //           16.wi,
+                    //           AdsMetricCard(
+                    //             label: 'Visits',
+                    //             points: '7265',
+                    //             percent: '-11.02%',
+                    //             isPositive: false,
+                    //             bgColor: AppColors.lightPurple,
+                    //           ),
+                    //           16.wi,
+                    //           AdsMetricCard(
+                    //             label: 'Impressions',
+                    //             points: '7265',
+                    //             percent: '-11.02%',
+                    //           ),
+                    //           16.wi,
+                    //           AdsMetricCard(
+                    //             label: 'Clicks',
+                    //             points: '7265',
+                    //             percent: '+11.02%',
+                    //             bgColor: AppColors.lightPurple,
+                    //           ),
+                    //           16.wi,
+                    //           AdsMetricCard(
+                    //             label: 'Views',
+                    //             points: '7265',
+                    //             percent: '+11.02%',
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     10.hi,
+                    //     DotsIndicator(
+                    //       dotsCount: 5,
+                    //       position: _currentIndex,
+                    //       decorator: DotsDecorator(
+                    //         activeColor: AppColors.w5Color,
+                    //         size: const Size.square(8.0),
+                    //         activeSize: const Size.square(8.0),
+                    //         activeShape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(25.0),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                     10.hi,
                     AppElevatedButton(
                       onTap: () {

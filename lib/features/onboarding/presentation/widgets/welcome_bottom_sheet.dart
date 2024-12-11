@@ -7,9 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../../core/constants/app_constants.dart';
 import '../../../../core/utils/app_icons.dart';
-import '../../../../core/utils/custom_inapp_browser.dart';
+import '../../../advertiser/features/screens/feat_tests/new_video_test.dart';
 
 class WelcomeBottomSheet extends ConsumerWidget {
   const WelcomeBottomSheet({
@@ -68,11 +67,11 @@ class WelcomeBottomSheet extends ConsumerWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) {
-                    return const CustomInAppBrowser(
-                      url: AppConstants.authurl,
-                    );
+                    // return const CustomInAppBrowser(
+                    //   url: AppConstants.authurl,
+                    // );
 
-                    // return const BarChartExample();
+                    return const NetworkVideoPlayer();
                   },
                 ),
               );

@@ -4,7 +4,6 @@ import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/advertiser_overview_screen.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/tab_pages/overview_tabview.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/tab_pages/preview_tabview.dart';
-import 'package:dealer_portal_mobile/features/advertiser/features/screens/tab_pages/report_tabview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,8 +27,7 @@ class _AdsDetailsScreenState extends ConsumerState<AdsDetailsScreen>
   @override
   void initState() {
     super.initState();
-    // int tabCount = ref.read(statusStateProvider) == 'pending' ? 2 : 3;
-    // _tabController = TabController(length: tabCount, vsync: this);
+
     initializeTabController();
   }
 
@@ -40,7 +38,8 @@ class _AdsDetailsScreenState extends ConsumerState<AdsDetailsScreen>
   }
 
   int getTabCount(String? status) {
-    return status == 'pending' ? 2 : 3;
+    // return status == 'pending' ? 2 : 3;
+    return 2;
   }
 
   void initializeTabController() {
@@ -65,13 +64,13 @@ class _AdsDetailsScreenState extends ConsumerState<AdsDetailsScreen>
     ];
 
     // Only add REPORT tab if not pending
-    if (status != 'pending') {
-      tabs.add(
-        const Tab(
-          child: Text('REPORT'),
-        ),
-      );
-    }
+    // if (status != 'pending') {
+    //   tabs.add(
+    //     const Tab(
+    //       child: Text('REPORT'),
+    //     ),
+    //   );
+    // }
 
     return tabs;
   }
@@ -83,9 +82,9 @@ class _AdsDetailsScreenState extends ConsumerState<AdsDetailsScreen>
     ];
 
     // Only add REPORT tab view if not pending
-    if (status != 'pending') {
-      tabViews.add(const ReportTabView());
-    }
+    // if (status != 'pending') {
+    //   tabViews.add(const ReportTabView());
+    // }
 
     return tabViews;
   }

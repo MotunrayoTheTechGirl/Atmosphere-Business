@@ -196,80 +196,87 @@ class _OverviewTabviewState extends ConsumerState<OverviewTabview> {
                   ),
                 ],
               ),
-              AppElevatedButton(
-                onTap: ref.watch(statusStateProvider) == 'pending'
-                    ? () {
-                        ref.read(isModifyStateProvider.notifier).state = true;
-                        if (ref.watch(typeStateProvider) == 'image') {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) {
-                              return const CreateAdsScreen();
-                            }),
-                          );
-                        } else if (ref.watch(typeStateProvider) == 'video') {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) {
-                              return const CreateAdsScreen(
-                                initialTabIndex: 1,
-                              );
-                            }),
-                          );
+              //! temporary
+              ref.watch(statusStateProvider) != 'pending'
+                  ? const SizedBox()
+                  : AppElevatedButton(
+                      onTap: ref.watch(statusStateProvider) == 'pending'
+                          ? () {
+                              ref.read(isModifyStateProvider.notifier).state =
+                                  true;
+                              if (ref.watch(typeStateProvider) == 'image') {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return const CreateAdsScreen();
+                                  }),
+                                );
+                              } else if (ref.watch(typeStateProvider) ==
+                                  'video') {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return const CreateAdsScreen(
+                                      initialTabIndex: 1,
+                                    );
+                                  }),
+                                );
+                              }
+                            }
+                          : () {},
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
+                      bgColor: () {
+                        switch (ref.watch(statusStateProvider)) {
+                          case "pending":
+                            return AppColors.lightPurple;
+                          case 'active':
+                            return AppColors.w5Color;
+                          default:
+                            return AppColors.lightPurple;
                         }
-                      }
-                    : () {},
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
-                bgColor: () {
-                  switch (ref.watch(statusStateProvider)) {
-                    case "pending":
-                      return AppColors.lightPurple;
-                    case 'active':
-                      return AppColors.w5Color;
-                    default:
-                      return AppColors.lightPurple;
-                  }
-                }(),
-                label: () {
-                  switch (ref.watch(statusStateProvider)) {
-                    case "pending":
-                      return 'Modify Ad';
-                    case "completed":
-                      return "Re-Run";
-                    case "active":
-                      return "Pause Ad";
-                    default:
-                      return 'Modify Ad';
-                  }
-                }(),
-                isFilled: () {
-                  switch (ref.watch(statusStateProvider)) {
-                    case "pending":
-                      return true;
-                    case "active":
-                      return false;
-                    default:
-                      return true;
-                  }
-                }(),
-                borderWidth: 0.2,
-                borderRadius: 5.r,
-                width: 100.w,
-                labelStyle: AppTheme.lightTextTheme.displaySmall?.copyWith(
-                  color: () {
-                    switch (ref.watch(statusStateProvider)) {
-                      case "pending":
-                        return AppColors.w5Color;
-                      case "active":
-                        return AppColors.white;
-                      default:
-                        return AppColors.w5Color;
-                    }
-                  }(),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 10.sp,
-                ),
-              )
+                      }(),
+                      label: () {
+                        switch (ref.watch(statusStateProvider)) {
+                          case "pending":
+                            return 'Modify Ad';
+                          case "completed":
+                            return "Re-Run";
+                          case "active":
+                            return "Pause Ad";
+                          default:
+                            return 'Modify Ad';
+                        }
+                      }(),
+                      isFilled: () {
+                        switch (ref.watch(statusStateProvider)) {
+                          case "pending":
+                            return true;
+                          case "active":
+                            return false;
+                          default:
+                            return true;
+                        }
+                      }(),
+                      borderWidth: 0.2,
+                      borderRadius: 5.r,
+                      width: 100.w,
+                      labelStyle:
+                          AppTheme.lightTextTheme.displaySmall?.copyWith(
+                        color: () {
+                          switch (ref.watch(statusStateProvider)) {
+                            case "pending":
+                              return AppColors.w5Color;
+                            case "active":
+                              return AppColors.white;
+                            default:
+                              return AppColors.w5Color;
+                          }
+                        }(),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 10.sp,
+                      ),
+                    )
             ],
           ),
           10.hi,

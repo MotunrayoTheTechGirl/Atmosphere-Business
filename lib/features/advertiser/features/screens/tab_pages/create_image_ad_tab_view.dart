@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dealer_portal_mobile/core/common_widgets/app_elevated_button.dart';
+import 'package:dealer_portal_mobile/core/constants/app_constants.dart';
 import 'package:dealer_portal_mobile/core/enums.dart';
 import 'package:dealer_portal_mobile/core/utils/extensions.dart';
 import 'package:dealer_portal_mobile/features/advertiser/features/screens/ads_screen.dart';
@@ -766,7 +767,8 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                 status: "drafts",
                                 adSize: ref.watch(adSizeStateProvider),
                                 mediaUrl:
-                                    'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                    // 'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                    '${AppConstants.devImageContentUrl}$trimmedData',
                                 targetUrl: targetUrlController.text.isEmpty
                                     ? null
                                     : targetUrlController.text,
@@ -919,7 +921,8 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                         status: "pending",
                                         adSize: ref.watch(adSizeStateProvider),
                                         mediaUrl:
-                                            'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                            // 'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                            '${AppConstants.devImageContentUrl}$trimmedData',
                                         targetUrl: targetUrlController.text,
                                         budget: int.parse(bugetController.text),
                                         duration:
@@ -1093,7 +1096,8 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                       businessCategory:
                                           businessCategoryController.text,
                                       mediaUrl:
-                                          'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                          // 'https://api-dev.wave5wireless.ng/content/getImage$trimmedData',
+                                          '${AppConstants.devImageContentUrl}$trimmedData',
                                       regionIds:
                                           ref.watch(AdRegionStateProvider),
                                     );

@@ -14,7 +14,6 @@ import '../../../my_plans/data/controller/get_dealer_by_identity_controller.dart
 import '../../../my_plans/data/controller/user_balance_controller.dart';
 import '../../../onboarding/data/controller/user_details_controller.dart';
 import '../../../wallet/presentation/widgets/wallet_balance_card.dart';
-import '../widgets/overview_card.dart';
 import '../widgets/quick_link_button.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -74,9 +73,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             color: AppColors.blackText,
           ),
         ),
-        actions: [
-          SvgPicture.asset(AppIcons.notification).padOnly(right: 20),
-        ],
+        // actions: [
+        //   SvgPicture.asset(AppIcons.notification).padOnly(right: 20),
+        // ],
       ),
       drawer: const CustomDrawer(),
       body: SafeArea(
@@ -112,8 +111,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               10.hi,
               const WalletBalanceCard(),
               // const WalletBalanceCardd(),
-              16.hi,
-              const OverviewCard(),
+              // 16.hi,
+              // const OverviewCard(),
               30.hi,
               Text(
                 'Quick links',
@@ -136,11 +135,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 spacing: 12,
                 runSpacing: 12,
                 children: [
-                  QuickLinksButton(
-                    icon: AppIcons.access,
-                    label: 'Access Control',
-                    onTap: () {},
-                  ),
+                  // QuickLinksButton(
+                  //   icon: AppIcons.access,
+                  //   label: 'Access Control',
+                  //   onTap: () {},
+                  // ),
                   QuickLinksButton(
                     icon: AppIcons.walletNew,
                     label: 'Wallet',
@@ -151,11 +150,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       }));
                     },
                   ),
-                  QuickLinksButton(
-                    icon: AppIcons.report,
-                    label: 'Reports',
-                    onTap: () {},
-                  ),
+                  // QuickLinksButton(
+                  //   icon: AppIcons.report,
+                  //   label: 'Reports',
+                  //   onTap: () {},
+                  // ),
                 ],
               )
             ],
