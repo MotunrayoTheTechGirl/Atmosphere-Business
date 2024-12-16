@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/common_widgets/app_image.dart';
-import '../../../../../core/common_widgets/app_video_player.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../widgets/preview_custom_row.dart';
+import '../feat_tests/new_video_test.dart';
 
 class PreviewTabView extends ConsumerStatefulWidget {
   const PreviewTabView({Key? key}) : super(key: key);
@@ -30,9 +30,11 @@ class _PreviewTabviewState extends ConsumerState<PreviewTabView> {
         ),
       );
     } else if (ref.watch(typeStateProvider) == 'video') {
-      return AppVideoPlayer(videoUrl: ref.watch(contentUrlStateProvider)
-          // 'https://static.videezy.com/system/resources/previews/000/055/284/original/20201011_savings_78.mp4',
-          );
+      return NetworkVideoPlayer(
+        videoUrl: ref.watch(contentUrlStateProvider),
+      );
+      // AppVideoPlayer(videoUrl: ref.watch(contentUrlStateProvider)
+      // 'https://static.videezy.com/system/resources/previews/000/055/284/original/20201011_savings_78.mp4',
     }
     return const SizedBox();
   }

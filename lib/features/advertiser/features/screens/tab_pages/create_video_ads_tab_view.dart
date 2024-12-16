@@ -24,8 +24,8 @@ import '../../../../../core/utils/app_icons.dart';
 import '../../../../../core/utils/themes/app_themes.dart';
 import '../../../../subscriptions/data/controller/file_upload_controller.dart';
 import '../../../data/controller/create_advert_controller.dart';
+import '../../../data/controller/get_adverts_controller.dart';
 import '../../../data/controller/update_ads_controller.dart';
-import '../../../data/repository/get_adverts_repository.dart';
 import '../../../data/repository/region_repository.dart';
 import '../../../logic/multiple_region_selection_notifier.dart';
 import '../../../logic/selected_region_id_state_notifier.dart';
@@ -514,7 +514,7 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
           12.hi,
           RichText(
             text: TextSpan(
-              text: 'Upload Image',
+              text: 'Upload Video',
               style: AppTheme.lightTextTheme.bodyLarge?.copyWith(
                 fontSize: 15.sp,
                 fontWeight: FontWeight.w400,
@@ -703,9 +703,10 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                             context: context,
                             message:
                                 'Video Advert saved to draft SuccessFully');
-                        ref.invalidate(
-                            getAdvertsByAdvertiserRepositoryFutureProvider(
-                                ref.watch(advertiserIdStateProvider)));
+                        // ref.invalidate(
+                        //     getAdvertsByAdvertiserRepositoryFutureProvider(
+                        //         ref.watch(advertiserIdStateProvider)));
+                        ref.invalidate(getAdvertsControllerProvider);
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) {
                           return const DraftScreen();
@@ -808,9 +809,10 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                               context: context,
                               message:
                                   'Video Advert saved to draft SuccessFully');
-                          ref.invalidate(
-                              getAdvertsByAdvertiserRepositoryFutureProvider(
-                                  ref.watch(advertiserIdStateProvider)));
+                          // ref.invalidate(
+                          //     getAdvertsByAdvertiserRepositoryFutureProvider(
+                          //         ref.watch(advertiserIdStateProvider)));
+                          ref.invalidate(getAdvertsControllerProvider);
                           Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (context) {
                             return const DraftScreen();
@@ -952,10 +954,12 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                                         context: context,
                                         message:
                                             'Video Advert updated SuccessFully');
+                                    // ref.invalidate(
+                                    //     getAdvertsByAdvertiserRepositoryFutureProvider(
+                                    //         ref.watch(
+                                    //             advertiserIdStateProvider)));
                                     ref.invalidate(
-                                        getAdvertsByAdvertiserRepositoryFutureProvider(
-                                            ref.watch(
-                                                advertiserIdStateProvider)));
+                                        getAdvertsControllerProvider);
                                     Navigator.pushReplacement(context,
                                         MaterialPageRoute(builder: (context) {
                                       return const AdsScreen();
@@ -1026,10 +1030,10 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                                     context: context,
                                     message:
                                         'Video Advert updated SuccessFully');
-                                ref.invalidate(
-                                    getAdvertsByAdvertiserRepositoryFutureProvider(
-                                        ref.watch(advertiserIdStateProvider)));
-
+                                // ref.invalidate(
+                                //     getAdvertsByAdvertiserRepositoryFutureProvider(
+                                //         ref.watch(advertiserIdStateProvider)));
+                                ref.invalidate(getAdvertsControllerProvider);
                                 Navigator.pushReplacement(context,
                                     MaterialPageRoute(builder: (context) {
                                   return const AdsScreen();
@@ -1102,10 +1106,11 @@ class _VideoAdsTabViewState extends ConsumerState<VideoAdsTabView> {
                                       context: context,
                                       message:
                                           'Video Advert Updated SuccessFully');
-                                  ref.invalidate(
-                                      getAdvertsByAdvertiserRepositoryFutureProvider(
-                                          ref.watch(
-                                              advertiserIdStateProvider)));
+                                  // ref.invalidate(
+                                  //     getAdvertsByAdvertiserRepositoryFutureProvider(
+                                  //         ref.watch(
+                                  //             advertiserIdStateProvider)));
+                                  ref.invalidate(getAdvertsControllerProvider);
                                   Navigator.pushReplacement(context,
                                       MaterialPageRoute(builder: (context) {
                                     return const AdsScreen();

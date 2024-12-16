@@ -56,7 +56,7 @@ class _DrawerTileDropDownState extends ConsumerState<DrawerTileDropDown> {
 
     return Column(
       children: [
-        GestureDetector(
+        InkWell(
           onTap: widget.isAdvertise
               ? ref.watch(advertiserIdStateProvider) == ''
                   ? () async {

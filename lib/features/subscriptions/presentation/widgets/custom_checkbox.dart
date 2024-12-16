@@ -17,12 +17,12 @@ class CustomCheckbox extends StatelessWidget {
         color: AppColors.primaryColor,
         width: 2.0,
       ),
-      fillColor: MaterialStateProperty.resolveWith<Color?>(
-        (Set<MaterialState> states) {
-          if (states.contains(MaterialState.disabled)) {
+      fillColor: WidgetStateProperty.resolveWith<Color?>(
+        (Set<WidgetState> states) {
+          if (states.contains(WidgetState.disabled)) {
             return Colors.grey;
           }
-          if (states.contains(MaterialState.selected)) {
+          if (states.contains(WidgetState.selected)) {
             return AppColors.primaryColor;
           }
           return AppColors.white;

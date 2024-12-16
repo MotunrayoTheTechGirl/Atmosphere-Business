@@ -19,8 +19,9 @@ class WelcomeScreen extends StatelessWidget {
         child: Stack(
           children: [
             Positioned(
-              top: 300,
-              left: 100,
+              top: 300.h,
+              left: 100.w,
+              right: 100.w,
               child: Image.asset(
                 AppIcons.appLogo,
                 fit: BoxFit.scaleDown,

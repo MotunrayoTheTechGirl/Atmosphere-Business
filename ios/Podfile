@@ -35,10 +35,16 @@ target 'Runner' do
   target 'RunnerTests' do
     inherit! :search_paths
   end
-end
 
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    flutter_additional_ios_build_settings(target)
+  # Combined post_install block
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+      # Set the Swift version
+      target.build_configurations.each do |config|
+        config.build_settings['SWIFT_VERSION'] = '5.0'
+      end
+      # Add additional Flutter build settings
+      flutter_additional_ios_build_settings(target)
+    end
   end
 end

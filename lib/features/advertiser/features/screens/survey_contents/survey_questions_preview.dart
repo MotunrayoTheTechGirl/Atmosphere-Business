@@ -106,8 +106,8 @@ class _SurveyQuestionsPreviewState
                               value: 0,
                               groupValue: -1,
                               fillColor:
-                                  MaterialStateProperty.resolveWith((states) {
-                                if (states.contains(MaterialState.disabled)) {
+                                  WidgetStateProperty.resolveWith((states) {
+                                if (states.contains(WidgetState.disabled)) {
                                   return Colors.red;
                                 }
                                 return AppColors.greyShade200;
@@ -137,8 +137,8 @@ class _SurveyQuestionsPreviewState
                                 value: 0,
                                 groupValue: -1,
                                 fillColor:
-                                    MaterialStateProperty.resolveWith((states) {
-                                  if (states.contains(MaterialState.disabled)) {
+                                    WidgetStateProperty.resolveWith((states) {
+                                  if (states.contains(WidgetState.disabled)) {
                                     return Colors.red;
                                   }
                                   return AppColors.greyShade200;

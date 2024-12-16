@@ -28,7 +28,7 @@ class DioInterceptor extends Interceptor {
     String? token = await secureStorageService.read(key: AppConstants.token);
 
     /// Check if the token is not null and not empty
-    if (token != null && token.isNotEmpty) {
+    if (token!.isNotEmpty) {
       /// Add the authorization header with the token value
       options.headers['Authorization'] = 'Bearer $token';
     }

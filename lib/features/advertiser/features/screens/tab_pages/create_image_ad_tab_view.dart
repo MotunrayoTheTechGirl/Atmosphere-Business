@@ -28,8 +28,8 @@ import '../../../../../core/utils/themes/app_themes.dart';
 import '../../../../onboarding/data/controller/user_details_controller.dart';
 import '../../../../subscriptions/data/controller/file_upload_controller.dart';
 import '../../../data/controller/create_advert_controller.dart';
+import '../../../data/controller/get_adverts_controller.dart';
 import '../../../data/controller/update_ads_controller.dart';
-import '../../../data/repository/get_adverts_repository.dart';
 import '../../../data/repository/region_repository.dart';
 import '../../../logic/multiple_region_selection_notifier.dart';
 import '../../../logic/selected_region_id_state_notifier.dart';
@@ -704,9 +704,10 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                             context: context,
                             message:
                                 'Image Advert saved to draft SuccessFully');
-                        ref.invalidate(
-                            getAdvertsByAdvertiserRepositoryFutureProvider(
-                                ref.watch(advertiserIdStateProvider)));
+                        // ref.invalidate(
+                        //     getAdvertsByAdvertiserRepositoryFutureProvider(
+                        //         ref.watch(advertiserIdStateProvider)));
+                        ref.invalidate(getAdvertsControllerProvider);
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) {
                           return const DraftScreen();
@@ -808,9 +809,10 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                               context: context,
                               message:
                                   'Image Advert saved to draft SuccessFully');
-                          ref.invalidate(
-                              getAdvertsByAdvertiserRepositoryFutureProvider(
-                                  ref.watch(advertiserIdStateProvider)));
+                          // ref.invalidate(
+                          //     getAdvertsByAdvertiserRepositoryFutureProvider(
+                          //         ref.watch(advertiserIdStateProvider)));
+                          ref.invalidate(getAdvertsControllerProvider);
                           Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (context) {
                             return const DraftScreen();
@@ -946,11 +948,12 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                         context: context,
                                         message:
                                             'Image Advert created SuccessFully');
+                                    // ref.invalidate(
+                                    //     getAdvertsByAdvertiserRepositoryFutureProvider(
+                                    //         ref.watch(
+                                    //             advertiserIdStateProvider)));
                                     ref.invalidate(
-                                        getAdvertsByAdvertiserRepositoryFutureProvider(
-                                            ref.watch(
-                                                advertiserIdStateProvider)));
-
+                                        getAdvertsControllerProvider);
                                     Navigator.pushReplacement(context,
                                         MaterialPageRoute(builder: (context) {
                                       return const AdsScreen();
@@ -1033,10 +1036,10 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                     context: context,
                                     message:
                                         'Image Advert updated SuccessFully');
-                                ref.invalidate(
-                                    getAdvertsByAdvertiserRepositoryFutureProvider(
-                                        ref.watch(advertiserIdStateProvider)));
-
+                                // ref.invalidate(
+                                //     getAdvertsByAdvertiserRepositoryFutureProvider(
+                                //         ref.watch(advertiserIdStateProvider)));
+                                ref.invalidate(getAdvertsControllerProvider);
                                 Navigator.pushReplacement(context,
                                     MaterialPageRoute(builder: (context) {
                                   return const AdsScreen();
@@ -1107,10 +1110,11 @@ class _ImageAdTabBiewState extends ConsumerState<ImageAdTabBiew> {
                                       context: context,
                                       message:
                                           'Image Advert Updated SuccessFully');
-                                  ref.invalidate(
-                                      getAdvertsByAdvertiserRepositoryFutureProvider(
-                                          ref.watch(
-                                              advertiserIdStateProvider)));
+                                  // ref.invalidate(
+                                  //     getAdvertsByAdvertiserRepositoryFutureProvider(
+                                  //         ref.watch(
+                                  //             advertiserIdStateProvider)));
+                                  ref.invalidate(getAdvertsControllerProvider);
                                   Navigator.pushReplacement(context,
                                       MaterialPageRoute(builder: (context) {
                                     return const AdsScreen();

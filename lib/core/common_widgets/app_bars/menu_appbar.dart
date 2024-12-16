@@ -23,7 +23,7 @@ class MenuAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: false,
       leading: Builder(builder: (context) {
         return Consumer(builder: (context, ref, child) {
-          return GestureDetector(
+          return InkWell(
             onTap: () {
               // Navigator.pop(context);
               ref.read(selectedRegionProvider.notifier).clear();

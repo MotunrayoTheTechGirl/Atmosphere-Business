@@ -76,7 +76,7 @@ class AppTheme {
     return ThemeData(
       brightness: Brightness.light,
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateColor.resolveWith((states) => Colors.black),
+        fillColor: WidgetStateColor.resolveWith((states) => Colors.black),
       ),
       appBarTheme: const AppBarTheme(
           foregroundColor: Colors.black, backgroundColor: Colors.white),

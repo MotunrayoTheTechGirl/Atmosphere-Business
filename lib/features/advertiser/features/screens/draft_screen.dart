@@ -13,8 +13,8 @@ import 'package:intl/intl.dart';
 import '../../../../core/common_widgets/app_bars/custom_appbar.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_icons.dart';
+import '../../data/controller/get_adverts_controller.dart';
 import '../../data/models/get_adverts_res_model.dart';
-import '../../data/repository/get_adverts_repository.dart';
 import '../widgets/ads_card.dart';
 import 'advertiser_overview_screen.dart';
 
@@ -28,9 +28,10 @@ class DraftScreen extends ConsumerStatefulWidget {
 class _DraftScreenState extends ConsumerState<DraftScreen> {
   @override
   Widget build(BuildContext context) {
-    final advertsController = ref.watch(
-        getAdvertsByAdvertiserRepositoryFutureProvider(
-            ref.watch(advertiserIdStateProvider)));
+    // final advertsController = ref.watch(
+    //     getAdvertsByAdvertiserRepositoryFutureProvider(
+    //         ref.watch(advertiserIdStateProvider)));
+    final advertsController = ref.watch(getAdvertsControllerProvider);
 
     final searchController = TextEditingController();
     return Scaffold(
