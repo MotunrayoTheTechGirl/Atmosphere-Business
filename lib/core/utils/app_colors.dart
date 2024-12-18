@@ -63,4 +63,5 @@ class AppColors {
   static const Color unSelectedTab = Color(0xFF3C3C43);
   static const Color armyGreen = Color(0xFF414141);
   static const Color biroBlue = Color(0xFF2542EA);
+  static const Color barChartColor = Color(0xFFCCCCCC);
 }

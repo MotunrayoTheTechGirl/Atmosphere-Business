@@ -124,6 +124,9 @@ class _AdvertiserOverviewScreenState
         child: RefreshIndicator.adaptive(
           onRefresh: () async {
             ref.read(getAdvertsControllerProvider.notifier).fetchAdverts();
+            ref
+                .read(fetchMetricOverviewControllerProvider.notifier)
+                .metricOverview(period: _selectedTimeFrame);
           },
           child: CustomScrollView(
             slivers: <Widget>[
@@ -430,6 +433,8 @@ class _AdvertiserOverviewScreenState
                                               return AppColors.deepGreen;
                                             case "paused":
                                               return AppColors.goldenYellow;
+                                            case "completed":
+                                              return AppColors.primaryColor;
                                             default:
                                               return AppColors.goldenYellow;
                                           }
@@ -443,6 +448,8 @@ class _AdvertiserOverviewScreenState
                                             case "approved":
                                               return AppColors.greenShade50
                                                   .withOpacity(0.5);
+                                            case "completed":
+                                              return AppColors.babyShade100;
                                             case "active":
                                               return AppColors.greenShade50
                                                   .withOpacity(0.5);

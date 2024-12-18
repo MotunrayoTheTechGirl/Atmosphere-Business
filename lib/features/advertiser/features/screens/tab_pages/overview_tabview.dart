@@ -12,10 +12,12 @@ import 'package:intl/intl.dart';
 
 import '../../../../../core/common_widgets/app_elevated_button.dart';
 import '../../../../../core/common_widgets/custom_snackbar.dart';
+import '../../../../../core/enums.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_icons.dart';
 import '../../../../../core/utils/themes/app_themes.dart';
 import '../../../../../core/utils/ui_helper.dart';
+import '../../../data/controller/change_advert_status_controller.dart';
 import '../advertiser_overview_screen.dart';
 
 final modifyTitleStateProvider = StateProvider<String>((ref) => '');
@@ -76,6 +78,11 @@ class _OverviewTabviewState extends ConsumerState<OverviewTabview> {
     super.initState();
   }
 
+  Widget buttonType() {
+    if (ref.watch(statusStateProvider) != 'pending') {}
+    return const SizedBox();
+  }
+
   @override
   Widget build(BuildContext context) {
     String createdDate = ref.watch(dateCreatedStateProvider) ?? '';
@@ -116,6 +123,8 @@ class _OverviewTabviewState extends ConsumerState<OverviewTabview> {
                         return AppColors.lightOrange;
                       case "active":
                         return AppColors.greenShade150;
+                      case "approved":
+                        return AppColors.greenShade150;
                       case "completed":
                         return AppColors.primaryColor;
                       case "paused":
@@ -136,8 +145,12 @@ class _OverviewTabviewState extends ConsumerState<OverviewTabview> {
                         return 'Pending';
                       case "active":
                         return "Active";
+                      case "approved":
+                        return "Active";
                       case "paused":
                         return "Paused";
+                      case "completed":
+                        return "Completed";
                       default:
                         return 'Modify Ad';
                     }
@@ -148,6 +161,8 @@ class _OverviewTabviewState extends ConsumerState<OverviewTabview> {
                           case "pending":
                             return AppColors.goldenYellow;
                           case "active":
+                            return AppColors.deepGreen;
+                          case "approved":
                             return AppColors.deepGreen;
                           case "completed":
                             return AppColors.babyShade100;
@@ -197,86 +212,180 @@ class _OverviewTabviewState extends ConsumerState<OverviewTabview> {
                 ],
               ),
               //! temporary
-              ref.watch(statusStateProvider) != 'pending'
-                  ? const SizedBox()
-                  : AppElevatedButton(
-                      onTap: ref.watch(statusStateProvider) == 'pending'
-                          ? () {
-                              ref.read(isModifyStateProvider.notifier).state =
-                                  true;
-                              if (ref.watch(typeStateProvider) == 'image') {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) {
-                                    return const CreateAdsScreen();
-                                  }),
-                                );
-                              } else if (ref.watch(typeStateProvider) ==
-                                  'video') {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) {
-                                    return const CreateAdsScreen(
-                                      initialTabIndex: 1,
-                                    );
-                                  }),
-                                );
-                              }
-                            }
-                          : () {},
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
-                      bgColor: () {
-                        switch (ref.watch(statusStateProvider)) {
-                          case "pending":
-                            return AppColors.lightPurple;
-                          case 'active':
-                            return AppColors.w5Color;
-                          default:
-                            return AppColors.lightPurple;
-                        }
-                      }(),
-                      label: () {
-                        switch (ref.watch(statusStateProvider)) {
-                          case "pending":
-                            return 'Modify Ad';
-                          case "completed":
-                            return "Re-Run";
-                          case "active":
-                            return "Pause Ad";
-                          default:
-                            return 'Modify Ad';
-                        }
-                      }(),
-                      isFilled: () {
-                        switch (ref.watch(statusStateProvider)) {
-                          case "pending":
-                            return true;
-                          case "active":
-                            return false;
-                          default:
-                            return true;
-                        }
-                      }(),
-                      borderWidth: 0.2,
-                      borderRadius: 5.r,
-                      width: 100.w,
-                      labelStyle:
-                          AppTheme.lightTextTheme.displaySmall?.copyWith(
-                        color: () {
-                          switch (ref.watch(statusStateProvider)) {
-                            case "pending":
-                              return AppColors.w5Color;
-                            case "active":
-                              return AppColors.white;
-                            default:
-                              return AppColors.w5Color;
-                          }
-                        }(),
-                        fontWeight: FontWeight.w600,
-                        fontSize: 10.sp,
-                      ),
-                    )
+              // ref.watch(statusStateProvider) != 'pending'
+              //     ? const SizedBox()
+              //     :
+              AppElevatedButton(
+                isLoading:
+                    ref.watch(changeAdvertStatusControllerProvider).status ==
+                        ResponseStatus.loading,
+                onTap: () async {
+                  if (ref.watch(statusStateProvider) == 'pending') {
+                    ref.read(isModifyStateProvider.notifier).state = true;
+                    if (ref.watch(typeStateProvider) == 'image') {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return const CreateAdsScreen();
+                        }),
+                      );
+                    } else if (ref.watch(typeStateProvider) == 'video') {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return const CreateAdsScreen(
+                            initialTabIndex: 1,
+                          );
+                        }),
+                      );
+                    }
+                  } else if (ref.watch(statusStateProvider) == 'paused') {
+                    final hasChangedStatus = await ref
+                        .read(changeAdvertStatusControllerProvider.notifier)
+                        .changeAdsStatus(
+                          status: 'active',
+                          advertId: ref.watch(advertIdStateProvider),
+                        );
+                    if (hasChangedStatus) {
+                      ref.read(statusStateProvider.notifier).state = ref
+                              .read(
+                                  changeAdvertStatusControllerProvider.notifier)
+                              .state
+                              .data
+                              ?.status ??
+                          '';
+                    }
+                  } else if (ref.watch(statusStateProvider) == 'active' ||
+                      ref.watch(statusStateProvider) == 'approved') {
+                    final hasChangedStatus = await ref
+                        .read(changeAdvertStatusControllerProvider.notifier)
+                        .changeAdsStatus(
+                          status: 'paused',
+                          advertId: ref.watch(advertIdStateProvider),
+                        );
+                    if (hasChangedStatus) {
+                      ref.read(statusStateProvider.notifier).state = ref
+                              .read(
+                                  changeAdvertStatusControllerProvider.notifier)
+                              .state
+                              .data
+                              ?.status ??
+                          '';
+                    }
+                  } else if (ref.watch(statusStateProvider) == 'completed') {
+                    final hasChangedStatus = await ref
+                        .read(changeAdvertStatusControllerProvider.notifier)
+                        .changeAdsStatus(
+                          status: 'active',
+                          advertId: ref.watch(advertIdStateProvider),
+                        );
+                    if (hasChangedStatus) {
+                      ref.read(statusStateProvider.notifier).state = ref
+                              .read(
+                                  changeAdvertStatusControllerProvider.notifier)
+                              .state
+                              .data
+                              ?.status ??
+                          '';
+                    }
+                  }
+                },
+                // ref.watch(statusStateProvider) == 'pending'
+                //     ? () {
+                //         ref.read(isModifyStateProvider.notifier).state = true;
+                //         if (ref.watch(typeStateProvider) == 'image') {
+                //           Navigator.pushReplacement(
+                //             context,
+                //             MaterialPageRoute(builder: (context) {
+                //               return const CreateAdsScreen();
+                //             }),
+                //           );
+                //         } else if (ref.watch(typeStateProvider) == 'video') {
+                //           Navigator.pushReplacement(
+                //             context,
+                //             MaterialPageRoute(builder: (context) {
+                //               return const CreateAdsScreen(
+                //                 initialTabIndex: 1,
+                //               );
+                //             }),
+                //           );
+                //         }
+                //       }
+                //     : () {},
+                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 12.h),
+                bgColor: () {
+                  switch (ref.watch(statusStateProvider)) {
+                    case "pending":
+                      return AppColors.lightPurple;
+                    case 'active':
+                      return AppColors.w5Color;
+                    case "approved":
+                      return AppColors.w5Color;
+                    case "paused":
+                      return AppColors.w5Color;
+                    case "completed":
+                      return AppColors.w5Color;
+                    default:
+                      return AppColors.lightPurple;
+                  }
+                }(),
+                label: () {
+                  switch (ref.watch(statusStateProvider)) {
+                    case "pending":
+                      return 'Modify Ad';
+                    case "completed":
+                      return "Re-Run";
+                    case "active":
+                      return "Pause Ad";
+                    case "approved":
+                      return "Pause Ad";
+                    case "paused":
+                      return 'Resume';
+
+                    default:
+                      return 'Modify Ad';
+                  }
+                }(),
+                isFilled: () {
+                  switch (ref.watch(statusStateProvider)) {
+                    case "pending":
+                      return true;
+                    case "active":
+                      return false;
+                    case "approved":
+                      return false;
+                    case "paused":
+                      return false;
+                    case "completed":
+                      return false;
+                    default:
+                      return true;
+                  }
+                }(),
+                borderWidth: 0.2,
+                borderRadius: 5.r,
+                width: 100.w,
+                labelStyle: AppTheme.lightTextTheme.displaySmall?.copyWith(
+                  color: () {
+                    switch (ref.watch(statusStateProvider)) {
+                      case "pending":
+                        return AppColors.w5Color;
+                      case "active":
+                        return AppColors.white;
+                      case "approved":
+                        return AppColors.white;
+                      case "paused":
+                        return AppColors.white;
+                      case "completed":
+                        return AppColors.white;
+                      default:
+                        return AppColors.w5Color;
+                    }
+                  }(),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 10.sp,
+                ),
+              )
             ],
           ),
           10.hi,

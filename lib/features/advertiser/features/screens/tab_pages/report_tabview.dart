@@ -151,6 +151,8 @@ class _ReportTabViewState extends State<ReportTabView> {
               });
             },
           ),
+          26.hi,
+          // const MetricBarChart(),
         ],
       ),
     );

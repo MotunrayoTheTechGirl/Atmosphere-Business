@@ -30,4 +30,5 @@ class ApiEndpoints {
   static const String advertsRegion = "/ads/getAllWifiRegions";
   static const String updateAds = "/ads/updateAdvert/";
   static const String metricOverView = "/ads/metrics/overview";
+  static const String changeAdvertStatus = "/ads/changeAdvertStatus";
 }
